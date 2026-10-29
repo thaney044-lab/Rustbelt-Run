@@ -1,0 +1,71 @@
+name: Deploy browser game
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install verified Godot and web templates
+        shell: bash
+        run: |
+          set -euo pipefail
+          release="https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable"
+          cd "$RUNNER_TEMP"
+          curl --fail --location --retry 3 --output SHA512-SUMS.txt "$release/SHA512-SUMS.txt"
+          curl --fail --location --retry 3 --output Godot_v4.6.3-stable_linux.x86_64.zip "$release/Godot_v4.6.3-stable_linux.x86_64.zip"
+          curl --fail --location --retry 3 --output Godot_v4.6.3-stable_export_templates.tpz "$release/Godot_v4.6.3-stable_export_templates.tpz"
+          python3 - <<'PY'
+          import hashlib, os, pathlib, zipfile
+          root = pathlib.Path(os.environ['RUNNER_TEMP'])
+          sums = {line.split()[-1].lstrip('*'): line.split()[0] for line in (root / 'SHA512-SUMS.txt').read_text().splitlines() if line.strip()}
+          for name in ['Godot_v4.6.3-stable_linux.x86_64.zip', 'Godot_v4.6.3-stable_export_templates.tpz']:
+              with (root / name).open('rb') as stream:
+                  actual = hashlib.file_digest(stream, 'sha512').hexdigest()
+              if actual != sums[name]:
+                  raise SystemExit('Checksum mismatch: ' + name)
+          binary = root / 'godot-bin'
+          binary.mkdir(exist_ok=True)
+          with zipfile.ZipFile(root / 'Godot_v4.6.3-stable_linux.x86_64.zip') as archive:
+              executable = binary / 'godot'
+              executable.write_bytes(archive.read('Godot_v4.6.3-stable_linux.x86_64'))
+              executable.chmod(0o755)
+          templates = pathlib.Path.home() / '.local/share/godot/export_templates/4.6.3.stable'
+          templates.mkdir(parents=True, exist_ok=True)
+          with zipfile.ZipFile(root / 'Godot_v4.6.3-stable_export_templates.tpz') as archive:
+              for name in ['version.txt', 'web_nothreads_debug.zip', 'web_nothreads_release.zip']:
+                  (templates / name).write_bytes(archive.read('templates/' + name))
+          PY
+          echo "$RUNNER_TEMP/godot-bin" >> "$GITHUB_PATH"
+      - name: Validate physics
+        run: godot --headless --path . --script tests/movement_smoke.gd
+      - name: Export browser game
+        run: bash tools/build_web.sh
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: builds/web
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
