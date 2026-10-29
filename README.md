@@ -6,13 +6,16 @@ A 2D puzzle platformer following a fox mechanic through an overgrown industrial 
 
 Godot **4.6.3**, GDScript, Compatibility renderer. Open `project.godot` and press **F6** on `scenes/movement_lab.tscn`, or press **F5** to run the project. From a terminal in this directory: `godot --path .`.
 
-The game uses a painted art pass: an animated fox mechanic, a detailed industrial valley panorama, weathered metal platforms, overgrown foliage, illustrated machinery and reflective canal water and includes acceleration, variable jump height, coyote time, jump buffering, solid platforms, a moving platform, a follow camera, a checkpoint, and fall/manual recovery. The prototype includes the movement yard, crane repair puzzle, piston passage, loft secret and service canal.
+First Shift connects five areas: Cinder Yard, the repair works, piston hall, flooded viaduct and the foundry. Painted stone viaducts, iron catwalks, cables, lanterns and animated ferns tie the playable route into the industrial valley. The fox has acceleration, variable jump height, coyote time, jump buffering, a follow camera and checkpoint recovery. The main route combines patrol combat, a crane repair puzzle, timed pistons, canal crossings and a powered hoist.
 
 - Move: A/D, arrows, controller left stick or D-pad.
 - Jump: Space or controller A; release early for a short hop.
 - Retry: R. Reach the flag to set the checkpoint.
+- Pause/resume: Esc. The pause screen includes controls and a full-run restart.
+- Optional rooftop routes hold two rare parts; a third is in the maintenance loft. Parts and scrap survive checkpoint retries during this page session. The rooftop parts also restore health.
+- Reach PATCH's lit workshop for the results screen: time, scrap, rare parts and retries. Enter/the button starts a fresh run; R returns to the final checkpoint for more exploration.
 
-The next section is a repair yard: J swings the wrench, K throws it toward a highlighted switch, E carries/inserts the battery or uses the crane control, and T resets the puzzle at its checkpoint. Controller bindings: X swing, B throw, Y use, Back reset. Lower the crane bridge and cross to the exit. Falls restore the whole puzzle to a recoverable state. Patrol bots, three health points, brief damage protection and optional scrap trails are now implemented. Final production audio, menus, remapping, persistence, and Windows exports remain planned. Controller bindings exist but have not been tested with physical hardware. The owner has playtested and approved the movement; new art and level additions still benefit from further playtesting.
+In the repair yard, J swings the wrench, K throws it toward a highlighted switch, E carries/inserts the battery or uses the crane control, and T resets the puzzle at its checkpoint. Controller bindings: X swing, B throw, Y use, Back reset. Lower the crane bridge and cross to the exit. Falls restore the whole puzzle to a recoverable state. Patrol bots, three health points, brief damage protection and optional scrap trails are implemented. Production audio, a title screen, remapping, persistent saves and Windows exports remain planned. Controller bindings exist but have not been tested with physical hardware. The owner has playtested and approved the movement; new art and level additions still benefit from further playtesting.
 
 See [the implementation plan](docs/IMPLEMENTATION_PLAN.md) for milestones and acceptance criteria based on the supplied v0.1 outline. Godot is the initial default; the outline did not specify an engine.
 
@@ -27,6 +30,8 @@ godot --headless --path . --script tests/passage_smoke.gd
 godot --headless --path . --script tests/canal_smoke.gd
 godot --headless --path . --script tests/art_smoke.gd
 godot --headless --path . --script tests/gameplay_smoke.gd
+godot --headless --path . --script tests/foundry_smoke.gd
+godot --headless --path . --script tests/level_smoke.gd
 ```
 
 The smoke test exercises real physics: landing, different jump heights, checkpoint activation, fall recovery, and moving-platform carrying. It exits nonzero on failure.
@@ -70,7 +75,7 @@ Artwork notes and provenance: [assets/art/README.md](assets/art/README.md).
 
 ## Piston passage and loft secret
 
-Continue right after lowering the crane. A checkpoint before the piston passage restores you to safety and restarts its timing after a hit. Amber lights with an exclamation mark warn before descent. Wait for a head to retract, then cross beneath it. The maintenance loft above the checkpoint contains an optional machine part, retained across retries during the current play session (not saved after a page reload). Reach the freight car and PATCH to finish this prototype stage; R replays the passage. The train is a stationary finish illustration, not the planned moving-train sequence.
+Continue right after lowering the crane. A checkpoint before the piston passage restores you to safety and restarts its timing after a hit. Amber lights with an exclamation mark warn before descent. Wait for a head to retract, then cross beneath it. The maintenance loft above the checkpoint contains an optional machine part, retained across retries during the current play session (not saved after a page reload). Reach the freight car and PATCH landmark, then continue to the canal. R returns to the current checkpoint. The train here is a stationary world illustration; there is no moving background train.
 
 Additional validation: `godot --headless --path . --script tests/passage_smoke.gd`.
 
@@ -86,4 +91,4 @@ The background transitions from the rail depot to a separate canal/foundry paint
 
 The fox artwork is now about 23% larger, anchored to the same foot position. The painted backdrop is augmented by independent cloud drift, rising steam, rotating flywheels at a nearer parallax depth, and animated distant water. Player collision dimensions and jump tuning are unchanged.
 
-The decorative low-opacity background train has been removed. Large static decks now use staggered beveled masonry, iron coping, moss and stone piers; thin catwalks have plank joints. The foundry service run adds a proximity-operated E control, a vertical hoist, upper catwalks, a moving gantry, two checkpoints and a final landing. These extend the route from about 5,480 to 7,660 world units. New tests: `godot --headless --path . --script tests/foundry_smoke.gd`.
+The decorative low-opacity background train has been removed. Large static decks use a bespoke painted stone material and arched viaduct supports; catwalks use textured iron, timber treads and under-brackets. The foundry service run has a proximity-operated E control, vertical hoist, upper catwalks, moving gantry, two checkpoints and a workshop landing. The route spans 7,660 world units, with optional upper paths in Cinder Yard and the foundry. See [the level design notes](docs/FIRST_SHIFT_LEVEL.md).

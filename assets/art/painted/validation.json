@@ -40,6 +40,29 @@
         1168
       ],
       "mode": "RGBA"
+    },
+    "viaduct_stone.png": {
+      "sha256": "93695b22fe01c8023c6375ef74587ba4b7d0eb212db4fdf023a5b850fb6848f7",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    "workshop.png": {
+      "sha256": "8867c9c166a54a5697ef1e6b97bb6042b581b91d27996b4f870c06e41025d491",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_bounds": [
+        0,
+        0,
+        1520,
+        1024
+      ],
+      "corner_alpha": 0
     }
   },
   "sprite_layout": {

@@ -7,6 +7,7 @@ var status: Label
 var checkpoint_reached := false
 var effects: Node2D
 var combat: Node2D
+var director: Node2D
 
 func _ready() -> void:
 	effects = preload("res://scripts/visual_effects.gd").new()
@@ -23,7 +24,13 @@ func _ready() -> void:
 	platform(Vector2(1450, 450), Vector2(150, 24))
 	platform(Vector2(1480, 362), Vector2(150, 24))
 	platform(Vector2(855, 470), Vector2(100, 20), true)
+	# Optional rooftop line: readable jumps, a reward, and a return to the main route.
+	platform(Vector2(650,340),Vector2(110,20))
+	platform(Vector2(850,315),Vector2(140,20))
+	platform(Vector2(1080,350),Vector2(180,20))
+	platform(Vector2(1290,370),Vector2(100,20))
 	player = Player.new()
+	player.z_index = 1
 	player.position = player.spawn_point
 	add_child(player)
 	var camera := Camera2D.new()
@@ -69,12 +76,10 @@ func _ready() -> void:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED if full else DisplayServer.WINDOW_MODE_FULLSCREEN)
 	)
 	hud.add_child(fullscreen)
-	status.text = "RUSTBELT RUN   /   OVERGROWN RAIL DEPOT\nA/D or arrows: run    Space: jump    R: retry  |  Reach the workshop flag."
-	label_at("SHORT / FULL JUMPS", Vector2(140, 310))
-	label_at("MOVING PLATFORM", Vector2(670, 335))
-	label_at("CHECKPOINT", Vector2(980, 470))
-	label_at("LOW CEILING", Vector2(1340, 290))
-	label_at("REPAIR YARD ->", Vector2(1640, 410))
+	status.text = "FIRST SHIFT   /   CINDER YARD\nA/D: run   Space: jump   J/K: wrench   E: use   R: retry   Esc: pause"
+	label_at("ROOFTOPS  /  RARE SALVAGE", Vector2(510, 225))
+	label_at("WORKSHOP CHECKPOINT", Vector2(980, 570))
+	label_at("REPAIR YARD  ->", Vector2(1640, 360))
 	var yard := preload("res://scripts/repair_yard.gd").new()
 	yard.lab = self
 	add_child(yard)
@@ -94,6 +99,13 @@ func _ready() -> void:
 	var foundry := preload("res://scripts/foundry_run.gd").new()
 	foundry.lab = self
 	add_child(foundry)
+	var dressing := preload("res://scripts/level_dressing.gd").new()
+	add_child(dressing)
+	director = preload("res://scripts/level_director.gd").new()
+	director.lab = self
+	director.foundry = foundry
+	director.passage = passage
+	add_child(director)
 	var scenery_layer := CanvasLayer.new()
 	scenery_layer.layer = -10
 	var scenery := preload("res://scripts/depot_scenery.gd").new()

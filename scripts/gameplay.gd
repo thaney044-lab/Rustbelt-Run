@@ -32,7 +32,7 @@ func _ready() -> void:
 	for point in [Vector2(140,480),Vector2(250,415),Vector2(440,335),Vector2(525,465),Vector2(575,450),Vector2(660,485),Vector2(770,475),Vector2(855,430),Vector2(960,480),Vector2(1100,395),Vector2(1290,485),Vector2(1450,400),Vector2(1650,485),Vector2(1770,485),Vector2(1990,485),Vector2(2110,450),Vector2(2375,470),Vector2(2580,485),Vector2(2810,435),Vector2(3000,485),Vector2(3290,485),Vector2(3530,485),Vector2(3780,485),Vector2(3970,400),Vector2(4410,485),Vector2(4520,430),Vector2(4700,430),Vector2(4950,485),Vector2(5150,415),Vector2(5500,480),Vector2(5660,450),Vector2(5850,400),Vector2(6140,340),Vector2(6340,410),Vector2(6600,430),Vector2(6940,480),Vector2(7190,460),Vector2(7410,440)]:
 		scrap_positions.append(point)
 		collected.append(false)
-	lab.label_at("PATROL BOT  /  J swing, K throw, or stomp",Vector2(305,275))
+	lab.label_at("PATROL  /  J swing · K throw · jump to stomp",Vector2(240,570))
 	lab.player.respawned.connect(reset_enemies)
 
 func show_notice(message: String) -> void:

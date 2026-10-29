@@ -19,7 +19,7 @@ All three sources were created using the host-native OpenAI ImageGen tool for th
 - Small impact, repair and landing particle bursts in `scripts/visual_effects.gd`.
 - Existing SVGs remain as earlier source artwork and the project emblem; the fox no longer uses the old vector head during gameplay.
 
-Collision dimensions, movement tuning, puzzle state, hazard timing and level layout are preserved. Art tests verify transparency, atlas layout and pose selection; gameplay tests verify the existing mechanics. Browser screenshots are still needed to assess readability and shaders.
+Movement tuning, existing platform collision dimensions, puzzle state and hazard timing are preserved. Later level passes add optional routes. Art tests verify transparency, atlas layout and pose selection; gameplay tests verify the mechanics. Browser screenshots assess readability and shaders.
 
 ## Foundry and patrol update
 
@@ -32,3 +32,11 @@ Trestle supports beneath large decks give the gameplay layer a structural connec
 The paintings remain the scenic base, with independently animated clouds, expanding/dissolving steam, and rotating flywheels on a faster parallax plane in `scripts/living_background.gd`. `shaders/living_panorama.gdshader` adds restrained distant-water ripples. These are decorative layers below the game world and HUD. The fox uses one shared 0.265 source-pixel scale (about 23% larger than 0.215) with its existing boot anchor and collision dimensions.
 
 The decorative low-opacity background train has been removed. Large static decks now use staggered beveled masonry, iron coping, moss and stone piers; thin catwalks have plank joints. The foundry service run adds a proximity-operated E control, a vertical hoist, upper catwalks, a moving gantry, two checkpoints and a final landing. These extend the route from about 5,480 to 7,660 world units. New tests: `godot --headless --path . --script tests/foundry_smoke.gd`.
+
+## First Shift level art
+
+`painted/viaduct_stone.png` is an original 1536×1024 host-native ImageGen masonry material, copied without pixel edits. Its full prompt and source are recorded in `painted/viaduct-provenance.json`; dimensions and SHA-256 are in `painted/validation.json`. It is rendered at four source pixels per world unit with mipmaps, subdued tint and repeated UVs. The image is a bespoke material source; visually perfect edge seamlessness is not assumed.
+
+`platform_art.gd` builds textured arch rings, spandrels and piers below the landing edge, and textured catwalk webs with timber treads and under-brackets. `level_dressing.gd` adds world-space cables, hanging supports, railings, a station clock, water tower, copper pipe runs, a canal suspension bridge, lanterns, swaying ferns and the final workshop. This layer renders behind the fox and colliders. The stone and steel materials are applied to in-engine architecture. The final workshop uses a separate painted building sprite. No external asset service or third-party stock package was used.
+
+`painted/workshop.png` is an original transparent 1536×1024 ImageGen building, preserved unchanged and rendered at one shared 0.22 scale. Its painted doorway sits on the final landing's foot baseline. Full prompt/source provenance is in `painted/workshop-provenance.json`, and hash, dimensions and alpha checks are in `painted/validation.json`. A small in-engine nameplate fits the empty signboard; a subtle animated light pool complements the painted windows. The final landing is widened from 250 to 330 units to support the building; the last gap remains a jump. The fox renders in front of all world machinery.

@@ -1,6 +1,7 @@
 extends Node2D
 
 const METAL = preload("res://assets/art/painted/weathered_steel.png")
+const STONE = preload("res://assets/art/painted/viaduct_stone.png")
 
 var size := Vector2(100, 20)
 var moving := false
@@ -9,6 +10,7 @@ var base_color := Color("3b5152")
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
 
 func _draw() -> void:
 	var r := Rect2(-size / 2, size)
@@ -28,77 +30,40 @@ func _draw() -> void:
 	if not moving and size.y > 35 and size.x > 100:
 		draw_masonry(r)
 		return
-	draw_rect(Rect2(r.position+Vector2(1,4),size),Color(0.02,0.06,0.07,0.3))
-	draw_style_box(box(base_color, Color("1d3035"), 3), r)
-	for i in range(int(ceil(size.x/96.0))):
-		var width := minf(96,size.x-i*96)
-		var region := Rect2(64+(i%6)*130,64,width*3,size.y*3)
-		var destination := Rect2(r.position+Vector2(i*96,0),Vector2(width,size.y))
-		draw_texture_rect_region(METAL,destination,region,Color(0.68,0.79,0.75))
-		if size.y > 30:
-			draw_line(destination.position+Vector2(0,15),destination.position+Vector2(0,size.y-2),Color("152c30"),2)
-	# Heavy iron top rail with a thin sunlit bevel, and deep lower lip.
-	draw_rect(Rect2(r.position,Vector2(size.x,5)),Color("899681"))
-	draw_rect(Rect2(r.position+Vector2(0,size.y-7),Vector2(size.x,7)),Color("192f32"))
-	# Recessed metal panels, small scratches and rust stains add material depth.
-	for band in range(1, int(size.y), 4):
-		var shade := 0.04 + float(band)/maxf(size.y,1.0)*0.08
-		draw_rect(Rect2(r.position+Vector2(3,band),Vector2(size.x-6,3)),Color(0.06,0.12,0.13,shade))
-	for i in range(int(size.x/19)):
-		var x := r.position.x+7+i*19
-		var y := r.position.y+9+fposmod(i*17.0,maxf(4,size.y-16))
-		draw_line(Vector2(x,y),Vector2(minf(x+8,r.end.x-3),y+2),Color("b6ad85",0.16),1)
-		if i%3 == 0:
-			draw_circle(Vector2(x,y),2.5,Color("a16d45",0.25))
-	draw_rect(Rect2(r.position + Vector2(0, 8), Vector2(size.x, 5)), Color("283d40"))
-	if size.y > 30:
-		for x in range(int(r.position.x + 10), int(r.end.x-26), 40):
-			draw_line(Vector2(x, r.position.y+22), Vector2(x+26, r.end.y-6), Color("233b3c",0.65), 2)
-			draw_line(Vector2(x+26, r.position.y+22), Vector2(x, r.end.y-6), Color("233b3c",0.65), 2)
-	if size.y <= 30:
-		for x in range(int(r.position.x+3),int(r.end.x-8),18):
-			draw_rect(Rect2(x,r.position.y+2,minf(16,r.end.x-x-2),5),Color("9b8053") if not moving else Color("bc9956"))
-			draw_line(Vector2(x,r.position.y+2),Vector2(x+12,r.position.y+2),Color("dac390"),1)
-	var trim := Color("e7b958") if moving else Color("9bac8e")
-	draw_rect(Rect2(r.position, Vector2(size.x, 6)), trim)
-	draw_line(r.position, Vector2(r.end.x, r.position.y), Color("f3d9a1") if moving else Color("ccd3aa"), 2)
-	if not moving and size.y <= 30:
-		for x in range(int(r.position.x+3),int(r.end.x-8),18):
-			draw_rect(Rect2(x,r.position.y+2,minf(16,r.end.x-x-2),4),Color("a18a60"))
-	for x in range(int(r.position.x + 10), int(r.end.x - 4), 30):
-		draw_circle(Vector2(x, r.position.y+15), 2.0, Color("b8b6a0"))
-	if moving:
-		for x in range(int(r.position.x+5), int(r.end.x-10), 22):
-			draw_line(Vector2(x, r.position.y+6), Vector2(x+8, r.position.y+13), Color("685536"), 4)
-	else:
-		for x in range(int(r.position.x+5), int(r.end.x-4), 23):
-			var h := 4.0 + fposmod(float(x*x), 8.0)
-			draw_line(Vector2(x,r.position.y), Vector2(x+2,r.position.y-h), Color("80a27c"), 2)
-			draw_line(Vector2(x+3,r.position.y), Vector2(x+7,r.position.y-h*.7), Color("527a66"), 2)
-		if size.y > 35:
-			for i in 3:
-				var at := Vector2(r.position.x + 13 + i*17, r.position.y + 10 + i*11)
-				draw_line(at, at+Vector2(0,15), Color("497563"), 2)
-				draw_circle(at+Vector2(4,7), 4, Color("62866a"))
+	draw_catwalk(r)
 
-	if not moving and surface_kind == "steel":
-		for i in range(int(size.x/55)):
-			var root := Vector2(r.position.x+16+i*55,r.position.y+1)
-			var height := 7.0+fposmod(i*13.0,10.0)
-			draw_circle(root+Vector2(0,2),5,Color("405d3f"))
+func draw_catwalk(r: Rect2) -> void:
+	# Thin iron web, warm timber treads and a readable, restrained walking edge.
+	draw_rect(Rect2(r.position+Vector2(1,3),size),Color("102a27",0.65))
+	draw_rect(r,Color("263e36"))
+	draw_texture_rect_region(METAL,r,Rect2(120,180,size.x*3,size.y*3),Color(0.59,0.66,0.52))
+	draw_rect(Rect2(r.position+Vector2(0,size.y-5),Vector2(size.x,5)),Color("1d332b"))
+	for x in range(int(r.position.x+2),int(r.end.x-3),16):
+		var width := minf(14,r.end.x-x-1)
+		draw_rect(Rect2(x,r.position.y,width,4),Color("8d805b"))
+		draw_line(Vector2(x,r.position.y),Vector2(x+width,r.position.y),Color("bdb18a"),1,true)
+		if int(x)%3 == 0:
+			draw_line(Vector2(x+2,r.position.y+2),Vector2(x+width-2,r.position.y+2),Color("4d5440"),1,true)
+	for x in range(int(r.position.x+8),int(r.end.x-3),24):
+		draw_circle(Vector2(x,r.position.y+10),2.2,Color("172f29"))
+		draw_circle(Vector2(x,r.position.y+9),1.2,Color("aa9e74"))
+	# Triangulated under-brackets give platforms weight without affecting collision.
+	for side in [-1,1]:
+		var x: float = side*(size.x/2-8)
+		draw_line(Vector2(x,r.end.y),Vector2(x-side*22,r.end.y+15),Color("283e31"),4,true)
+		draw_line(Vector2(x-side*22,r.end.y+15),Vector2(x-side*45,r.end.y),Color("3c503c"),3,true)
+		draw_line(Vector2(x,r.end.y),Vector2(x-side*22,r.end.y+15),Color("8a8e65"),1,true)
+	if moving:
+		for x in range(int(r.position.x+3),int(r.end.x-6),18):
+			draw_line(Vector2(x,r.position.y+5),Vector2(x+6,r.position.y+12),Color("d2ad5f"),4,true)
+		draw_line(r.position,Vector2(r.end.x,r.position.y),Color("e4c682"),1.5,true)
+	else:
+		for i in range(int(size.x/62)):
+			var root := Vector2(r.position.x+10+i*62,r.position.y+1)
 			for j in 4:
-				var at := root+Vector2(j*1.3,-j*height/4)
-				leaf(at,Vector2(-6-j,-3-j),Color("648254"))
-				leaf(at,Vector2(5+j,-5-j),Color("83a15f"))
-			draw_line(root,root+Vector2(4,-height),Color("b4bd7c"),1,true)
-		if size.y > 35:
-			for i in range(int(size.x/140)):
-				var root := r.position+Vector2(34+i*140,5)
-				for j in 6:
-					var at := root+Vector2(sin(j*1.2)*5,j*7)
-					draw_line(at,at+Vector2(1,9),Color("385e46"),2)
-					leaf(at,Vector2(-7,-2),Color("466e4c"))
-					leaf(at+Vector2(0,4),Vector2(7,1),Color("6b8c50"))
+				var at := root+Vector2(sin(j)*2,j*6)
+				leaf(at,Vector2(-5,-2),Color("557346"))
+				leaf(at+Vector2(0,2),Vector2(5,-1),Color("809455"))
 
 func leaf(at: Vector2, direction: Vector2, color: Color) -> void:
 	var side := Vector2(-direction.y,direction.x).normalized()*2.5
@@ -114,30 +79,32 @@ func box(fill: Color, edge: Color, border: int) -> StyleBoxFlat:
 	return b
 
 func draw_masonry(r: Rect2) -> void:
-	# Individually beveled, weathered masonry beneath a clear iron walking edge.
-	draw_rect(r,Color("263631"))
-	for row in range(int(ceil(size.y/24.0))):
-		var offset := -32.0 if row%2 else 0.0
-		for col in range(int(ceil(size.x/64.0))+1):
-			var left := maxf(r.position.x,r.position.x+offset+col*64)
-			var right := minf(r.end.x,r.position.x+offset+col*64+62)
-			var top := r.position.y+row*24+2
-			var height := minf(21,r.end.y-top)
-			if right <= left or height <= 0:
-				continue
-			var stone := Rect2(left+1,top,right-left-1,height)
-			var tone := 0.80+fposmod(col*17.0+row*11,19)/70
-			draw_style_box(box(Color(0.38,0.39,0.32)*tone,Color("313a31"),1),stone)
-			draw_texture_rect_region(METAL,stone,Rect2(80+(col%5)*140,150+row*75,stone.size.x*2,height*2),Color(1.2,1.15,0.83,0.19))
-			draw_line(stone.position,Vector2(stone.end.x,stone.position.y),Color("a2a18a",0.5),1)
-			draw_line(Vector2(stone.position.x,stone.end.y),stone.end,Color("172b28",0.7),2)
-	# Stone piers connect the deck to the valley floor below the view.
-	for i in range(int(ceil(size.x/200.0))):
-		var x := r.position.x+minf(28+i*200,size.x-40)
-		draw_rect(Rect2(x,r.end.y,28,270),Color("384238"))
-		draw_rect(Rect2(x+2,r.end.y,4,270),Color("63705a"))
-		for j in 9:
-			draw_line(Vector2(x,r.end.y+j*30),Vector2(x+28,r.end.y+j*30),Color("263a30"),2)
+	# Painted stone at a consistent world scale; arches connect the deck to the valley.
+	stone_rect(r)
+	draw_rect(Rect2(r.position+Vector2(0,size.y-10),Vector2(size.x,10)),Color("172e2b",0.35))
+	var bays := maxi(1,int(round(size.x/260.0)))
+	var span := size.x/bays
+	for i in bays:
+		var left := r.position.x+i*span
+		var center := Vector2(left+span/2,r.end.y+maxf(170,span/2+20))
+		var radius := span/2-27
+		stone_rect(Rect2(left,r.end.y,27,290))
+		stone_rect(Rect2(left+span-27,r.end.y,27,290))
+		# A continuous arch ring, rather than a solid rectangle over the opening.
+		for j in 18:
+			var a := PI+j*PI/18
+			var b := PI+(j+1)*PI/18
+			var points := PackedVector2Array([center+Vector2.from_angle(a)*radius,center+Vector2.from_angle(b)*radius,center+Vector2.from_angle(b)*(radius+32),center+Vector2.from_angle(a)*(radius+32)])
+			stone_polygon(points)
+			if j%2 == 0:
+				draw_line(points[0],points[3],Color("26352d",0.75),1,true)
+		# Fill the spandrel above the arch, leaving its interior transparent.
+		for j in 18:
+			var a := center+Vector2.from_angle(PI+j*PI/18)*(radius+31)
+			var b := center+Vector2.from_angle(PI+(j+1)*PI/18)*(radius+31)
+			stone_polygon(PackedVector2Array([Vector2(a.x,r.end.y),Vector2(b.x,r.end.y),b,a]))
+		for edge in [left,left+span-27]:
+			draw_line(Vector2(edge+2,r.end.y),Vector2(edge+2,r.end.y+290),Color("b6ac85",0.25),2)
 	draw_rect(Rect2(r.position-Vector2(0,1),Vector2(size.x,7)),Color("374b44"))
 	draw_line(r.position-Vector2(0,1),Vector2(r.end.x,r.position.y-1),Color("cec39c"),2)
 	for i in range(int(size.x/32)):
@@ -149,3 +116,24 @@ func draw_masonry(r: Rect2) -> void:
 			leaf(at,Vector2(6,-5),Color("88a364"))
 			for j in 3:
 				leaf(at+Vector2(2,j*8),Vector2(6,2),Color("59764b"))
+	# Broad, soft-edged rust streaks and trailing ivy break up repeated tiles.
+	for i in range(int(size.x/110)):
+		var x := r.position.x+26+i*110
+		for j in 9:
+			var at := Vector2(x+sin(j*0.8)*5,r.position.y+j*7)
+			draw_line(at,at+Vector2(0,8),Color("40523a"),2,true)
+			leaf(at,Vector2(-6,-2),Color("58754a"))
+			if j%2 == 0: leaf(at+Vector2(1,4),Vector2(7,-2),Color("809455"))
+
+func stone_rect(rect: Rect2) -> void:
+	# Subdivide so wider decks never stretch the stone courses.
+	for i in range(int(ceil(rect.size.x/384.0))):
+		var width := minf(384,rect.size.x-i*384)
+		var dest := Rect2(rect.position+Vector2(i*384,0),Vector2(width,rect.size.y))
+		draw_texture_rect_region(STONE,dest,Rect2(0,0,width*4,rect.size.y*4),Color(0.69,0.77,0.70))
+
+func stone_polygon(points: PackedVector2Array) -> void:
+	var uv := PackedVector2Array()
+	for p in points:
+		uv.append((p+size/2)*4/Vector2(STONE.get_size()))
+	draw_polygon(points,PackedColorArray([Color(0.57,0.66,0.60)]),uv,STONE)

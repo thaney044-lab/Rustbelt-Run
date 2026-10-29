@@ -41,6 +41,9 @@ func _physics_process(delta: float) -> void:
 	invulnerability = maxf(0,invulnerability-delta)
 	hurt_lock = maxf(0,hurt_lock-delta)
 	queue_redraw()
+	if Input.is_action_just_pressed("restart"):
+		respawn()
+		return
 	if not controls_enabled:
 		return
 	var axis := Input.get_axis("move_left", "move_right")
@@ -61,7 +64,7 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	if is_on_floor() and not was_grounded:
 		get_parent().effects.burst(position+Vector2(0,20),Color("c7bb93",0.6),5)
-	if position.y > 850.0 or Input.is_action_just_pressed("restart"):
+	if position.y > 850.0:
 		respawn()
 
 func set_checkpoint(at: Vector2) -> void:

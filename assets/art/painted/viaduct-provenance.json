@@ -1,0 +1,8 @@
+{
+  "provider": "OpenAI host-native ImageGen",
+  "source": "/workspace/generated_images/exec-54d9c455-26a1-4288-908a-5b2fcfbfefba.png",
+  "integrated": "assets/art/painted/viaduct_stone.png",
+  "prompt": "Create a seamless horizontal tiling game environment material texture, 1536x1024 landscape. Front-on orthographic elevation, absolutely no perspective, no sky, no ground plane, no props, no text. A richly hand-painted realistic weathered industrial railway viaduct masonry wall in warm muted charcoal limestone, old buff sandstone and grey olive stone, irregular rectangular block courses with deeply recessed dark joints, chipped edges, fine layered mineral grain, subtle rust streaks, tiny patches of moss, subtle warm sunlight grazing the top left of individual stones. Eight roughly even horizontal courses of varying stone blocks, each block approximately 200px wide and 120px tall. Material fills entire image edge to edge. Calm high-quality painterly game art to match a realistic late-afternoon overgrown Victorian railway depot scene, restrained color variation, no cartoon black outlines, no round boulders, no large weeds, no dramatic lighting. Flat consistent lighting across full surface, horizontally seamless tileable left and right edges. This is a color texture for solid 2D side-scroller stone platforms and arches.",
+  "negative_prompt": "Included in prompt; no separate negative-prompt parameter.",
+  "processing": "Original PNG copied unchanged; tiling, tint, geometry and scale applied in engine. No third-party stock artwork."
+}
