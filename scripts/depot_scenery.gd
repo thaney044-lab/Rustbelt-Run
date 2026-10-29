@@ -28,10 +28,12 @@ func _draw() -> void:
 	var scroll := camera.get_screen_center_position().x - 576.0
 	living.scroll = scroll
 	# An oversized panorama has sufficient bleed for the entire level's slow parallax.
-	draw_texture_rect(PANORAMA,Rect2(-20-scroll*0.065,-22,1640,703),false,Color(0.76,0.82,0.80))
 	var transition := smoothstep(3400.0,4100.0,lab.player.position.x)
+	if transition < 1.0:
+		draw_texture_rect(PANORAMA,Rect2(-20-scroll*0.065,-22,1640,703),false,Color(0.76,0.82,0.80))
 	var foundry_scroll := clampf((lab.player.position.x-3000.0)*0.18,0,450)
-	draw_texture_rect(FOUNDRY,Rect2(-40-foundry_scroll,-5,1880,687),false,Color(0.79,0.82,0.83,transition))
+	if transition > 0.0:
+		draw_texture_rect(FOUNDRY,Rect2(-40-foundry_scroll,-5,1880,687),false,Color(0.79,0.82,0.83,transition))
 	# Low mist sits behind the playable layer, never obscuring hazards or targets.
 	for i in 8:
 		var y := 380+i*12.0+sin(time*0.15+i)*4

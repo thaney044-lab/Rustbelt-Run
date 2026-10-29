@@ -6,7 +6,7 @@ A 2D puzzle platformer following a fox mechanic through an overgrown industrial 
 
 Godot **4.6.3**, GDScript, Compatibility renderer. Open `project.godot` and press **F6** on `scenes/movement_lab.tscn`, or press **F5** to run the project. From a terminal in this directory: `godot --path .`.
 
-First Shift connects five areas: Cinder Yard, the repair works, piston hall, flooded viaduct and the foundry. Painted stone viaducts, iron catwalks, cables, lanterns and animated ferns tie the playable route into the industrial valley. The fox has acceleration, variable jump height, coyote time, jump buffering, a follow camera and checkpoint recovery. The main route combines patrol combat, a crane repair puzzle, timed pistons, canal crossings and a powered hoist.
+First Shift connects five areas: Cinder Yard, the repair works, piston hall, flooded viaduct and the foundry. Painted stone viaducts, iron catwalks, cables, lanterns and ferns tie the playable route into the industrial valley. The fox has acceleration, variable jump height, coyote time, jump buffering, a follow camera and checkpoint recovery. The main route combines patrol combat, a crane repair puzzle, timed pistons, canal crossings and a powered hoist.
 
 - Move: A/D, arrows, controller left stick or D-pad.
 - Jump: Space or controller A; release early for a short hop.
@@ -70,6 +70,8 @@ The repository includes `.github/workflows/deploy-web.yml`. It verifies official
 3. After deployment succeeds, open the URL reported by the deployment job. Players only need that browser link; they do not download or install the game.
 
 This workflow is active and publishes tested updates to the existing Pages URL.
+
+Static scenery is cached in independently culled sections, and small decorative shapes share mesh batches. The web game renders at its design resolution before scaling to larger/high-DPI windows. This reduces per-frame work while retaining the painted assets and animated background layers. See [performance measurements and limits](docs/PERFORMANCE.md).
 
 Artwork notes and provenance: [assets/art/README.md](assets/art/README.md).
 
