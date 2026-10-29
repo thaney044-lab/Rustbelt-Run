@@ -3,6 +3,7 @@ extends Node2D
 var lab: Node2D
 var camera: Camera2D
 var time := 0.0
+const FOUNDRY = preload("res://assets/art/painted/foundry_panorama.png")
 const PANORAMA = preload("res://assets/art/painted/depot_panorama.png")
 
 func _process(delta: float) -> void:
@@ -19,6 +20,13 @@ func _draw() -> void:
 	var scroll := camera.get_screen_center_position().x - 576.0
 	# An oversized panorama has sufficient bleed for the entire level's slow parallax.
 	draw_texture_rect(PANORAMA,Rect2(-20-scroll*0.065,-22,1640,703),false,Color(0.76,0.82,0.80))
+	var transition := smoothstep(3400.0,4100.0,lab.player.position.x)
+	var foundry_scroll := clampf((lab.player.position.x-3000.0)*0.18,0,450)
+	draw_texture_rect(FOUNDRY,Rect2(-40-foundry_scroll,-5,1880,687),false,Color(0.79,0.82,0.83,transition))
+	# Low mist sits behind the playable layer, never obscuring hazards or targets.
+	for i in 8:
+		var y := 380+i*12.0+sin(time*0.15+i)*4
+		draw_rect(Rect2(-20,y,1200,24),Color(0.45,0.64,0.64,transition*0.013))
 	# Atmospheric shadow separates the bright readable playfield from distant detail.
 	for i in 18:
 		draw_rect(Rect2(0,320+i*20,1152,20),Color(0.04,0.12,0.14,float(i)*0.016))

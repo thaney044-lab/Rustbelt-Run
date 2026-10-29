@@ -12,7 +12,7 @@ func _ready() -> void:
 	water.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var water_material := ShaderMaterial.new()
 	water_material.shader = preload("res://shaders/canal_water.gdshader")
-	water_material.set_shader_parameter("panorama",preload("res://assets/art/painted/depot_panorama.png"))
+	water_material.set_shader_parameter("panorama",preload("res://assets/art/painted/foundry_panorama.png"))
 	water.material = water_material
 	add_child(water)
 	lab.platform(Vector2(4400,560),Vector2(200,80))
@@ -30,7 +30,7 @@ func _physics_process(delta: float) -> void:
 	var p: CharacterBody2D = lab.player
 	if p.position.x > 4330 and p.position.x < 4500 and p.is_on_floor() and not active:
 		active = true
-		p.spawn_point = Vector2(4370,490)
+		p.set_checkpoint(Vector2(4370,490))
 	if not active:
 		return
 	if p.position.x > 4280 and p.position.y > 620:

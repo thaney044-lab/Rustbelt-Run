@@ -46,7 +46,7 @@ func _physics_process(delta: float) -> void:
 	var player: CharacterBody2D = lab.player
 	if player.position.x > 2780 and player.position.x < 2990 and player.is_on_floor() and not checkpoint_active:
 		checkpoint_active = true
-		player.spawn_point = Vector2(2780,490)
+		player.set_checkpoint(Vector2(2780,490))
 		time = 0
 	if player.position.distance_to(SECRET) < 29 and not secret_found:
 		secret_found = true

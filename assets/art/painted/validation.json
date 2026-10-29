@@ -24,6 +24,22 @@
         1254
       ],
       "mode": "RGB"
+    },
+    "foundry_panorama.png": {
+      "sha256": "64dbf18c81c72d01a0cab482bb461f4c404b92ab3fd3a2b1113476f22b3a39fa",
+      "size": [
+        2075,
+        758
+      ],
+      "mode": "RGB"
+    },
+    "patrol_bot.png": {
+      "sha256": "c588020763434f8edaff711f0d9db168409cdf6de75063f43355178534337270",
+      "size": [
+        1346,
+        1168
+      ],
+      "mode": "RGBA"
     }
   },
   "sprite_layout": {
@@ -81,5 +97,15 @@
         322
       ]
     ]
-  }
+  },
+  "patrol_bot_region": [
+    162,
+    203,
+    1087,
+    795
+  ],
+  "patrol_bot_display_size": [
+    50,
+    36.6
+  ]
 }

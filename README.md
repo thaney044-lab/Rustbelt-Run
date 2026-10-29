@@ -12,7 +12,7 @@ The game uses a painted art pass: an animated fox mechanic, a detailed industria
 - Jump: Space or controller A; release early for a short hop.
 - Retry: R. Reach the flag to set the checkpoint.
 
-The next section is a repair yard: J swings the wrench, K throws it toward a highlighted switch, E carries/inserts the battery or uses the crane control, and T resets the puzzle at its checkpoint. Controller bindings: X swing, B throw, Y use, Back reset. Lower the crane bridge and cross to the exit. Falls restore the whole puzzle to a recoverable state. Enemies, final production art/audio, menus, remapping, persistence, and Windows exports are planned, not implemented. Controller bindings exist but have not been tested with physical hardware. The owner has playtested and approved the movement; new art and level additions still benefit from further playtesting.
+The next section is a repair yard: J swings the wrench, K throws it toward a highlighted switch, E carries/inserts the battery or uses the crane control, and T resets the puzzle at its checkpoint. Controller bindings: X swing, B throw, Y use, Back reset. Lower the crane bridge and cross to the exit. Falls restore the whole puzzle to a recoverable state. Patrol bots, three health points, brief damage protection and optional scrap trails are now implemented. Final production audio, menus, remapping, persistence, and Windows exports remain planned. Controller bindings exist but have not been tested with physical hardware. The owner has playtested and approved the movement; new art and level additions still benefit from further playtesting.
 
 See [the implementation plan](docs/IMPLEMENTATION_PLAN.md) for milestones and acceptance criteria based on the supplied v0.1 outline. Godot is the initial default; the outline did not specify an engine.
 
@@ -26,6 +26,7 @@ godot --headless --path . --script tests/repair_smoke.gd
 godot --headless --path . --script tests/passage_smoke.gd
 godot --headless --path . --script tests/canal_smoke.gd
 godot --headless --path . --script tests/art_smoke.gd
+godot --headless --path . --script tests/gameplay_smoke.gd
 ```
 
 The smoke test exercises real physics: landing, different jump heights, checkpoint activation, fall recovery, and moving-platform carrying. It exits nonzero on failure.
@@ -74,3 +75,11 @@ Continue right after lowering the crane. A checkpoint before the piston passage 
 Additional validation: `godot --headless --path . --script tests/passage_smoke.gd`.
 
 The route now continues beyond the freight yard into a flooded service canal with a checkpoint, moving maintenance lift and foundry gate. Use the FULLSCREEN button for a larger browser view. The camera is 12% closer; movement and collision dimensions are unchanged. Additional test: `godot --headless --path . --script tests/canal_smoke.gd`.
+
+## Patrols, health and scrap
+
+Three patrol robots guard safe-ground routes. J swings the wrench, K throws toward a highlighted robot in front of you, and landing on a bot's flat top disables it with a bounce. Side contact costs one of three health points and knocks you clear; temporary protection prevents repeated hits. Losing all health returns you to the current checkpoint. Checkpoints restore health. Patrols and puzzle objects reset after a retry; collected scrap remains collected for the current play session. The 29 optional scrap pieces suggest jump paths and reward detours; none are required to finish.
+
+When no bot is targeted in the repair yard, K continues to operate the existing switch puzzle. There is only one thrown wrench at a time. The HUD shows health and scrap totals. No new input bindings are required.
+
+The background transitions from the rail depot to a separate canal/foundry painting near the final piston passage. Trestles support the larger decks visually, and the canal reflection uses the foundry scene. These supports remain decorative, with all original landing/collision dimensions intact.

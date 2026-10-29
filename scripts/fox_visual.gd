@@ -18,6 +18,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	time += delta
+	modulate.a = 0.65+sin(time*14)*0.20 if player.invulnerability > 0 else 1.0
 	action_time = maxf(0.0,action_time-delta)
 	if Input.is_action_just_pressed("swing"):
 		action_time = 0.22

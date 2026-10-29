@@ -6,6 +6,7 @@ var player: CharacterBody2D
 var status: Label
 var checkpoint_reached := false
 var effects: Node2D
+var combat: Node2D
 
 func _ready() -> void:
 	effects = preload("res://scripts/visual_effects.gd").new()
@@ -54,6 +55,7 @@ func _ready() -> void:
 	hud.add_child(status)
 	var fullscreen := Button.new()
 	fullscreen.text = "FULLSCREEN"
+	fullscreen.focus_mode = Control.FOCUS_NONE
 	fullscreen.position = Vector2(1000,22)
 	fullscreen.add_theme_font_size_override("font_size",13)
 	var button_style := backing.duplicate()
@@ -82,6 +84,13 @@ func _ready() -> void:
 	var canal := preload("res://scripts/canal_crossing.gd").new()
 	canal.lab = self
 	add_child(canal)
+	combat = preload("res://scripts/gameplay.gd").new()
+	combat.lab = self
+	combat.yard = yard
+	add_child(combat)
+	var vitals := preload("res://scripts/vitals_hud.gd").new()
+	vitals.lab = self
+	hud.add_child(vitals)
 	var scenery_layer := CanvasLayer.new()
 	scenery_layer.layer = -10
 	var scenery := preload("res://scripts/depot_scenery.gd").new()
@@ -166,7 +175,7 @@ func label_at(text: String, at: Vector2) -> void:
 func _physics_process(_delta: float) -> void:
 	if player.position.x > 980 and player.position.x < 1130 and player.is_on_floor() and not checkpoint_reached:
 		checkpoint_reached = true
-		player.spawn_point = Vector2(1020, 490)
+		player.set_checkpoint(Vector2(1020, 490))
 		status.text = "RUSTBELT RUN   /   CHECKPOINT REACHED\nContinue right to the repair yard.  R returns here."
 
 func _draw() -> void:

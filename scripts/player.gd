@@ -14,6 +14,9 @@ var jump_buffer := 0.0
 var spawn_point := Vector2(100, 490)
 var controls_enabled := true
 var animation_time := 0.0
+var health := 3
+var invulnerability := 0.0
+var hurt_lock := 0.0
 
 
 func _ready() -> void:
@@ -35,13 +38,16 @@ func _draw() -> void:
 
 func _physics_process(delta: float) -> void:
 	animation_time += delta
+	invulnerability = maxf(0,invulnerability-delta)
+	hurt_lock = maxf(0,hurt_lock-delta)
 	queue_redraw()
 	if not controls_enabled:
 		return
 	var axis := Input.get_axis("move_left", "move_right")
 	if absf(axis) > 0.1:
 		facing = signf(axis)
-	velocity.x = move_toward(velocity.x, axis * SPEED, ACCELERATION * delta)
+	if hurt_lock <= 0:
+		velocity.x = move_toward(velocity.x, axis * SPEED, ACCELERATION * delta)
 	coyote = COYOTE_TIME if is_on_floor() else maxf(0.0, coyote - delta)
 	jump_buffer = BUFFER_TIME if Input.is_action_just_pressed("jump") else maxf(0.0, jump_buffer - delta)
 	if jump_buffer > 0.0 and coyote > 0.0:
@@ -58,7 +64,27 @@ func _physics_process(delta: float) -> void:
 	if position.y > 850.0 or Input.is_action_just_pressed("restart"):
 		respawn()
 
+func set_checkpoint(at: Vector2) -> void:
+	spawn_point = at
+	health = 3
+
+func take_damage(source_x: float) -> bool:
+	if invulnerability > 0:
+		return false
+	health -= 1
+	if health <= 0:
+		respawn()
+	else:
+		invulnerability = 1.1
+		hurt_lock = 0.20
+		velocity = Vector2(-190 if source_x > position.x else 190,-240)
+		get_parent().effects.burst(position,Color("e59b73"),8)
+	return true
+
 func respawn() -> void:
+	health = 3
+	invulnerability = 0.5
+	hurt_lock = 0
 	position = spawn_point
 	velocity = Vector2.ZERO
 	coyote = 0.0

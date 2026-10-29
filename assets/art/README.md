@@ -20,3 +20,9 @@ All three sources were created using the host-native OpenAI ImageGen tool for th
 - Existing SVGs remain as earlier source artwork and the project emblem; the fox no longer uses the old vector head during gameplay.
 
 Collision dimensions, movement tuning, puzzle state, hazard timing and level layout are preserved. Art tests verify transparency, atlas layout and pose selection; gameplay tests verify the existing mechanics. Browser screenshots are still needed to assess readability and shaders.
+
+## Foundry and patrol update
+
+`painted/foundry_panorama.png` is a new 2075×758 district painting, blended into the backdrop as the fox approaches the canal. `painted/patrol_bot.png` is a transparent 1346×1168 single robot sprite; its padded source region is rendered at one shared aspect ratio, mirrored with patrol direction. Both were generated with host-native ImageGen. Full prompts and source references are in `painted/foundry-and-bot-provenance.json`, with hashes/dimensions in `painted/validation.json`.
+
+Trestle supports beneath large decks give the gameplay layer a structural connection to the valley. They are decorative and do not change collision or moving-platform paths.

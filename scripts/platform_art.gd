@@ -25,6 +25,16 @@ func _draw() -> void:
 			draw_line(Vector2(-7, y), Vector2(7, y+8), Color("d39450"), 6)
 		draw_rect(Rect2(-size.x/2-3, r.position.y, size.x+6, 7), Color("e6c77c"))
 		return
+	if not moving and size.y > 35 and size.x > 100:
+		# The decks are now visibly carried by iron trestles, not floating slabs.
+		for i in range(int(ceil(size.x/200.0))):
+			var x := r.position.x+minf(38+i*200,size.x-25)
+			var base := r.end.y-2
+			draw_rect(Rect2(x-9,base,18,270),Color("142d30"))
+			draw_texture_rect_region(METAL,Rect2(x-7,base,14,270),Rect2(220,220,42,810),Color(0.32,0.46,0.42))
+			for j in 3:
+				draw_line(Vector2(x-6,base+j*78),Vector2(x+48,base+62+j*78),Color("26423e"),5)
+				draw_circle(Vector2(x,base+12+j*78),2,Color("7b8b71"))
 	draw_rect(Rect2(r.position+Vector2(1,4),size),Color(0.02,0.06,0.07,0.3))
 	draw_style_box(box(base_color, Color("1d3035"), 3), r)
 	for i in range(int(ceil(size.x/96.0))):

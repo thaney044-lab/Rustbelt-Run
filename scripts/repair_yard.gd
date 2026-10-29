@@ -108,7 +108,7 @@ func target_in_front(at: Vector2, reach: float) -> bool:
 	return difference.length() <= reach and difference.x * player.facing >= -12
 
 func swing() -> void:
-	if wrench_out:
+	if wrench_out or (lab.combat and lab.combat.flight_active):
 		return
 	swing_time = 0.2
 	if not crate_broken and target_in_front(crate.position, 80):
@@ -122,7 +122,7 @@ func swing() -> void:
 		hint = "Crane moving to its other fixed stop."
 
 func throw_wrench() -> void:
-	if wrench_out:
+	if wrench_out or (lab.combat and lab.combat.flight_active):
 		return
 	wrench_out = true
 	wrench_returning = false
@@ -151,7 +151,7 @@ func interact() -> void:
 func _physics_process(delta: float) -> void:
 	if not entered and player.position.x > 1780 and player.is_on_floor():
 		entered = true
-		player.spawn_point = Vector2(1800, 490)
+		player.set_checkpoint(Vector2(1800, 490))
 		hint = "Repair checkpoint active. J breaks the marked crate."
 	if not entered:
 		return
