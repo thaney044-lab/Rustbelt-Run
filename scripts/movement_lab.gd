@@ -25,7 +25,7 @@ func _ready() -> void:
 	var camera := Camera2D.new()
 	camera.position = Vector2(180, -80)
 	camera.limit_left = 0
-	camera.limit_right = 3000
+	camera.limit_right = 4320
 	camera.limit_top = 0
 	camera.limit_bottom = 720
 	player.add_child(camera)
@@ -54,6 +54,9 @@ func _ready() -> void:
 	var yard := preload("res://scripts/repair_yard.gd").new()
 	yard.lab = self
 	add_child(yard)
+	var passage := preload("res://scripts/piston_passage.gd").new()
+	passage.lab = self
+	add_child(passage)
 	var scenery_layer := CanvasLayer.new()
 	scenery_layer.layer = -10
 	var scenery := preload("res://scripts/depot_scenery.gd").new()

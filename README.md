@@ -63,3 +63,9 @@ The repository includes `.github/workflows/deploy-web.yml`. It verifies official
 These hosting steps have been prepared but have not been executed from this environment. The Pages URL is not live until the workflow successfully deploys.
 
 Artwork notes and provenance: [assets/art/README.md](assets/art/README.md).
+
+## Piston passage and loft secret
+
+Continue right after lowering the crane. A checkpoint before the piston passage restores you to safety and restarts its timing after a hit. Amber lights with an exclamation mark warn before descent. Wait for a head to retract, then cross beneath it. The maintenance loft above the checkpoint contains an optional machine part, retained across retries during the current play session (not saved after a page reload). Reach the freight car and PATCH to finish this prototype stage; R replays the passage. The train is a stationary finish illustration, not the planned moving-train sequence.
+
+Additional validation: `godot --headless --path . --script tests/passage_smoke.gd`.

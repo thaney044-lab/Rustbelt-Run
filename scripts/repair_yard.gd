@@ -181,7 +181,7 @@ func _physics_process(delta: float) -> void:
 	if player.position.x > 2720 and player.is_on_floor():
 		complete = true
 	if complete:
-		lab.status.text = "REPAIR COMPLETE — route restored!\nT: reset the puzzle and play again."
+		lab.status.text = "CRANE REPAIRED  /  ROUTE RESTORED\nContinue right to the maintenance loft and piston passage."
 	else:
 		lab.status.text = "REPAIR YARD   /   J swing   K throw   E use   T reset\n" + hint
 	queue_redraw()
