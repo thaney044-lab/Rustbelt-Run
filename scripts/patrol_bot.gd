@@ -28,7 +28,7 @@ func defeat() -> void:
 		return
 	alive = false
 	age = 0
-	lab.effects.burst(position,Color("e6c27e"),12)
+	lab.effects.robot_breakup(position + Vector2(0, -8), direction)
 	queue_redraw()
 
 func contact_player(player: CharacterBody2D) -> void:
@@ -59,9 +59,9 @@ func is_targeted() -> bool:
 	return alive and lab.combat.nearest_target() == self
 
 func _draw() -> void:
-	if not alive and age >= 0.6:
+	if not alive and age >= 1.0:
 		return
-	var alpha := 1.0 if alive else maxf(0.0, 1.0 - age / 0.6)
+	var alpha := 1.0 if alive else 1.0 - smoothstep(0.55, 1.0, age)
 	var targeted := is_targeted()
 	draw_set_transform(Vector2(0, 18), 0, Vector2(1, 0.22))
 	draw_circle(Vector2.ZERO, 28, Color(0.02, 0.07, 0.08, 0.3 * alpha))
@@ -73,8 +73,9 @@ func _draw() -> void:
 			var at := Vector2(-28 * direction - phase * 7 * direction, -28 - phase * 17)
 			draw_circle(at, 1.5 + phase * 3.5, Color(0.69, 0.76, 0.68, (1.0 - phase) * 0.22))
 	# Tip around the feet on defeat instead of spinning around the body center.
-	var tilt := 0.0 if alive else age * 1.5 * direction
-	draw_set_transform(Vector2(0, 18), tilt, Vector2(direction * 1.4, 1.4))
+	var collapse := 0.0 if alive else smoothstep(0.08, 0.35, age)
+	var tilt := collapse * 0.28 * direction
+	draw_set_transform(Vector2(0, 18), tilt, Vector2(direction * 1.4, 1.4 * (1.0 - collapse * 0.6)))
 	var body_rect := Rect2(-25, -34.6, 50, 36.6)
 	if art:
 		draw_texture_rect_region(art, body_rect, sprite_region, Color(1, 1, 1, alpha))
@@ -96,6 +97,10 @@ func _draw() -> void:
 	draw_circle(lens, 2, Color(1.0, 0.8, 0.33, alpha))
 	draw_circle(lens + Vector2(0, -0.7), 0.8, Color(1.0, 0.96, 0.76, alpha))
 	draw_set_transform(Vector2.ZERO)
+	if not alive and age < 0.16:
+		var flash := 1.0 - age / 0.16
+		draw_circle(Vector2(0, -8), 12 + age * 85, Color(1.0, 0.86, 0.52, flash * 0.7))
+		draw_arc(Vector2(0, -8), 14 + age * 150, 0, TAU, 32, Color(1.0, 0.94, 0.72, flash), 2, true)
 	if targeted:
 		# Node2D drawing uses local coordinates, never the bot's world position.
 		var radius := 39.0 + sin(age * 4) * 1.0

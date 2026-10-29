@@ -39,14 +39,3 @@ func _draw() -> void:
 			var radius := 20+age*55
 			var at := Vector2(x+age*35,300-age*155)
 			draw_texture_rect(steam_texture,Rect2(at-Vector2.ONE*radius,Vector2.ONE*radius*2),false,Color(0.91,0.96,0.94,sin(age*PI)*0.70))
-	# Near flywheels turn on supporting girders at a faster parallax depth.
-	for i in range(-1,4):
-		var x := i*540.0-fposmod(scroll*.5,540.0)+240
-		var center := Vector2(x,560)
-		draw_line(center,center+Vector2(0,140),Color("1f3839",0.75),9)
-		draw_arc(center,35,0,TAU,40,Color("243f3e",0.8),6,true)
-		draw_arc(center,31,0,TAU,40,Color("728577",0.45),2,true)
-		for spoke in 6:
-			var angle := time*.42+spoke*TAU/6
-			draw_line(center,center+Vector2.from_angle(angle)*31,Color("425e53",0.8),4,true)
-		draw_circle(center,7,Color("b2925c",0.6))

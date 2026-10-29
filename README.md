@@ -19,11 +19,13 @@ In the repair yard, J swings the wrench, K throws it toward a highlighted switch
 
 See [the implementation plan](docs/IMPLEMENTATION_PLAN.md) for milestones and acceptance criteria based on the supplied v0.1 outline. Godot is the initial default; the outline did not specify an engine.
 
+The repeating foreground flywheels have been removed so bottom-of-screen machinery no longer appears to follow the player.
+
 ## Item graphics polish
 
 Catwalks have cross-braced metal webs, brass rivets, timber treads and bounded under-brackets. Moving decks use amber hazard stripes and paired lamps; stone decks have segmented coping aligned to their collision top. Wooden crates have grain, diagonal braces and metal straps, while gates have inset hazard panels and reinforced rails.
 
-Cinder Yard uses staggered ledges instead of closely stacked decks. Patrol bots render 40% larger and retain their painted artwork with animated brass wheel hubs, exhaust steam, a pulsing lens and a foot-pivot defeat animation. The targeting brackets use local coordinates and highlight only the nearest valid wrench target. Collision shapes, movement speeds and jump tuning are unchanged. The art smoke test checks target priority, facing, defeated-target handoff and animation reset.
+Cinder Yard uses staggered ledges instead of closely stacked decks. Patrol bots render 40% larger and retain their painted artwork with animated brass wheel hubs, exhaust steam, a pulsing lens and a collapsing defeat animation with an impact flash, spinning metal fragments and rising smoke. The targeting brackets use local coordinates and highlight only the nearest valid wrench target. Collision shapes, movement speeds and jump tuning are unchanged. The art smoke test checks target priority, facing, defeated-target handoff and animation reset.
 
 ## Validation
 
@@ -97,7 +99,7 @@ When no bot is targeted in the repair yard, K continues to operate the existing 
 
 The background transitions from the rail depot to a separate canal/foundry painting near the final piston passage. Trestles support the larger decks visually, and the canal reflection uses the foundry scene. These supports remain decorative, with all original landing/collision dimensions intact.
 
-The fox artwork is now about 23% larger, anchored to the same foot position. The painted backdrop is augmented by independent cloud drift, rising steam, rotating flywheels at a nearer parallax depth, and animated distant water. Player collision dimensions and jump tuning are unchanged.
+The fox artwork is now about 23% larger, anchored to the same foot position. The painted backdrop is augmented by independent cloud drift, rising steam, and animated distant water. Player collision dimensions and jump tuning are unchanged.
 
 The decorative low-opacity background train has been removed. Large static decks use a bespoke painted stone material and arched viaduct supports; catwalks use textured iron, timber treads and under-brackets. The foundry service run has a proximity-operated E control, vertical hoist, upper catwalks, moving gantry, two checkpoints and a workshop landing. The route spans 8,860 world units, with optional upper paths in Cinder Yard and the foundry. See [the level design notes](docs/FIRST_SHIFT_LEVEL.md).
 
