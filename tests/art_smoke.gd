@@ -38,4 +38,21 @@ func run() -> void:
 	await process_frame
 	check(fox.frame == 7,"wrench input selects the swing pose")
 	Input.action_release("swing")
+	# The visible reticle must agree with the wrench's actual target.
+	var near_bot = scene.combat.enemies[0]
+	var far_bot = scene.combat.enemies[1]
+	near_bot.set_physics_process(false)
+	far_bot.set_physics_process(false)
+	scene.player.position = Vector2(100, 499)
+	scene.player.facing = 1
+	near_bot.position = Vector2(180, 499)
+	far_bot.position = Vector2(220, 499)
+	check(near_bot.is_targeted() and not far_bot.is_targeted(), "only the nearest wrench target is highlighted")
+	scene.player.facing = -1
+	check(not near_bot.is_targeted(), "targets behind the player are not highlighted")
+	scene.player.facing = 1
+	near_bot.defeat()
+	check(not near_bot.is_targeted() and far_bot.is_targeted(), "defeated enemies hand targeting to the next live bot")
+	near_bot.reset()
+	check(near_bot.alive and near_bot.position == near_bot.home and near_bot.wheel_rotation == 0, "retry resets enemy animation and patrol position")
 	quit(1 if failures else 0)

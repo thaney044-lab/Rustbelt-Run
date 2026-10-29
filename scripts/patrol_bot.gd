@@ -9,6 +9,7 @@ var age := 0.0
 var home := Vector2.ZERO
 var art: Texture2D
 var sprite_region := Rect2()
+var wheel_rotation := 0.0
 
 func _ready() -> void:
 	home = position
@@ -19,6 +20,7 @@ func reset() -> void:
 	position = home
 	direction = 1.0
 	age = 0
+	wheel_rotation = 0
 	queue_redraw()
 
 func defeat() -> void:
@@ -43,6 +45,7 @@ func contact_player(player: CharacterBody2D) -> void:
 func _physics_process(delta: float) -> void:
 	age += delta
 	if alive:
+		wheel_rotation += direction * 48 * delta / 5.0
 		position.x = clampf(position.x+direction*48*delta,patrol_left,patrol_right)
 		if position.x >= patrol_right:
 			direction = -1
@@ -51,20 +54,52 @@ func _physics_process(delta: float) -> void:
 		contact_player(lab.player)
 	queue_redraw()
 
+func is_targeted() -> bool:
+	# Match the actual wrench selection, including nearest-target priority.
+	return alive and lab.combat.nearest_target() == self
+
 func _draw() -> void:
-	if not alive and age > 0.6:
+	if not alive and age >= 0.6:
 		return
-	var alpha := 1.0 if alive else maxf(0.0,1.0-age/0.6)
-	draw_set_transform(Vector2(0,18),0,Vector2(1,0.22))
-	draw_circle(Vector2.ZERO,19,Color(0.02,0.07,0.08,0.3*alpha))
-	draw_set_transform(Vector2(0,sin(age*11)*0.6),0 if alive else age*1.5,Vector2(direction,1))
-	if art:
-		draw_texture_rect_region(art,Rect2(-25,-16.6,50,36.6),sprite_region,Color(1,1,1,alpha))
-	else:
-		draw_rect(Rect2(-18,-16,36,29),Color("497773"))
-		for x in [-12,12]:
-			draw_circle(Vector2(x,14),7,Color("20383a"))
-		draw_circle(Vector2(9,-4),5,Color("e7b35e"))
+	var alpha := 1.0 if alive else maxf(0.0, 1.0 - age / 0.6)
+	var targeted := is_targeted()
+	draw_set_transform(Vector2(0, 18), 0, Vector2(1, 0.22))
+	draw_circle(Vector2.ZERO, 21, Color(0.02, 0.07, 0.08, 0.3 * alpha))
 	draw_set_transform(Vector2.ZERO)
-	if alive and lab.player.position.distance_to(position) < 250 and (position.x-lab.player.position.x)*lab.player.facing > 0:
-		draw_arc(position,29,0,TAU,28,Color("edcf8b",0.7),1.5,true)
+	if alive:
+		# Faint steam behind the exhaust; particles stay decorative.
+		for i in 3:
+			var phase := fposmod(age * 0.9 + i / 3.0, 1.0)
+			var at := Vector2(-20 * direction - phase * 7 * direction, -15 - phase * 17)
+			draw_circle(at, 1.5 + phase * 3.5, Color(0.69, 0.76, 0.68, (1.0 - phase) * 0.22))
+	# Tip around the feet on defeat instead of spinning around the body center.
+	var tilt := 0.0 if alive else age * 1.5 * direction
+	draw_set_transform(Vector2(0, 18), tilt, Vector2(direction, 1))
+	var body_rect := Rect2(-25, -34.6, 50, 36.6)
+	if art:
+		draw_texture_rect_region(art, body_rect, sprite_region, Color(1, 1, 1, alpha))
+	else:
+		draw_rect(Rect2(-18, -34, 36, 29), Color(0.29, 0.47, 0.45, alpha))
+		for x in [-12, 12]:
+			draw_circle(Vector2(x, -4), 7, Color(0.13, 0.22, 0.23, alpha))
+	# Brass hub spokes animate the painted wheels without moving the contact plane.
+	for x in [-12.0, 15.0]:
+		var hub := Vector2(x, -4.1)
+		draw_circle(hub, 2.5, Color(0.26, 0.22, 0.13, alpha))
+		for spoke in 3:
+			var offset := Vector2.from_angle(wheel_rotation * direction + spoke * TAU / 3) * 2.1
+			draw_line(hub, hub + offset, Color(0.88, 0.65, 0.32, alpha), 0.8, true)
+		draw_circle(hub, 0.8, Color(1.0, 0.86, 0.57, alpha))
+	var lens := Vector2(20, -18)
+	var pulse := 0.5 + 0.5 * sin(age * 5)
+	draw_circle(lens, 6, Color(1.0, 0.69, 0.22, (0.06 + pulse * 0.04) * alpha))
+	draw_circle(lens, 2, Color(1.0, 0.8, 0.33, alpha))
+	draw_circle(lens + Vector2(0, -0.7), 0.8, Color(1.0, 0.96, 0.76, alpha))
+	draw_set_transform(Vector2.ZERO)
+	if targeted:
+		# Node2D drawing uses local coordinates, never the bot's world position.
+		var radius := 29.0 + sin(age * 4) * 1.0
+		for quadrant in 4:
+			var angle := PI / 4 + quadrant * PI / 2
+			draw_arc(Vector2.ZERO, radius, angle - 0.18, angle + 0.18, 8, Color("ffe0a0", 0.9), 1.5, true)
+		draw_colored_polygon(PackedVector2Array([Vector2(-3, -35), Vector2(3, -35), Vector2(0, -31)]), Color("ffe0a0"))

@@ -36,10 +36,6 @@ func _ready() -> void:
 	gate = body(Vector2(2140, 465), Vector2(20, 110), Color("ac6651"))
 	gate_shape = gate.get_child(0)
 	crate = body(Vector2(1910, 497), Vector2(42, 46), Color("ad8456"))
-	var crate_mark := Label.new()
-	crate_mark.text = "X"
-	crate_mark.position = Vector2(-8, -15)
-	crate.add_child(crate_mark)
 	bridge = AnimatableBody2D.new()
 	bridge.position = Vector2(2375, 375)
 	add_shape(bridge, Vector2(310, 20), Color("dfb85d"))

@@ -19,6 +19,12 @@ In the repair yard, J swings the wrench, K throws it toward a highlighted switch
 
 See [the implementation plan](docs/IMPLEMENTATION_PLAN.md) for milestones and acceptance criteria based on the supplied v0.1 outline. Godot is the initial default; the outline did not specify an engine.
 
+## Item graphics polish
+
+Catwalks have cross-braced metal webs, brass rivets, timber treads and bounded under-brackets. Moving decks use amber hazard stripes and paired lamps; stone decks have segmented coping aligned to their collision top. Wooden crates have grain, diagonal braces and metal straps, while gates have inset hazard panels and reinforced rails.
+
+Patrol bots retain their painted artwork with animated brass wheel hubs, exhaust steam, a pulsing lens and a foot-pivot defeat animation. The targeting brackets use local coordinates and highlight only the nearest valid wrench target. Collision shapes, movement speeds and jump tuning are unchanged. The art smoke test checks target priority, facing, defeated-target handoff and animation reset.
+
 ## Validation
 
 ```sh

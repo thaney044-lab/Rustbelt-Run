@@ -22,18 +22,11 @@ func _draw() -> void:
 	stonework = DrawBatch.new()
 	var r := Rect2(-size / 2, size)
 	if surface_kind == "crate":
-		draw_style_box(box(Color("8b5137"), Color("302e2b"), 3), r)
-		for x in [-13, 0, 13]:
-			foliage.line(Vector2(x, r.position.y + 3), Vector2(x, r.end.y - 3), Color("b5794e"), 2)
-		foliage.line(r.position + Vector2(5, 5), r.end - Vector2(5, 5), Color("e0a66c"), 5)
-		foliage.line(Vector2(r.end.x-5, r.position.y+5), Vector2(r.position.x+5, r.end.y-5), Color("e0a66c"), 5)
+		draw_crate(r)
 		draw_foliage()
 		return
 	if surface_kind == "gate":
-		draw_style_box(box(Color("25383b"), Color("18282b"), 3), r)
-		for y in range(int(r.position.y + 5), int(r.end.y), 15):
-			foliage.line(Vector2(-7, y), Vector2(7, y+8), Color("d39450"), 6)
-		draw_rect(Rect2(-size.x/2-3, r.position.y, size.x+6, 7), Color("e6c77c"))
+		draw_gate(r)
 		draw_foliage()
 		return
 	if not moving and size.y > 35 and size.x > 100:
@@ -44,37 +37,80 @@ func _draw() -> void:
 	draw_foliage()
 
 func draw_catwalk(r: Rect2) -> void:
-	# Thin iron web, warm timber treads and a readable, restrained walking edge.
-	draw_rect(Rect2(r.position+Vector2(1,3),size),Color("102a27",0.65))
-	draw_rect(r,Color("263e36"))
-	draw_texture_rect_region(METAL,r,Rect2(120,180,size.x*3,size.y*3),Color(0.59,0.66,0.52))
-	foliage.rect(Rect2(r.position+Vector2(0,size.y-5),Vector2(size.x,5)),Color("1d332b"))
-	for x in range(int(r.position.x+2),int(r.end.x-3),16):
-		var width := minf(14,r.end.x-x-1)
-		foliage.rect(Rect2(x,r.position.y,width,4),Color("8d805b"))
-		foliage.line(Vector2(x,r.position.y),Vector2(x+width,r.position.y),Color("bdb18a"),1,true)
-		if int(x)%3 == 0:
-			foliage.line(Vector2(x+2,r.position.y+2),Vector2(x+width-2,r.position.y+2),Color("4d5440"),1,true)
-	for x in range(int(r.position.x+8),int(r.end.x-3),24):
-		foliage.circle(Vector2(x,r.position.y+10),2.2,Color("172f29"))
-		foliage.circle(Vector2(x,r.position.y+9),1.2,Color("aa9e74"))
-	# Triangulated under-brackets give platforms weight without affecting collision.
-	for side in [-1,1]:
-		var x: float = side*(size.x/2-8)
-		foliage.line(Vector2(x,r.end.y),Vector2(x-side*22,r.end.y+15),Color("283e31"),4,true)
-		foliage.line(Vector2(x-side*22,r.end.y+15),Vector2(x-side*45,r.end.y),Color("3c503c"),3,true)
-		foliage.line(Vector2(x,r.end.y),Vector2(x-side*22,r.end.y+15),Color("8a8e65"),1,true)
+	# All load-bearing detail stays below the exact collision top.
+	draw_rect(Rect2(r.position + Vector2(0, 3), size), Color("102321", 0.65))
+	draw_rect(r, Color("243c39"))
+	draw_texture_rect_region(METAL, r, Rect2(120, 180, size.x * 3, size.y * 3), Color(0.72, 0.79, 0.72))
+	var web_y := r.position.y + 7
+	foliage.rect(Rect2(r.position.x + 3, web_y, size.x - 6, maxf(2, size.y - 11)), Color("172e2c", 0.8))
+	for x in range(int(r.position.x + 5), int(r.end.x - 8), 28):
+		var end_x := minf(x + 24, r.end.x - 4)
+		foliage.line(Vector2(x, r.end.y - 3), Vector2(end_x, web_y), Color("698079"), 2, true)
+		foliage.line(Vector2(x, web_y), Vector2(end_x, r.end.y - 3), Color("364f48"), 2, true)
+	foliage.rect(Rect2(r.position.x, r.end.y - 3, size.x, 3), Color("142a29"))
+	foliage.line(Vector2(r.position.x, r.end.y - 3), Vector2(r.end.x, r.end.y - 3), Color("839084"), 1, true)
+	for x in range(int(r.position.x + 2), int(r.end.x - 2), 16):
+		var width := minf(14, r.end.x - x - 1)
+		foliage.rect(Rect2(x, r.position.y, width, 5), Color("9e8960"))
+		foliage.line(Vector2(x, r.position.y + 1), Vector2(x + width, r.position.y + 1), Color("e2d2a3"), 1, true)
+		foliage.line(Vector2(x + 2, r.position.y + 4), Vector2(x + width - 1, r.position.y + 4), Color("574c38"), 1)
+	for side in [-1, 1]:
+		var x: float = side * (size.x / 2 - 6)
+		foliage.rect(Rect2(x - 3, web_y - 1, 6, size.y - 7), Color("57685b"))
+		rivet(Vector2(x, web_y + 2))
+		var reach := minf(36, size.x * 0.3)
+		foliage.line(Vector2(x, r.end.y), Vector2(x - side * reach * 0.5, r.end.y + 12), Color("223a32"), 4, true)
+		foliage.line(Vector2(x - side * reach * 0.5, r.end.y + 12), Vector2(x - side * reach, r.end.y), Color("7a8563"), 2, true)
 	if moving:
-		for x in range(int(r.position.x+3),int(r.end.x-6),18):
-			foliage.line(Vector2(x,r.position.y+5),Vector2(x+6,r.position.y+12),Color("d2ad5f"),4,true)
-		foliage.line(r.position,Vector2(r.end.x,r.position.y),Color("e4c682"),1.5,true)
+		# Hazard stripes and paired lamps distinguish every moving deck.
+		for x in range(int(r.position.x + 11), int(r.end.x - 13), 18):
+			foliage.line(Vector2(x, web_y), Vector2(minf(x + 5, r.end.x - 10), web_y + 6), Color("e0b35c"), 3, true)
+		for side in [-1, 1]:
+			var lamp := Vector2(side * (size.x / 2 - 6), r.position.y + 3)
+			foliage.circle(lamp, 4, Color("efbc65", 0.18))
+			foliage.circle(lamp, 1.6, Color("fff0b6"))
 	else:
-		for i in range(int(size.x/62)):
-			var root := Vector2(r.position.x+10+i*62,r.position.y+1)
+		for i in range(int(size.x / 62)):
+			var root := Vector2(r.position.x + 12 + i * 62, r.position.y + 5)
 			for j in 4:
-				var at := root+Vector2(sin(j)*2,j*6)
-				leaf(at,Vector2(-5,-2),Color("557346"))
-				leaf(at+Vector2(0,2),Vector2(5,-1),Color("809455"))
+				var at := root + Vector2(sin(j) * 2, j * 6)
+				leaf(at, Vector2(-5, -2), Color("557346"))
+				leaf(at + Vector2(0, 2), Vector2(5, -1), Color("809455"))
+
+func rivet(at: Vector2) -> void:
+	foliage.circle(at + Vector2(0, 1), 2.0, Color("172c29"))
+	foliage.circle(at, 1.2, Color("d1b783"))
+
+func draw_crate(r: Rect2) -> void:
+	draw_style_box(box(Color("714b33"), Color("252f29"), 2), r)
+	for i in 4:
+		var x := r.position.x + 3 + i * (size.x - 6) / 4
+		var width := (size.x - 6) / 4 - 1
+		foliage.rect(Rect2(x, r.position.y + 3, width, size.y - 6), Color("a7794e") if i % 2 == 0 else Color("8c623e"))
+		for j in 3:
+			foliage.line(Vector2(x + 2, r.position.y + 8 + j * 11), Vector2(x + width - 2, r.position.y + 11 + j * 11), Color("533e2b", 0.5), 1)
+	for reverse in [false, true]:
+		var start := Vector2(r.position.x + 5, r.end.y - 5 if reverse else r.position.y + 5)
+		var end := Vector2(r.end.x - 5, r.position.y + 5 if reverse else r.end.y - 5)
+		foliage.line(start + Vector2(0, 2), end + Vector2(0, 2), Color("493b2a"), 6, true)
+		foliage.line(start, end, Color("c99b64"), 4, true)
+	for y in [r.position.y + 4, r.end.y - 5]:
+		foliage.rect(Rect2(r.position.x + 1, y - 2, size.x - 2, 5), Color("45594e"))
+		for x in [r.position.x + 5, r.end.x - 5]:
+			rivet(Vector2(x, y))
+
+func draw_gate(r: Rect2) -> void:
+	draw_style_box(box(Color("263b3a"), Color("132824"), 2), r)
+	draw_texture_rect_region(METAL, r.grow(-2), Rect2(60, 80, (size.x - 4) * 3, (size.y - 4) * 3), Color(0.6, 0.7, 0.65))
+	for y in range(int(r.position.y + 10), int(r.end.y - 10), 16):
+		foliage.rect(Rect2(r.position.x + 4, y, size.x - 8, 10), Color("182e2c"))
+		foliage.line(Vector2(r.position.x + 5, y + 1), Vector2(r.end.x - 5, y + 8), Color("d9a959"), 3, true)
+	for x in [r.position.x + 2, r.end.x - 3]:
+		foliage.line(Vector2(x, r.position.y), Vector2(x, r.end.y), Color("9d9f83"), 1)
+	for y in [r.position.y + 4, r.end.y - 4]:
+		foliage.rect(Rect2(r.position.x, y - 3, size.x, 6), Color("637367"))
+		rivet(Vector2(0, y))
+	foliage.circle(Vector2(0, r.position.y + 4), 2, Color("ffd283"))
 
 func leaf(at: Vector2, direction: Vector2, color: Color) -> void:
 	var side := Vector2(-direction.y,direction.x).normalized()*2.5
@@ -125,15 +161,20 @@ func draw_masonry(r: Rect2) -> void:
 	stone_mesh = stonework.build()
 	draw_mesh(stone_mesh,STONE)
 	foliage.multiline(joints,Color("26352d",0.75),1,true)
-	foliage.rect(Rect2(r.position-Vector2(0,1),Vector2(size.x,7)),Color("374b44"))
-	foliage.line(r.position-Vector2(0,1),Vector2(r.end.x,r.position.y-1),Color("cec39c"),2)
+	foliage.rect(Rect2(r.position,Vector2(size.x,7)),Color("374b44"))
+	foliage.line(r.position,Vector2(r.end.x,r.position.y),Color("cec39c"),2)
+	# Individual coping blocks make the landing edge readable over the painting.
+	for x in range(int(r.position.x + 1), int(r.end.x - 1), 28):
+		var width := minf(26, r.end.x - x - 1)
+		foliage.rect(Rect2(x, r.position.y + 1, width, 5), Color("999a7d"))
+		foliage.line(Vector2(x, r.position.y + 1), Vector2(x + width, r.position.y + 1), Color("ded2aa"), 1)
 	for i in range(int(size.x/32)):
 		var x := r.position.x+10+i*32
 		foliage.line(Vector2(x,r.position.y+2),Vector2(x+14,r.position.y+2),Color("87947a"),1)
 		if i%3 == 0:
 			var at := Vector2(x,r.position.y+3)
-			leaf(at,Vector2(-5,-7),Color("648454"))
-			leaf(at,Vector2(6,-5),Color("88a364"))
+			leaf(at,Vector2(-5,-2),Color("648454"))
+			leaf(at,Vector2(6,-1),Color("88a364"))
 			for j in 3:
 				leaf(at+Vector2(2,j*8),Vector2(6,2),Color("59764b"))
 	# Recessed drainage outlets and iron tie plates anchor the painted masonry.
