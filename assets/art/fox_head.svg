@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="280" height="240" viewBox="0 0 140 120">
+<defs><linearGradient id="fur" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e8a454"/><stop offset=".45" stop-color="#c96b32"/><stop offset="1" stop-color="#914326"/></linearGradient><linearGradient id="cream" x2="0" y2="1"><stop stop-color="#fff0cb"/><stop offset="1" stop-color="#d6bf94"/></linearGradient></defs>
+<!-- Original side-profile fox: high ears, sloping brow and a projecting muzzle. -->
+<path d="M26 65Q13 43 17 8Q39 15 50 38L64 32Q74 11 90 4Q99 24 91 45Q105 55 108 69L132 80Q138 84 132 91L105 101Q93 116 72 114L36 105L16 91L26 88L13 78Z" fill="url(#fur)" stroke="#453528" stroke-width="4" stroke-linejoin="round"/>
+<path d="M24 17L29 51L43 37Z" fill="#51392e"/><path d="M29 27L33 45L40 37Z" fill="#cb9b79"/><path d="M85 13Q72 25 70 38L85 42Q91 26 85 13" fill="#54392d"/><path d="M82 23L76 36L85 37Z" fill="#d5aa85"/>
+<path d="M29 69L43 74L35 83L52 80Q67 91 82 86Q95 78 107 79L132 86L104 98Q92 114 70 110L38 101L24 91L35 92L22 81L35 83Z" fill="url(#cream)"/>
+<path d="M51 51Q64 40 84 49L98 64L89 70Q79 53 64 58Z" fill="#eead60"/>
+<path d="M65 68Q78 57 91 68Q80 80 67 73Z" fill="#372f26"/><path d="M73 68Q80 63 85 68L81 75L75 74Z" fill="#c49b45"/><ellipse cx="79" cy="69" rx="2" ry="6" fill="#202a28"/><circle cx="81" cy="66" r="1.8" fill="#fff8db"/>
+<path d="M66 60Q78 53 89 60" fill="none" stroke="#643c28" stroke-width="3" stroke-linecap="round"/>
+<path d="M123 80Q137 78 137 85L132 90L122 86Z" fill="#283331"/><path d="M126 82L131 82" stroke="#85968a" stroke-width="2"/>
+<path d="M100 98L121 92M108 91L110 94" stroke="#5b4a38" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+<g fill="none" stroke="#ae7744" stroke-width="1" opacity=".65"><path d="M30 59l8 7m-7-2 7 5m-1 17 8 5m-5 1 8 4m-3-46 8 3m-10 44 9 3m-1-62 5 5"/></g>
+<!-- Goggles rest on the forehead; they do not cover the fox's eye. -->
+<path d="M28 51Q54 40 76 41" fill="none" stroke="#644c36" stroke-width="6"/><g stroke="#ddae55" stroke-width="3" fill="#46777b"><ellipse cx="44" cy="47" rx="10" ry="8" transform="rotate(-18 44 47)"/><ellipse cx="65" cy="44" rx="9" ry="7" transform="rotate(-10 65 44)"/></g><path d="M39 44l5 4m17-7 4 4" stroke="#abd3c6" stroke-width="2"/>
+</svg>

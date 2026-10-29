@@ -12,3 +12,5 @@ Original vector artwork and procedural drawing authored for Rustbelt Run; no thi
 Palette: copper/rust hero, cream facial highlights, brass tool cues, muted teal steel and green vegetation. Background silhouettes stay lower contrast than gameplay objects. Solid platform tops and collision dimensions remain unchanged.
 
 This is an initial stylized vector art direction, not final sprite animation or production level art. Run, idle and airborne poses are procedural; no commissioned art or licensed character designs are included.
+
+Fox refinement: `fox_head.svg` supplies an elongated side-profile muzzle, large dark-backed ears, amber eye and layered cream cheek fur. The hero now has a fuller, white-tipped fox tail, following the requested fox direction; the earlier panda icon remains the project emblem.
