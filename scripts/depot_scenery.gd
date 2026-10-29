@@ -3,8 +3,16 @@ extends Node2D
 var lab: Node2D
 var camera: Camera2D
 var time := 0.0
+var living: Node2D
 const FOUNDRY = preload("res://assets/art/painted/foundry_panorama.png")
 const PANORAMA = preload("res://assets/art/painted/depot_panorama.png")
+
+func _ready() -> void:
+	var surface := ShaderMaterial.new()
+	surface.shader = preload("res://shaders/living_panorama.gdshader")
+	material = surface
+	living = preload("res://scripts/living_background.gd").new()
+	add_child(living)
 
 func _process(delta: float) -> void:
 	time += delta
@@ -18,6 +26,7 @@ func _draw() -> void:
 	if not camera:
 		return
 	var scroll := camera.get_screen_center_position().x - 576.0
+	living.scroll = scroll
 	# An oversized panorama has sufficient bleed for the entire level's slow parallax.
 	draw_texture_rect(PANORAMA,Rect2(-20-scroll*0.065,-22,1640,703),false,Color(0.76,0.82,0.80))
 	var transition := smoothstep(3400.0,4100.0,lab.player.position.x)

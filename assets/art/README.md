@@ -26,3 +26,7 @@ Collision dimensions, movement tuning, puzzle state, hazard timing and level lay
 `painted/foundry_panorama.png` is a new 2075×758 district painting, blended into the backdrop as the fox approaches the canal. `painted/patrol_bot.png` is a transparent 1346×1168 single robot sprite; its padded source region is rendered at one shared aspect ratio, mirrored with patrol direction. Both were generated with host-native ImageGen. Full prompts and source references are in `painted/foundry-and-bot-provenance.json`, with hashes/dimensions in `painted/validation.json`.
 
 Trestle supports beneath large decks give the gameplay layer a structural connection to the valley. They are decorative and do not change collision or moving-platform paths.
+
+## Living background and larger fox
+
+The paintings remain the scenic base, with independently animated clouds, expanding/dissolving steam, a traveling distant train, and rotating flywheels on a faster parallax plane in `scripts/living_background.gd`. `shaders/living_panorama.gdshader` adds restrained distant-water ripples. These are decorative layers below the game world and HUD. The fox uses one shared 0.265 source-pixel scale (about 23% larger than 0.215) with its existing boot anchor and collision dimensions.

@@ -44,7 +44,7 @@
   },
   "sprite_layout": {
     "frames": 8,
-    "shared_scale": 0.215,
+    "shared_scale": 0.265,
     "hip_anchor_source_x": 270,
     "alignment": "boot baseline at world y +20; airborne tail may extend below feet",
     "regions": [

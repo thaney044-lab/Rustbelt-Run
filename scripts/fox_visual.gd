@@ -3,7 +3,7 @@ extends Node2D
 # Each pose uses the same source-pixel scale and a shared hip/boot anchor.
 # The untouched source sheet is retained alongside its generation provenance.
 const SHEET = preload("res://assets/art/painted/fox_animations.png")
-const SCALE := 0.215
+const SCALE := 0.265
 const ANCHOR_X := 270.0
 const BOOT_Y := [477.0,466.0,472.0,468.0,420.0,323.0,410.0,418.0]
 const REGIONS := [Rect2(44,135,324,342),Rect2(394,146,351,320),Rect2(774,147,322,325),Rect2(1140,148,357,320),Rect2(33,613,330,319),Rect2(485,560,260,367),Rect2(779,635,365,287),Rect2(1161,608,349,322)]

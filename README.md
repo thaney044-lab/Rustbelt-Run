@@ -83,3 +83,5 @@ Three patrol robots guard safe-ground routes. J swings the wrench, K throws towa
 When no bot is targeted in the repair yard, K continues to operate the existing switch puzzle. There is only one thrown wrench at a time. The HUD shows health and scrap totals. No new input bindings are required.
 
 The background transitions from the rail depot to a separate canal/foundry painting near the final piston passage. Trestles support the larger decks visually, and the canal reflection uses the foundry scene. These supports remain decorative, with all original landing/collision dimensions intact.
+
+The fox artwork is now about 23% larger, anchored to the same foot position. The painted backdrop is augmented by independent cloud drift, rising steam, a traveling background train, rotating flywheels at a nearer parallax depth, and animated distant water. Player collision dimensions and jump tuning are unchanged.
