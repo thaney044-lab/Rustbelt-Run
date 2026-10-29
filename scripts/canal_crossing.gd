@@ -37,7 +37,7 @@ func _physics_process(delta: float) -> void:
 		p.respawn()
 	if p.position.x > 5180 and p.is_on_floor():
 		finished = true
-	lab.status.text = "FIRST SHIFT  /  FOUNDRY GATE REACHED!\nR: replay canal crossing." if finished else "SERVICE CANAL  /  CHECKPOINT ACTIVE\nJump to the moving maintenance lift, then cross to the foundry gate."
+	lab.status.text = "CANAL CROSSED  /  CONTINUE THROUGH THE FOUNDRY GATE\nThe service hoist is ahead." if finished else "SERVICE CANAL  /  CHECKPOINT ACTIVE\nJump to the moving maintenance lift, then cross to the foundry gate."
 	queue_redraw()
 
 func _draw() -> void:

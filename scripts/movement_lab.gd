@@ -30,7 +30,7 @@ func _ready() -> void:
 	camera.position = Vector2(180, -80)
 	camera.zoom = Vector2(1.12,1.12)
 	camera.limit_left = 0
-	camera.limit_right = 5480
+	camera.limit_right = 7660
 	camera.limit_top = 0
 	camera.limit_bottom = 720
 	player.add_child(camera)
@@ -91,6 +91,9 @@ func _ready() -> void:
 	var vitals := preload("res://scripts/vitals_hud.gd").new()
 	vitals.lab = self
 	hud.add_child(vitals)
+	var foundry := preload("res://scripts/foundry_run.gd").new()
+	foundry.lab = self
+	add_child(foundry)
 	var scenery_layer := CanvasLayer.new()
 	scenery_layer.layer = -10
 	var scenery := preload("res://scripts/depot_scenery.gd").new()

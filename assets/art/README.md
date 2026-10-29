@@ -29,4 +29,6 @@ Trestle supports beneath large decks give the gameplay layer a structural connec
 
 ## Living background and larger fox
 
-The paintings remain the scenic base, with independently animated clouds, expanding/dissolving steam, a traveling distant train, and rotating flywheels on a faster parallax plane in `scripts/living_background.gd`. `shaders/living_panorama.gdshader` adds restrained distant-water ripples. These are decorative layers below the game world and HUD. The fox uses one shared 0.265 source-pixel scale (about 23% larger than 0.215) with its existing boot anchor and collision dimensions.
+The paintings remain the scenic base, with independently animated clouds, expanding/dissolving steam, and rotating flywheels on a faster parallax plane in `scripts/living_background.gd`. `shaders/living_panorama.gdshader` adds restrained distant-water ripples. These are decorative layers below the game world and HUD. The fox uses one shared 0.265 source-pixel scale (about 23% larger than 0.215) with its existing boot anchor and collision dimensions.
+
+The decorative low-opacity background train has been removed. Large static decks now use staggered beveled masonry, iron coping, moss and stone piers; thin catwalks have plank joints. The foundry service run adds a proximity-operated E control, a vertical hoist, upper catwalks, a moving gantry, two checkpoints and a final landing. These extend the route from about 5,480 to 7,660 world units. New tests: `godot --headless --path . --script tests/foundry_smoke.gd`.

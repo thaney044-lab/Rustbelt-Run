@@ -26,15 +26,8 @@ func _draw() -> void:
 		draw_rect(Rect2(-size.x/2-3, r.position.y, size.x+6, 7), Color("e6c77c"))
 		return
 	if not moving and size.y > 35 and size.x > 100:
-		# The decks are now visibly carried by iron trestles, not floating slabs.
-		for i in range(int(ceil(size.x/200.0))):
-			var x := r.position.x+minf(38+i*200,size.x-25)
-			var base := r.end.y-2
-			draw_rect(Rect2(x-9,base,18,270),Color("142d30"))
-			draw_texture_rect_region(METAL,Rect2(x-7,base,14,270),Rect2(220,220,42,810),Color(0.32,0.46,0.42))
-			for j in 3:
-				draw_line(Vector2(x-6,base+j*78),Vector2(x+48,base+62+j*78),Color("26423e"),5)
-				draw_circle(Vector2(x,base+12+j*78),2,Color("7b8b71"))
+		draw_masonry(r)
+		return
 	draw_rect(Rect2(r.position+Vector2(1,4),size),Color(0.02,0.06,0.07,0.3))
 	draw_style_box(box(base_color, Color("1d3035"), 3), r)
 	for i in range(int(ceil(size.x/96.0))):
@@ -62,9 +55,16 @@ func _draw() -> void:
 		for x in range(int(r.position.x + 10), int(r.end.x-26), 40):
 			draw_line(Vector2(x, r.position.y+22), Vector2(x+26, r.end.y-6), Color("233b3c",0.65), 2)
 			draw_line(Vector2(x+26, r.position.y+22), Vector2(x, r.end.y-6), Color("233b3c",0.65), 2)
+	if size.y <= 30:
+		for x in range(int(r.position.x+3),int(r.end.x-8),18):
+			draw_rect(Rect2(x,r.position.y+2,minf(16,r.end.x-x-2),5),Color("9b8053") if not moving else Color("bc9956"))
+			draw_line(Vector2(x,r.position.y+2),Vector2(x+12,r.position.y+2),Color("dac390"),1)
 	var trim := Color("e7b958") if moving else Color("9bac8e")
 	draw_rect(Rect2(r.position, Vector2(size.x, 6)), trim)
 	draw_line(r.position, Vector2(r.end.x, r.position.y), Color("f3d9a1") if moving else Color("ccd3aa"), 2)
+	if not moving and size.y <= 30:
+		for x in range(int(r.position.x+3),int(r.end.x-8),18):
+			draw_rect(Rect2(x,r.position.y+2,minf(16,r.end.x-x-2),4),Color("a18a60"))
 	for x in range(int(r.position.x + 10), int(r.end.x - 4), 30):
 		draw_circle(Vector2(x, r.position.y+15), 2.0, Color("b8b6a0"))
 	if moving:
@@ -112,3 +112,40 @@ func box(fill: Color, edge: Color, border: int) -> StyleBoxFlat:
 	b.set_border_width_all(border)
 	b.set_corner_radius_all(2)
 	return b
+
+func draw_masonry(r: Rect2) -> void:
+	# Individually beveled, weathered masonry beneath a clear iron walking edge.
+	draw_rect(r,Color("263631"))
+	for row in range(int(ceil(size.y/24.0))):
+		var offset := -32.0 if row%2 else 0.0
+		for col in range(int(ceil(size.x/64.0))+1):
+			var left := maxf(r.position.x,r.position.x+offset+col*64)
+			var right := minf(r.end.x,r.position.x+offset+col*64+62)
+			var top := r.position.y+row*24+2
+			var height := minf(21,r.end.y-top)
+			if right <= left or height <= 0:
+				continue
+			var stone := Rect2(left+1,top,right-left-1,height)
+			var tone := 0.80+fposmod(col*17.0+row*11,19)/70
+			draw_style_box(box(Color(0.38,0.39,0.32)*tone,Color("313a31"),1),stone)
+			draw_texture_rect_region(METAL,stone,Rect2(80+(col%5)*140,150+row*75,stone.size.x*2,height*2),Color(1.2,1.15,0.83,0.19))
+			draw_line(stone.position,Vector2(stone.end.x,stone.position.y),Color("a2a18a",0.5),1)
+			draw_line(Vector2(stone.position.x,stone.end.y),stone.end,Color("172b28",0.7),2)
+	# Stone piers connect the deck to the valley floor below the view.
+	for i in range(int(ceil(size.x/200.0))):
+		var x := r.position.x+minf(28+i*200,size.x-40)
+		draw_rect(Rect2(x,r.end.y,28,270),Color("384238"))
+		draw_rect(Rect2(x+2,r.end.y,4,270),Color("63705a"))
+		for j in 9:
+			draw_line(Vector2(x,r.end.y+j*30),Vector2(x+28,r.end.y+j*30),Color("263a30"),2)
+	draw_rect(Rect2(r.position-Vector2(0,1),Vector2(size.x,7)),Color("374b44"))
+	draw_line(r.position-Vector2(0,1),Vector2(r.end.x,r.position.y-1),Color("cec39c"),2)
+	for i in range(int(size.x/32)):
+		var x := r.position.x+10+i*32
+		draw_line(Vector2(x,r.position.y+2),Vector2(x+14,r.position.y+2),Color("87947a"),1)
+		if i%3 == 0:
+			var at := Vector2(x,r.position.y+3)
+			leaf(at,Vector2(-5,-7),Color("648454"))
+			leaf(at,Vector2(6,-5),Color("88a364"))
+			for j in 3:
+				leaf(at+Vector2(2,j*8),Vector2(6,2),Color("59764b"))

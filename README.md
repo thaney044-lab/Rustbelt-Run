@@ -78,10 +78,12 @@ The route now continues beyond the freight yard into a flooded service canal wit
 
 ## Patrols, health and scrap
 
-Three patrol robots guard safe-ground routes. J swings the wrench, K throws toward a highlighted robot in front of you, and landing on a bot's flat top disables it with a bounce. Side contact costs one of three health points and knocks you clear; temporary protection prevents repeated hits. Losing all health returns you to the current checkpoint. Checkpoints restore health. Patrols and puzzle objects reset after a retry; collected scrap remains collected for the current play session. The 29 optional scrap pieces suggest jump paths and reward detours; none are required to finish.
+Four patrol robots guard safe-ground routes. J swings the wrench, K throws toward a highlighted robot in front of you, and landing on a bot's flat top disables it with a bounce. Side contact costs one of three health points and knocks you clear; temporary protection prevents repeated hits. Losing all health returns you to the current checkpoint. Checkpoints restore health. Patrols and puzzle objects reset after a retry; collected scrap remains collected for the current play session. The 38 optional scrap pieces suggest jump paths and reward detours; none are required to finish.
 
 When no bot is targeted in the repair yard, K continues to operate the existing switch puzzle. There is only one thrown wrench at a time. The HUD shows health and scrap totals. No new input bindings are required.
 
 The background transitions from the rail depot to a separate canal/foundry painting near the final piston passage. Trestles support the larger decks visually, and the canal reflection uses the foundry scene. These supports remain decorative, with all original landing/collision dimensions intact.
 
-The fox artwork is now about 23% larger, anchored to the same foot position. The painted backdrop is augmented by independent cloud drift, rising steam, a traveling background train, rotating flywheels at a nearer parallax depth, and animated distant water. Player collision dimensions and jump tuning are unchanged.
+The fox artwork is now about 23% larger, anchored to the same foot position. The painted backdrop is augmented by independent cloud drift, rising steam, rotating flywheels at a nearer parallax depth, and animated distant water. Player collision dimensions and jump tuning are unchanged.
+
+The decorative low-opacity background train has been removed. Large static decks now use staggered beveled masonry, iron coping, moss and stone piers; thin catwalks have plank joints. The foundry service run adds a proximity-operated E control, a vertical hoist, upper catwalks, a moving gantry, two checkpoints and a final landing. These extend the route from about 5,480 to 7,660 world units. New tests: `godot --headless --path . --script tests/foundry_smoke.gd`.
