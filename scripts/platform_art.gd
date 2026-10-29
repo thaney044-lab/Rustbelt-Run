@@ -136,6 +136,19 @@ func draw_masonry(r: Rect2) -> void:
 			leaf(at,Vector2(6,-5),Color("88a364"))
 			for j in 3:
 				leaf(at+Vector2(2,j*8),Vector2(6,2),Color("59764b"))
+	# Recessed drainage outlets and iron tie plates anchor the painted masonry.
+	for i in range(int(size.x/155)):
+		var at := r.position+Vector2(65+i*155,31)
+		foliage.rect(Rect2(at-Vector2(12,9),Vector2(24,18)),Color("152d28",0.7))
+		foliage.rect(Rect2(at-Vector2(10,8),Vector2(20,15)),Color("485345"))
+		foliage.line(at+Vector2(-9,-7),at+Vector2(9,-7),Color("a59b72"),1)
+		for dx in [-7,7]:
+			foliage.circle(at+Vector2(dx,0),1.7,Color("c0aa78"))
+		foliage.circle(at,4,Color("142a25"))
+		foliage.line(at+Vector2(0,5),at+Vector2(2,24),Color("273c2d",0.5),3)
+	# Subtle face shading sits under the coping without hiding stone grain.
+	for band in 5:
+		foliage.rect(Rect2(r.position+Vector2(0,7+band*3),Vector2(size.x,3)),Color(0.03,0.08,0.06,0.14-band*0.025))
 	# Broad, soft-edged rust streaks and trailing ivy break up repeated tiles.
 	for i in range(int(size.x/110)):
 		var x := r.position.x+26+i*110
