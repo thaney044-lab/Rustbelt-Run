@@ -5,8 +5,11 @@ const MovingPlatform = preload("res://scripts/moving_platform.gd")
 var player: CharacterBody2D
 var status: Label
 var checkpoint_reached := false
+var effects: Node2D
 
 func _ready() -> void:
+	effects = preload("res://scripts/visual_effects.gd").new()
+	add_child(effects)
 	configure_input()
 	platform(Vector2(270, 560), Vector2(540, 80))
 	platform(Vector2(700, 560), Vector2(180, 80))
@@ -36,9 +39,12 @@ func _ready() -> void:
 	status.position = Vector2(24, 22)
 	status.add_theme_font_size_override("font_size", 17)
 	var backing := StyleBoxFlat.new()
-	backing.bg_color = Color("152f34", 0.92)
+	backing.bg_color = Color("142b30", 0.88)
 	backing.border_color = Color("c99c52")
-	backing.border_width_left = 3
+	backing.border_width_left = 2
+	backing.border_width_bottom = 1
+	backing.shadow_color = Color(0,0,0,0.22)
+	backing.shadow_size = 4
 	backing.content_margin_left = 14
 	backing.content_margin_right = 16
 	backing.content_margin_top = 9
@@ -49,7 +55,13 @@ func _ready() -> void:
 	var fullscreen := Button.new()
 	fullscreen.text = "FULLSCREEN"
 	fullscreen.position = Vector2(1000,22)
-	fullscreen.add_theme_font_size_override("font_size",14)
+	fullscreen.add_theme_font_size_override("font_size",13)
+	var button_style := backing.duplicate()
+	button_style.content_margin_left = 12
+	button_style.content_margin_right = 12
+	fullscreen.add_theme_stylebox_override("normal",button_style)
+	fullscreen.add_theme_stylebox_override("hover",button_style)
+	fullscreen.add_theme_color_override("font_color",Color("efd6a1"))
 	fullscreen.pressed.connect(func():
 		var full := DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED if full else DisplayServer.WINDOW_MODE_FULLSCREEN)
@@ -76,6 +88,18 @@ func _ready() -> void:
 	scenery.lab = self
 	scenery_layer.add_child(scenery)
 	add_child(scenery_layer)
+	var atmosphere_layer := CanvasLayer.new()
+	atmosphere_layer.layer = 3
+	add_child(atmosphere_layer)
+	var vignette := ColorRect.new()
+	vignette.size = Vector2(1152,648)
+	vignette.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var atmosphere_material := ShaderMaterial.new()
+	atmosphere_material.shader = preload("res://shaders/atmosphere.gdshader")
+	vignette.material = atmosphere_material
+	atmosphere_layer.add_child(vignette)
+	atmosphere_layer.add_child(preload("res://scripts/atmosphere.gd").new())
+	hud.layer = 5
 	queue_redraw()
 
 func configure_input() -> void:

@@ -1,6 +1,7 @@
 extends Node2D
 
 # Constrained puzzle state: all objects reset together on checkpoint retry.
+const METAL = preload("res://assets/art/painted/weathered_steel.png")
 const BATTERY_HOME := Vector2(2000, 497)
 const SOCKET := Vector2(2155, 493)
 const SWITCH := Vector2(2080, 390)
@@ -112,6 +113,7 @@ func swing() -> void:
 	swing_time = 0.2
 	if not crate_broken and target_in_front(crate.position, 80):
 		crate_broken = true
+		lab.effects.burst(crate.position,Color("d5a46d"),14)
 		crate.get_child(0).set_deferred("disabled", true)
 		crate.hide()
 		hint = "Crate cleared. Throw K toward the highlighted switch."
@@ -130,6 +132,7 @@ func throw_wrench() -> void:
 func interact() -> void:
 	if not powered and carrying and player.position.distance_to(SOCKET) < 65:
 		powered = true
+		lab.effects.burst(SOCKET,Color("a9e1c2"),12)
 		carrying = false
 		battery = SOCKET
 		hint = "Crane powered! E or J at the control lowers the bridge."
@@ -172,6 +175,7 @@ func _physics_process(delta: float) -> void:
 			else:
 				if wrench_target == SWITCH:
 					gate_open = true
+					lab.effects.burst(SWITCH,Color("f1d29a"),12)
 					gate_shape.set_deferred("disabled", true)
 					gate.hide()
 					hint = "Gate open. E picks up the battery and inserts it at the socket."
@@ -190,6 +194,7 @@ func _draw() -> void:
 	# Fixed crane tower and top beam frame the actual moving bridge.
 	for x in [2250,2500]:
 		draw_line(Vector2(x,590),Vector2(x,225),Color("394e4d"),18)
+		draw_texture_rect_region(METAL,Rect2(x-9,225,18,365),Rect2(190,160,54,1095),Color(0.7,0.75,0.65))
 		draw_line(Vector2(x-3,580),Vector2(x-3,225),Color("b47d4b"),7)
 		for y in range(250,560,60):
 			draw_line(Vector2(x-9,y),Vector2(x+9,y+40),Color("c19662"),3)
@@ -207,7 +212,12 @@ func _draw() -> void:
 	if not gate_open and target_in_front(SWITCH, 260):
 		draw_arc(SWITCH, 25, 0, TAU, 24, Color.WHITE, 3)
 	draw_style_box(tool_box(Color("2b4146")),Rect2(battery-Vector2(13,18),Vector2(26,36)))
-	draw_rect(Rect2(battery-Vector2(8,12),Vector2(16,24)),Color("8ed6ab"))
+	draw_rect(Rect2(battery-Vector2(8,12),Vector2(16,24)),Color("385e51"))
+	for j in 3:
+		draw_rect(Rect2(battery+Vector2(-6,-10+j*8),Vector2(12,5)),Color("a1d9a9"))
+	for dx in [-10,10]:
+		draw_circle(battery+Vector2(dx,-14),1.2,Color("d1c28d"))
+		draw_circle(battery+Vector2(dx,14),1.2,Color("d1c28d"))
 	draw_rect(Rect2(battery+Vector2(-5,-22),Vector2(10,5)),Color("e2bc72"))
 	draw_line(battery+Vector2(0,-7),battery+Vector2(0,7),Color("294849"),3)
 	draw_line(battery + Vector2(-6, 0), battery + Vector2(6, 0), Color("203a30"), 3)

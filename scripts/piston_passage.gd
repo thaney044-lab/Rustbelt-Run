@@ -6,6 +6,7 @@ var checkpoint_active := false
 var secret_found := false
 var finished := false
 var collected_flash := 0.0
+const METAL = preload("res://assets/art/painted/weathered_steel.png")
 const SECRET := Vector2(2860, 410)
 const PISTONS := [3190.0, 3420.0, 3650.0]
 
@@ -69,8 +70,8 @@ func _physics_process(delta: float) -> void:
 	queue_redraw()
 
 func _draw() -> void:
-	draw_line(Vector2(2780,520),Vector2(2780,465),Color("d4bc88"),4)
-	draw_colored_polygon(PackedVector2Array([Vector2(2782,466),Vector2(2815,472),Vector2(2782,485)]),Color("88bd9b"))
+	draw_line(Vector2(2750,520),Vector2(2750,465),Color("d4bc88"),4)
+	draw_colored_polygon(PackedVector2Array([Vector2(2752,466),Vector2(2785,472),Vector2(2752,485)]),Color("88bd9b"))
 	# Industrial overhead frame; warm lamps communicate the cycle without color alone.
 	draw_line(Vector2(3060,215),Vector2(3750,215),Color("243d41"),24)
 	draw_line(Vector2(3060,205),Vector2(3750,205),Color("bc8d56"),5)
@@ -82,6 +83,7 @@ func _draw() -> void:
 		draw_rect(Rect2(x-9,225,18,bottom-250),Color("92aaa1"))
 		draw_line(Vector2(x-5,225),Vector2(x-5,bottom-25),Color("dae0c3"),3)
 		draw_rect(Rect2(x-29,bottom-28,58,28),Color("263c3f"))
+		draw_texture_rect_region(METAL,Rect2(x-29,bottom-28,58,28),Rect2(120,150,174,84),Color(0.6,0.72,0.68))
 		draw_rect(Rect2(x-27,bottom-25,54,19),Color("c9934d"))
 		for offset in [-20,-5,10]:
 			draw_line(Vector2(x+offset,bottom-23),Vector2(x+offset+12,bottom-9),Color("4f4b37"),5)
@@ -108,6 +110,7 @@ func _draw() -> void:
 		draw_circle(Vector2(x,507),20,Color("24383a"))
 		draw_circle(Vector2(x,507),11,Color("b18858"))
 	draw_rect(Rect2(3890,442,260,56),Color("89573c"))
+	draw_texture_rect_region(METAL,Rect2(3890,442,260,56),Rect2(140,140,780,168),Color(1.05,0.7,0.45))
 	draw_rect(Rect2(3890,442,260,8),Color("d3aa68"))
 	for x in range(3900,4150,30):
 		draw_line(Vector2(x,455),Vector2(x,488),Color("ae774d"),3)

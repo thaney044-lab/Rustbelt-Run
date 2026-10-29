@@ -1,0 +1,85 @@
+{
+  "provider": "OpenAI host-native ImageGen",
+  "integrated_assets": {
+    "fox_animations.png": {
+      "sha256": "b1d60030db369e994836612f65d22c9d183b3d65b338892471a5af2f1e29e18c",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA"
+    },
+    "depot_panorama.png": {
+      "sha256": "c5d992837ed12ff59f2d931845c2b279e9c6f7cf0a134e0a0aa1a097e2dbc6c1",
+      "size": [
+        1916,
+        821
+      ],
+      "mode": "RGB"
+    },
+    "weathered_steel.png": {
+      "sha256": "79abfc5558cd043b5e11c3a1084855612eec34a7371abb6956265772428d110c",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGB"
+    }
+  },
+  "sprite_layout": {
+    "frames": 8,
+    "shared_scale": 0.215,
+    "hip_anchor_source_x": 270,
+    "alignment": "boot baseline at world y +20; airborne tail may extend below feet",
+    "regions": [
+      [
+        44,
+        135,
+        324,
+        342
+      ],
+      [
+        394,
+        146,
+        351,
+        320
+      ],
+      [
+        774,
+        147,
+        322,
+        325
+      ],
+      [
+        1140,
+        148,
+        357,
+        320
+      ],
+      [
+        33,
+        613,
+        330,
+        319
+      ],
+      [
+        485,
+        560,
+        260,
+        367
+      ],
+      [
+        779,
+        635,
+        365,
+        287
+      ],
+      [
+        1161,
+        608,
+        349,
+        322
+      ]
+    ]
+  }
+}

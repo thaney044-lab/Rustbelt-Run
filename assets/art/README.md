@@ -1,16 +1,22 @@
-# First visual pass
+# Rustbelt Run artwork
 
-Original vector artwork and procedural drawing authored for Rustbelt Run; no third-party asset downloads or external image dependencies.
+The current game combines original ImageGen artwork with engine-drawn machinery and effects. The painted pass replaces the earlier flat vector scenery and procedural fox silhouette.
 
-- `depot_sky.svg`: layered green mountain valley, hazy sky and warm sunlight.
-- `panda_icon.svg`: red panda mechanic with brass goggles; browser and project icon.
-- `scripts/player.gd`: animated panda silhouette, cream markings, overalls, boots, striped tail and wrench.
-- `scripts/platform_art.gd`: riveted steel, grass, vines, hazard trim, wooden crates and gate.
-- `scripts/depot_scenery.gd`: parallax industrial skyline and railway viaduct.
-- `scripts/repair_yard.gd`: crane tower, battery, socket, switch and mechanical control.
+## Painted assets
 
-Palette: copper/rust hero, cream facial highlights, brass tool cues, muted teal steel and green vegetation. Background silhouettes stay lower contrast than gameplay objects. Solid platform tops and collision dimensions remain unchanged.
+- `painted/depot_panorama.png`: 1916×821 industrial valley, brick rail depot, distant mountains, foliage and canal. Rendered with slow parallax and a cool atmospheric treatment to separate it from the playable platforms.
+- `painted/fox_animations.png`: 1536×1024 transparent, eight-pose character sheet. Idle, four running poses, rise, fall and wrench swing. Generated together and revised for spacing; `scripts/fox_visual.gd` isolates each pose and aligns it to a shared hip/boot anchor with one shared pixel scale. The artwork is not stretched separately per frame.
+- `painted/weathered_steel.png`: 1254×1254 material source for platform panels, crane towers and piston housings. Gameplay rims, hazard stripes and target symbols are rendered separately for readability.
+- `painted/provenance.json`, `painted/spacing-edit.txt`, and `painted/validation.json`: provider, complete prompts, source lineage, integrated asset hashes and layout measurements. Original generated sources remain under `/workspace/generated_images` in the current workspace.
 
-This is an initial stylized vector art direction, not final sprite animation or production level art. Run, idle and airborne poses are procedural; no commissioned art or licensed character designs are included.
+All three sources were created using the host-native OpenAI ImageGen tool for this project. No paid external asset provider or third-party stock collection was used. The fox's reference was the existing in-game character screenshot. The original PNG artwork is retained without destructive pixel edits; frame isolation and alignment occur in-engine.
 
-Fox refinement: `fox_head.svg` supplies an elongated side-profile muzzle, large dark-backed ears, amber eye and layered cream cheek fur. The hero now has a fuller, white-tipped fox tail, following the requested fox direction; the earlier panda icon remains the project emblem.
+## Runtime presentation
+
+- Textured metal, bevels, rivets, foliage and vines in `scripts/platform_art.gd`.
+- Slow parallax in `scripts/depot_scenery.gd`, subtle sunlight/motes in `scripts/atmosphere.gd`, and a soft vignette below the HUD.
+- Reflective rippling canal material in `shaders/canal_water.gdshader`.
+- Small impact, repair and landing particle bursts in `scripts/visual_effects.gd`.
+- Existing SVGs remain as earlier source artwork and the project emblem; the fox no longer uses the old vector head during gameplay.
+
+Collision dimensions, movement tuning, puzzle state, hazard timing and level layout are preserved. Art tests verify transparency, atlas layout and pose selection; gameplay tests verify the existing mechanics. Browser screenshots are still needed to assess readability and shaders.

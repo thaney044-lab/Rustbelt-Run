@@ -2,9 +2,11 @@ extends Node2D
 
 var lab: Node2D
 var camera: Camera2D
-var sky := preload("res://assets/art/depot_sky.svg")
+var time := 0.0
+const PANORAMA = preload("res://assets/art/painted/depot_panorama.png")
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	time += delta
 	queue_redraw()
 
 func _draw() -> void:
@@ -15,31 +17,18 @@ func _draw() -> void:
 	if not camera:
 		return
 	var scroll := camera.get_screen_center_position().x - 576.0
-	draw_texture(sky, Vector2(-scroll * 0.12, 0))
-	# The distant silhouettes move slowly, keeping the traversable layer distinct.
-	for i in range(-1, 12):
-		var x := i * 210.0 - scroll * 0.28
-		var h := 100.0 + fposmod(float(i*i*71), 110.0)
-		draw_rect(Rect2(x, 430-h, 160, h+220), Color("607c76"))
-		draw_colored_polygon(PackedVector2Array([Vector2(x-6,430-h),Vector2(x+55,398-h),Vector2(x+166,430-h)]), Color("526f6b"))
-		draw_rect(Rect2(x+104, 335-h, 22, 100), Color("56716c"))
-		draw_rect(Rect2(x+99, 332-h, 32, 8), Color("729083"))
-		for col in 5:
-			for row in 3:
-				draw_rect(Rect2(x+12+col*28, 445-h+row*30, 12, 19), Color("a8b49a") if (col+row+i)%4==0 else Color("47635f"))
-	# Pipework, roof vents and softened chimney plumes provide industrial depth.
-	for i in range(-1,12):
-		var x := i*270.0-scroll*.35
-		draw_polyline(PackedVector2Array([Vector2(x,560),Vector2(x,355),Vector2(x+65,355),Vector2(x+65,390)]),Color("4c6962"),9,true)
-		draw_line(Vector2(x-2,560),Vector2(x-2,360),Color("8da18b",0.5),2)
-		for j in 5:
-			draw_circle(Vector2(x+100+j*10,180-j*15),12+j*3,Color("d2d5b8",0.06))
-	# Mid-distance railway viaduct and rusty gantries.
-	var rail_y := 420.0
-	draw_line(Vector2(0,rail_y),Vector2(1200,rail_y),Color("445d59"),8)
-	for i in range(-1, 10):
-		var x := i*190.0 - fposmod(scroll*.48,190.0)
-		draw_line(Vector2(x,rail_y),Vector2(x,648),Color("526b61"),14)
-		draw_line(Vector2(x,rail_y+15),Vector2(x+80,520),Color("526b61"),7)
-	# Foreground shade remains below the playable ledges.
-	draw_rect(Rect2(0,600,1152,100),Color("183b3c",0.55))
+	# An oversized panorama has sufficient bleed for the entire level's slow parallax.
+	draw_texture_rect(PANORAMA,Rect2(-20-scroll*0.065,-22,1640,703),false,Color(0.76,0.82,0.80))
+	# Atmospheric shadow separates the bright readable playfield from distant detail.
+	for i in 18:
+		draw_rect(Rect2(0,320+i*20,1152,20),Color(0.04,0.12,0.14,float(i)*0.016))
+	# Fine cables and near girders travel faster than the painting, providing depth.
+	for i in range(-1,9):
+		var x := i*360.0-fposmod(scroll*0.35,360.0)
+		draw_line(Vector2(x,540),Vector2(x,690),Color("1c3538",0.65),9)
+		draw_line(Vector2(x,552),Vector2(x+90,640),Color("20393a",0.55),5)
+	# A few distant birds, rather than a constantly moving screen overlay.
+	for i in 3:
+		var at := Vector2(fposmod(time*6+i*180,1400)-120,110+sin(time*.3+i)*12)
+		var wing := sin(time*3+i)*3
+		draw_polyline(PackedVector2Array([at+Vector2(-5,wing),at,at+Vector2(5,wing)]),Color("354c4c",0.4),1,true)
