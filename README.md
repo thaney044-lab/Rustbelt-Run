@@ -23,7 +23,7 @@ See [the implementation plan](docs/IMPLEMENTATION_PLAN.md) for milestones and ac
 
 Catwalks have cross-braced metal webs, brass rivets, timber treads and bounded under-brackets. Moving decks use amber hazard stripes and paired lamps; stone decks have segmented coping aligned to their collision top. Wooden crates have grain, diagonal braces and metal straps, while gates have inset hazard panels and reinforced rails.
 
-Patrol bots retain their painted artwork with animated brass wheel hubs, exhaust steam, a pulsing lens and a foot-pivot defeat animation. The targeting brackets use local coordinates and highlight only the nearest valid wrench target. Collision shapes, movement speeds and jump tuning are unchanged. The art smoke test checks target priority, facing, defeated-target handoff and animation reset.
+Cinder Yard uses staggered ledges instead of closely stacked decks. Patrol bots render 40% larger and retain their painted artwork with animated brass wheel hubs, exhaust steam, a pulsing lens and a foot-pivot defeat animation. The targeting brackets use local coordinates and highlight only the nearest valid wrench target. Collision shapes, movement speeds and jump tuning are unchanged. The art smoke test checks target priority, facing, defeated-target handoff and animation reset.
 
 ## Validation
 
@@ -77,7 +77,7 @@ The repository includes `.github/workflows/deploy-web.yml`. It verifies official
 
 This workflow is active and publishes tested updates to the existing Pages URL.
 
-Static scenery is cached in independently culled sections, and small decorative shapes share mesh batches. The web game renders at its design resolution before scaling to larger/high-DPI windows. This reduces per-frame work while retaining the painted assets and animated background layers. See [performance measurements and limits](docs/PERFORMANCE.md).
+Static scenery is cached in independently culled sections, and small decorative shapes share mesh batches. The web game renders canvas items at the window resolution so painted sprites stay clear on larger windows. This reduces per-frame work while retaining the painted assets and animated background layers. See [performance measurements and limits](docs/PERFORMANCE.md).
 
 Artwork notes and provenance: [assets/art/README.md](assets/art/README.md).
 

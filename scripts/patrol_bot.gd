@@ -64,17 +64,17 @@ func _draw() -> void:
 	var alpha := 1.0 if alive else maxf(0.0, 1.0 - age / 0.6)
 	var targeted := is_targeted()
 	draw_set_transform(Vector2(0, 18), 0, Vector2(1, 0.22))
-	draw_circle(Vector2.ZERO, 21, Color(0.02, 0.07, 0.08, 0.3 * alpha))
+	draw_circle(Vector2.ZERO, 28, Color(0.02, 0.07, 0.08, 0.3 * alpha))
 	draw_set_transform(Vector2.ZERO)
 	if alive:
 		# Faint steam behind the exhaust; particles stay decorative.
 		for i in 3:
 			var phase := fposmod(age * 0.9 + i / 3.0, 1.0)
-			var at := Vector2(-20 * direction - phase * 7 * direction, -15 - phase * 17)
+			var at := Vector2(-28 * direction - phase * 7 * direction, -28 - phase * 17)
 			draw_circle(at, 1.5 + phase * 3.5, Color(0.69, 0.76, 0.68, (1.0 - phase) * 0.22))
 	# Tip around the feet on defeat instead of spinning around the body center.
 	var tilt := 0.0 if alive else age * 1.5 * direction
-	draw_set_transform(Vector2(0, 18), tilt, Vector2(direction, 1))
+	draw_set_transform(Vector2(0, 18), tilt, Vector2(direction * 1.4, 1.4))
 	var body_rect := Rect2(-25, -34.6, 50, 36.6)
 	if art:
 		draw_texture_rect_region(art, body_rect, sprite_region, Color(1, 1, 1, alpha))
@@ -98,8 +98,8 @@ func _draw() -> void:
 	draw_set_transform(Vector2.ZERO)
 	if targeted:
 		# Node2D drawing uses local coordinates, never the bot's world position.
-		var radius := 29.0 + sin(age * 4) * 1.0
+		var radius := 39.0 + sin(age * 4) * 1.0
 		for quadrant in 4:
 			var angle := PI / 4 + quadrant * PI / 2
 			draw_arc(Vector2.ZERO, radius, angle - 0.18, angle + 0.18, 8, Color("ffe0a0", 0.9), 1.5, true)
-		draw_colored_polygon(PackedVector2Array([Vector2(-3, -35), Vector2(3, -35), Vector2(0, -31)]), Color("ffe0a0"))
+		draw_colored_polygon(PackedVector2Array([Vector2(-3, -43), Vector2(3, -43), Vector2(0, -39)]), Color("ffe0a0"))

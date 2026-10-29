@@ -4,7 +4,7 @@ The graphics additions exposed two costs: rebuilding a single level-wide decorat
 
 The renderer now retains static architecture in nine independently culled sections. Small colored shapes and textured stone arches share retained `ArrayMesh` batches built by `scripts/draw_batch.gd`. Line edges use a vertex-alpha fringe within the same mesh. The painted textures, collisions, jump settings, timing and level positions remain intact. Ferns and the workshop light pool are cached; clouds, steam, birds, flywheels, water and gameplay hazards still animate. Fully invisible panorama layers are skipped.
 
-The project uses `viewport` stretch mode: the game renders at its 1152×648 design resolution, then scales to the browser window. High-DPI/fullscreen windows therefore do not multiply the cost of every world layer. Large displays can look softer than native-resolution rendering. Input and HUD coordinates scale together.
+The project uses `canvas_items` stretch mode to preserve painted sprite detail at the browser window resolution. This restores sharpness on large displays at the cost of more pixel work than the earlier fixed 1152×648 viewport. Retained scenery batches and section culling remain active. The measurements below describe the earlier fixed-resolution optimization, not a new performance measurement of the current rendering mode.
 
 ## Measurements
 

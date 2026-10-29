@@ -22,12 +22,12 @@ func _ready() -> void:
 	platform(Vector2(440, 370), Vector2(110, 20))
 	platform(Vector2(1060, 430), Vector2(100, 24))
 	platform(Vector2(1450, 450), Vector2(150, 24))
-	platform(Vector2(1480, 362), Vector2(150, 24))
+	platform(Vector2(1600, 362), Vector2(110, 24))
 	platform(Vector2(855, 470), Vector2(100, 20), true)
 	# Optional rooftop line: readable jumps, a reward, and a return to the main route.
 	platform(Vector2(650,340),Vector2(110,20))
 	platform(Vector2(850,315),Vector2(90,20))
-	platform(Vector2(1080,350),Vector2(110,20))
+	platform(Vector2(1130,300),Vector2(110,20))
 	platform(Vector2(1290,370),Vector2(100,20))
 	player = Player.new()
 	player.z_index = 1
