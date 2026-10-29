@@ -32,10 +32,20 @@ func _ready() -> void:
 	var hud := CanvasLayer.new()
 	add_child(hud)
 	status = Label.new()
-	status.position = Vector2(24, 20)
-	status.add_theme_font_size_override("font_size", 21)
+	status.position = Vector2(24, 22)
+	status.add_theme_font_size_override("font_size", 17)
+	var backing := StyleBoxFlat.new()
+	backing.bg_color = Color("152f34", 0.92)
+	backing.border_color = Color("c99c52")
+	backing.border_width_left = 3
+	backing.content_margin_left = 14
+	backing.content_margin_right = 16
+	backing.content_margin_top = 9
+	backing.content_margin_bottom = 9
+	backing.set_corner_radius_all(3)
+	status.add_theme_stylebox_override("normal", backing)
 	hud.add_child(status)
-	status.text = "RUSTBELT RUN / Movement lab\nA/D or arrows: move   Space: jump (hold for height)   R: retry\nController: left stick / D-pad + A. Reach the checkpoint flag."
+	status.text = "RUSTBELT RUN   /   OVERGROWN RAIL DEPOT\nA/D or arrows: run    Space: jump    R: retry  |  Reach the workshop flag."
 	label_at("SHORT / FULL JUMPS", Vector2(140, 310))
 	label_at("MOVING PLATFORM", Vector2(670, 335))
 	label_at("CHECKPOINT", Vector2(980, 470))
@@ -44,6 +54,12 @@ func _ready() -> void:
 	var yard := preload("res://scripts/repair_yard.gd").new()
 	yard.lab = self
 	add_child(yard)
+	var scenery_layer := CanvasLayer.new()
+	scenery_layer.layer = -10
+	var scenery := preload("res://scripts/depot_scenery.gd").new()
+	scenery.lab = self
+	scenery_layer.add_child(scenery)
+	add_child(scenery_layer)
 	queue_redraw()
 
 func configure_input() -> void:
@@ -86,10 +102,9 @@ func platform(center: Vector2, size: Vector2, moving := false) -> void:
 	shape.size = size
 	collision.shape = shape
 	body.add_child(collision)
-	var visual := Polygon2D.new()
-	visual.polygon = PackedVector2Array([Vector2(-size.x, -size.y), Vector2(size.x, -size.y), size, Vector2(-size.x, size.y)])
-	visual.scale = Vector2(0.5, 0.5)
-	visual.color = Color("dfb85d") if moving else Color("526a65")
+	var visual := preload("res://scripts/platform_art.gd").new()
+	visual.size = size
+	visual.moving = moving
 	body.add_child(visual)
 	add_child(body)
 
@@ -97,17 +112,31 @@ func label_at(text: String, at: Vector2) -> void:
 	var label := Label.new()
 	label.text = text
 	label.position = at
-	label.add_theme_color_override("font_color", Color("e6c86a"))
+	label.add_theme_font_size_override("font_size", 13)
+	label.add_theme_color_override("font_color", Color("f2dbac"))
+	var sign_style := StyleBoxFlat.new()
+	sign_style.bg_color = Color("294446", 0.9)
+	sign_style.content_margin_left = 8
+	sign_style.content_margin_right = 8
+	sign_style.content_margin_top = 4
+	sign_style.content_margin_bottom = 4
+	label.add_theme_stylebox_override("normal", sign_style)
 	add_child(label)
 
 func _physics_process(_delta: float) -> void:
 	if player.position.x > 980 and player.position.x < 1130 and player.is_on_floor() and not checkpoint_reached:
 		checkpoint_reached = true
 		player.spawn_point = Vector2(1020, 490)
-		status.text += "\nCheckpoint active — falls and R return here."
+		status.text = "RUSTBELT RUN   /   CHECKPOINT REACHED\nContinue right to the repair yard.  R returns here."
 
 func _draw() -> void:
-	for x in range(50, 3000, 160):
-		draw_rect(Rect2(x, 160, 55, 360), Color("172d30"))
-	draw_line(Vector2(1000, 520), Vector2(1000, 465), Color("e6c86a"), 4)
-	draw_colored_polygon(PackedVector2Array([Vector2(1000, 465), Vector2(1030, 475), Vector2(1000, 485)]), Color("e6c86a"))
+	# Workshop flag, rails and riveted support below the checkpoint.
+	draw_line(Vector2(1000,520),Vector2(1000,455),Color("283d3f"),6)
+	draw_line(Vector2(999,520),Vector2(999,455),Color("d4bc88"),2)
+	draw_colored_polygon(PackedVector2Array([Vector2(1002,456),Vector2(1036,462),Vector2(1028,483),Vector2(1002,478)]),Color("d7a451"))
+	draw_circle(Vector2(1015,468),5,Color("314d4b"))
+	# Ground decoration never crosses the solid platform's upper edge.
+	for x in [60, 1200, 1600, 2800]:
+		draw_line(Vector2(x,590),Vector2(x+150,590),Color("283c3e"),6)
+		for i in 6:
+			draw_line(Vector2(x+i*28,580),Vector2(x+i*28,602),Color("795c43"),5)

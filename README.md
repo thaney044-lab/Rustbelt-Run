@@ -6,19 +6,20 @@ A 2D puzzle platformer following a red panda mechanic through an overgrown indus
 
 Godot **4.6.3**, GDScript, Compatibility renderer. Open `project.godot` and press **F6** on `scenes/movement_lab.tscn`, or press **F5** to run the project. From a terminal in this directory: `godot --path .`.
 
-The movement lab uses temporary geometric art and includes acceleration, variable jump height, coyote time, jump buffering, solid platforms, a moving platform, a follow camera, a checkpoint, and fall/manual recovery. This is the movement milestone foundation, not the complete First Shift level.
+The movement lab uses an original vector-art pass (red panda mechanic, layered valley and factory scenery, overgrown steel platforms, and illustrated machinery) and includes acceleration, variable jump height, coyote time, jump buffering, solid platforms, a moving platform, a follow camera, a checkpoint, and fall/manual recovery. This is the movement milestone foundation, not the complete First Shift level.
 
 - Move: A/D, arrows, controller left stick or D-pad.
 - Jump: Space or controller A; release early for a short hop.
 - Retry: R. Reach the flag to set the checkpoint.
 
-The next section is a repair yard: J swings the wrench, K throws it toward a highlighted switch, E carries/inserts the battery or uses the crane control, and T resets the puzzle at its checkpoint. Controller bindings: X swing, B throw, Y use, Back reset. Lower the crane bridge and cross to the exit. Falls restore the whole puzzle to a recoverable state. Enemies, final art/audio, menus, remapping, persistence, and Windows exports are planned, not implemented. Controller bindings exist but have not been tested with physical hardware. Movement feel still needs a human playtest.
+The next section is a repair yard: J swings the wrench, K throws it toward a highlighted switch, E carries/inserts the battery or uses the crane control, and T resets the puzzle at its checkpoint. Controller bindings: X swing, B throw, Y use, Back reset. Lower the crane bridge and cross to the exit. Falls restore the whole puzzle to a recoverable state. Enemies, final production art/audio, menus, remapping, persistence, and Windows exports are planned, not implemented. Controller bindings exist but have not been tested with physical hardware. Movement feel still needs a human playtest.
 
 See [the implementation plan](docs/IMPLEMENTATION_PLAN.md) for milestones and acceptance criteria based on the supplied v0.1 outline. Godot is the initial default; the outline did not specify an engine.
 
 ## Validation
 
 ```sh
+godot --headless --editor --import --path . --quit
 godot --headless --path . --quit-after 120
 godot --headless --path . --script tests/movement_smoke.gd
 godot --headless --path . --script tests/repair_smoke.gd
@@ -60,3 +61,5 @@ The repository includes `.github/workflows/deploy-web.yml`. It verifies official
 3. After deployment succeeds, open the URL reported by the deployment job. Players only need that browser link; they do not download or install the game.
 
 These hosting steps have been prepared but have not been executed from this environment. The Pages URL is not live until the workflow successfully deploys.
+
+Artwork notes and provenance: [assets/art/README.md](assets/art/README.md).

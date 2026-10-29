@@ -1,7 +1,8 @@
 config_version=5
 
 [application]
-config/name="Rustbelt Run — Movement Lab"
+config/name="Rustbelt Run"
+config/icon="res://assets/art/panda_icon.svg"
 run/main_scene="res://scenes/movement_lab.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 

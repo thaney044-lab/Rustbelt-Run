@@ -44,10 +44,19 @@ func _ready() -> void:
 	add_shape(bridge, Vector2(310, 20), Color("dfb85d"))
 	add_child(bridge)
 	marker = Label.new()
-	marker.position = Vector2(1780, 275)
-	marker.text = "REPAIR YARD\nJ: swing  K: throw  E: carry / use  T: reset puzzle\nController: X / B / Y / Back"
+	marker.position = Vector2(1760, 305)
+	marker.add_theme_font_size_override("font_size", 14)
+	marker.add_theme_color_override("font_color", Color("f5dbab"))
+	var plaque := StyleBoxFlat.new()
+	plaque.bg_color = Color("294446",0.92)
+	plaque.content_margin_left = 10
+	plaque.content_margin_right = 10
+	plaque.content_margin_top = 6
+	plaque.content_margin_bottom = 6
+	marker.add_theme_stylebox_override("normal",plaque)
+	marker.text = "WORKSHOP  /  02\nJ swing   K throw   E use   T reset"
 	add_child(marker)
-	lab.label_at("THROW -> SWITCH", Vector2(1990, 330))
+	lab.label_at("THROW -> SWITCH", Vector2(1990, 310))
 	lab.label_at("BATTERY -> SOCKET -> CRANE", Vector2(2050, 580))
 	lab.label_at("EXIT ->", Vector2(2720, 455))
 	player.respawned.connect(on_respawn)
@@ -58,9 +67,11 @@ func add_shape(node: PhysicsBody2D, size: Vector2, color: Color) -> void:
 	rectangle.size = size
 	collision.shape = rectangle
 	node.add_child(collision)
-	var visual := Polygon2D.new()
-	visual.polygon = PackedVector2Array([Vector2(-size.x/2, -size.y/2), Vector2(size.x/2, -size.y/2), size/2, Vector2(-size.x/2, size.y/2)])
-	visual.color = color
+	var visual := preload("res://scripts/platform_art.gd").new()
+	visual.size = size
+	visual.base_color = color
+	visual.moving = size.x > 250
+	visual.surface_kind = "crate" if size == Vector2(42,46) else ("gate" if size == Vector2(20,110) else "steel")
 	node.add_child(visual)
 
 func body(at: Vector2, size: Vector2, color: Color) -> StaticBody2D:
@@ -172,21 +183,35 @@ func _physics_process(delta: float) -> void:
 	if complete:
 		lab.status.text = "REPAIR COMPLETE — route restored!\nT: reset the puzzle and play again."
 	else:
-		lab.status.text = "RUSTBELT RUN / Repair yard — J swing • K throw • E use • T reset\n" + hint
+		lab.status.text = "REPAIR YARD   /   J swing   K throw   E use   T reset\n" + hint
 	queue_redraw()
 
 func _draw() -> void:
-	if not entered:
-		return
-	draw_line(SOCKET, Vector2(2375, 330), Color("e6c86a") if powered else Color("657673"), 3)
+	# Fixed crane tower and top beam frame the actual moving bridge.
+	for x in [2250,2500]:
+		draw_line(Vector2(x,590),Vector2(x,225),Color("394e4d"),18)
+		draw_line(Vector2(x-3,580),Vector2(x-3,225),Color("b47d4b"),7)
+		for y in range(250,560,60):
+			draw_line(Vector2(x-9,y),Vector2(x+9,y+40),Color("c19662"),3)
+	draw_line(Vector2(2230,225),Vector2(2520,225),Color("273c40"),26)
+	draw_line(Vector2(2230,219),Vector2(2520,219),Color("d4a759"),7)
+	for x in range(2240,2520,30):
+		draw_line(Vector2(x,215),Vector2(x+14,235),Color("8d7048"),5)
+	draw_line(SOCKET,Vector2(2195,525),Color("273b3c"),9)
+	draw_line(Vector2(2195,525),Vector2(2375,525),Color("273b3c"),9)
+	draw_line(SOCKET, Vector2(2375,330), Color("e6c86a") if powered else Color("657673"), 3)
 	draw_line(Vector2(2375, 330), bridge.position, Color("e6c86a"), 4)
 	draw_rect(Rect2(SOCKET - Vector2(18, 20), Vector2(36, 40)), Color("d0c4a0"), false, 3)
 	draw_circle(SWITCH, 17, Color("6ebe99") if gate_open else Color("d79156"))
 	draw_line(SWITCH - Vector2(8, 0), SWITCH + Vector2(8, 0), Color.WHITE, 3)
 	if not gate_open and target_in_front(SWITCH, 260):
 		draw_arc(SWITCH, 25, 0, TAU, 24, Color.WHITE, 3)
-	draw_rect(Rect2(battery - Vector2(10, 16), Vector2(20, 32)), Color("8ed6ab"))
+	draw_style_box(tool_box(Color("2b4146")),Rect2(battery-Vector2(13,18),Vector2(26,36)))
+	draw_rect(Rect2(battery-Vector2(8,12),Vector2(16,24)),Color("8ed6ab"))
+	draw_rect(Rect2(battery+Vector2(-5,-22),Vector2(10,5)),Color("e2bc72"))
+	draw_line(battery+Vector2(0,-7),battery+Vector2(0,7),Color("294849"),3)
 	draw_line(battery + Vector2(-6, 0), battery + Vector2(6, 0), Color("203a30"), 3)
+	draw_style_box(tool_box(Color("49635d")),Rect2(CONTROL-Vector2(17,16),Vector2(34,37)))
 	draw_circle(CONTROL, 12, Color("e6c86a") if powered else Color("657673"))
 	draw_line(CONTROL, CONTROL + Vector2(0, -20), Color.WHITE, 3)
 	if wrench_out:
@@ -197,3 +222,11 @@ func _draw() -> void:
 	if not crate_broken:
 		draw_line(crate.position - Vector2(12, 12), crate.position + Vector2(12, 12), Color("f5e0ae"), 3)
 		draw_line(crate.position + Vector2(-12, 12), crate.position + Vector2(12, -12), Color("f5e0ae"), 3)
+
+func tool_box(fill: Color) -> StyleBoxFlat:
+	var b := StyleBoxFlat.new()
+	b.bg_color = fill
+	b.border_color = Color("22363a")
+	b.set_border_width_all(3)
+	b.set_corner_radius_all(4)
+	return b
