@@ -79,11 +79,11 @@ Continue right after lowering the crane. A checkpoint before the piston passage 
 
 Additional validation: `godot --headless --path . --script tests/passage_smoke.gd`.
 
-The route now continues beyond the freight yard into a flooded service canal with a checkpoint, moving maintenance lift and foundry gate. Use the FULLSCREEN button for a larger browser view. The camera is 12% closer; movement and collision dimensions are unchanged. Additional test: `godot --headless --path . --script tests/canal_smoke.gd`.
+The route now continues beyond the freight yard into a flooded service canal with a checkpoint, moving maintenance lift and foundry gate. Use the FULLSCREEN button for a larger browser view. The wider camera framing reveals more of the next landing; movement and player collision dimensions are unchanged. Additional test: `godot --headless --path . --script tests/canal_smoke.gd`.
 
 ## Patrols, health and scrap
 
-Four patrol robots guard safe-ground routes. J swings the wrench, K throws toward a highlighted robot in front of you, and landing on a bot's flat top disables it with a bounce. Side contact costs one of three health points and knocks you clear; temporary protection prevents repeated hits. Losing all health returns you to the current checkpoint. Checkpoints restore health. Patrols and puzzle objects reset after a retry; collected scrap remains collected for the current play session. The 38 optional scrap pieces suggest jump paths and reward detours; none are required to finish.
+Four patrol robots guard safe-ground routes. J swings the wrench, K throws toward a highlighted robot in front of you, and landing on a bot's flat top disables it with a bounce. Side contact costs one of three health points and knocks you clear; temporary protection prevents repeated hits. Losing all health returns you to the current checkpoint. Checkpoints restore health. Patrols and puzzle objects reset after a retry; collected scrap remains collected for the current play session. The 45 optional scrap pieces suggest jump paths and reward detours; none are required to finish.
 
 When no bot is targeted in the repair yard, K continues to operate the existing switch puzzle. There is only one thrown wrench at a time. The HUD shows health and scrap totals. No new input bindings are required.
 
@@ -91,4 +91,12 @@ The background transitions from the rail depot to a separate canal/foundry paint
 
 The fox artwork is now about 23% larger, anchored to the same foot position. The painted backdrop is augmented by independent cloud drift, rising steam, rotating flywheels at a nearer parallax depth, and animated distant water. Player collision dimensions and jump tuning are unchanged.
 
-The decorative low-opacity background train has been removed. Large static decks use a bespoke painted stone material and arched viaduct supports; catwalks use textured iron, timber treads and under-brackets. The foundry service run has a proximity-operated E control, vertical hoist, upper catwalks, moving gantry, two checkpoints and a workshop landing. The route spans 7,660 world units, with optional upper paths in Cinder Yard and the foundry. See [the level design notes](docs/FIRST_SHIFT_LEVEL.md).
+The decorative low-opacity background train has been removed. Large static decks use a bespoke painted stone material and arched viaduct supports; catwalks use textured iron, timber treads and under-brackets. The foundry service run has a proximity-operated E control, vertical hoist, upper catwalks, moving gantry, two checkpoints and a workshop landing. The route spans 8,860 world units, with optional upper paths in Cinder Yard and the foundry. See [the level design notes](docs/FIRST_SHIFT_LEVEL.md).
+
+## Wider, harder layout
+
+The entrance now has 155–160-unit ground gaps, smaller banks and narrower rooftop landings. A low shelf has been moved away from the takeoff edge so full jumps remain possible. Canal and foundry shuttles have smaller decks and faster, predictable cycles. The camera shows a wider field.
+
+Before the workshop, a new 1,200-unit transfer span combines raised landings, a moving shuttle, two timed steam vents and a safe island checkpoint. Amber **!** lamps warn for 0.8 seconds before each 1.1-second burst; wait for the plume to clear before committing. Steam contact returns you to your current checkpoint and resets the cycle. The final checkpoint is on the island at x=7940. The relocated workshop remains the finish. Seven more scrap pieces mark the extended route, bringing the total to 45.
+
+Additional physics validation: `godot --headless --path . --script tests/transfer_smoke.gd` covers the widened entrance jumps, all new transfer jumps, shuttle riding, the new checkpoint and warning/live steam behavior.

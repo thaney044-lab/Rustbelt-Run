@@ -21,7 +21,7 @@ func _ready() -> void:
 	glow = radial
 	var sign := Label.new()
 	sign.text = "PATCH'S WORKSHOP"
-	sign.position = Vector2(7448,372)
+	sign.position = Vector2(8648,372)
 	sign.add_theme_font_size_override("font_size",8)
 	sign.add_theme_color_override("font_color",Color("d5bb7a"))
 	add_child(sign)
@@ -32,7 +32,7 @@ func _process(delta: float) -> void:
 
 func _draw() -> void:
 	# Sagging power cables tie individual jumps to a continuous railway district.
-	for spec in [[30,520],[970,1260],[1660,2060],[2580,2990],[4290,4900],[6820,7240]]:
+	for spec in [[30,520],[970,1260],[1660,2060],[2580,2990],[4290,4900],[6820,7240],[7870,8010]]:
 		var left: float = spec[0]
 		var right: float = spec[1]
 		for x in [left,right]:
@@ -49,7 +49,7 @@ func _draw() -> void:
 			draw_line(at,at+Vector2(0,10),Color("3c4b3b"),1,true)
 			draw_circle(at+Vector2(0,11),2,Color("ebc578"))
 	# Hanging catwalks use braces and chain eyes, not unexplained floating blocks.
-	for spec in [[205,315,180,440],[385,495,140,360],[595,705,150,330],[780,920,130,305],[990,1170,170,340],[1240,1340,210,360],[1380,1550,180,350],[2800,2900,180,446],[6030,6250,110,380],[6060,6160,110,295],[6245,6335,90,255],[6400,6500,110,305]]:
+	for spec in [[205,315,180,440],[385,495,140,360],[595,705,150,330],[805,895,130,305],[1025,1135,170,340],[1240,1340,210,360],[1380,1550,180,350],[2800,2900,180,446],[6030,6250,110,380],[6060,6160,110,295],[6245,6335,90,255],[6400,6500,110,305]]:
 		var left: float = spec[0]
 		var right: float = spec[1]
 		var top: float = spec[2]
@@ -60,9 +60,9 @@ func _draw() -> void:
 			for y in range(int(top),int(bottom),18):
 				draw_circle(Vector2(x,y),2.5,Color("6e765b"))
 	# Railway railing has thin, subdued uprights behind the playable silhouette.
-	for spec in [[35,490,520],[945,1120,520],[1640,1800,520],[4310,4460,520],[6860,7220,520],[7370,7590,490]]:
+	for spec in [[35,470,520],[945,1120,520],[1640,1800,520],[4310,4460,520],[6860,7220,520],[8570,8790,490]]:
 		railing(spec[0],spec[1],spec[2])
-	for x in [140,1090,1760,2660,4160,5060,6970,7530]:
+	for x in [140,1090,1760,2660,4160,5060,6970,8730]:
 		lamp(Vector2(x,330))
 	# District landmarks, placed outside the collision path.
 	station_clock(Vector2(90,235))
@@ -83,10 +83,15 @@ func _draw() -> void:
 		if i%3 == 0:
 			draw_line(at,Vector2(at.x,450),Color("577064",0.65),1,true)
 	draw_polyline(suspension,Color("a7a17a"),3,true)
+	# Widely spaced transfer towers leave the jumping corridor open.
+	for x in [7350,7810,8110,8500]:
+		girder(Vector2(x,260),430,8)
+		for y in [280,630]:
+			draw_line(Vector2(x-18,y),Vector2(x+18,y),Color("566c50"),3,true)
 	# An illuminated workshop provides a real destination beyond the final jump.
-	workshop(Vector2(7310,279))
+	workshop(Vector2(8510,279))
 	# Ferns live at edges; their roots never change the actual collision rim.
-	for spec in [[20,520],[510,520],[940,520],[1550,520],[1845,520],[2980,520],[4240,520],[5310,520],[6810,520],[7240,520],[7580,490]]:
+	for spec in [[20,520],[470,520],[940,520],[1510,520],[1845,520],[2980,520],[4240,520],[5310,520],[6810,520],[7240,520],[8780,490]]:
 		fern(Vector2(spec[0],spec[1]),float(spec[0])*0.01)
 
 func girder(at: Vector2, height: float, width: float) -> void:

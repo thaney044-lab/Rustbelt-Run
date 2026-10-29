@@ -37,7 +37,7 @@ func run() -> void:
 	lab.player.position = Vector2(6940,490)
 	await frames(20)
 	check(area.stage == 2 and lab.player.spawn_point.x == 6910,"far-bank checkpoint saves crossing progress")
-	lab.player.position = Vector2(7500,450)
+	lab.player.position = Vector2(8700,450)
 	await frames(30)
 	check(area.finished,"final landing completes extended route")
 	lab.player.respawn()

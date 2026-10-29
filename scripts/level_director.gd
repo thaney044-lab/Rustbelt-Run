@@ -180,7 +180,7 @@ func _process(delta: float) -> void:
 	toast.visible = toast_time > 0
 	toast.modulate.a = minf(1,toast_time)
 	route.text = "%s     /     PARTS %d/3     /     %02d:%02d" % [CHAPTERS[chapter],cache_count()+int(passage.secret_found),int(elapsed)/60,int(elapsed)%60]
-	progress.points = PackedVector2Array([Vector2(28,623),Vector2(28+clampf(x/7500,0,1)*1096,623)])
+	progress.points = PackedVector2Array([Vector2(28,623),Vector2(28+clampf(x/8700,0,1)*1096,623)])
 	if foundry.finished: finish()
 	queue_redraw()
 

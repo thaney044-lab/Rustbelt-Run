@@ -13,21 +13,21 @@ func _ready() -> void:
 	effects = preload("res://scripts/visual_effects.gd").new()
 	add_child(effects)
 	configure_input()
-	platform(Vector2(270, 560), Vector2(540, 80))
-	platform(Vector2(700, 560), Vector2(180, 80))
+	platform(Vector2(240, 560), Vector2(480, 80))
+	platform(Vector2(700, 560), Vector2(130, 80))
 	platform(Vector2(1030, 560), Vector2(220, 80))
-	platform(Vector2(1410, 560), Vector2(300, 80))
+	platform(Vector2(1410, 560), Vector2(220, 80))
 	platform(Vector2(1750, 560), Vector2(240, 80))
 	platform(Vector2(260, 450), Vector2(110, 20))
 	platform(Vector2(440, 370), Vector2(110, 20))
-	platform(Vector2(1100, 430), Vector2(140, 24))
+	platform(Vector2(1060, 430), Vector2(100, 24))
 	platform(Vector2(1450, 450), Vector2(150, 24))
 	platform(Vector2(1480, 362), Vector2(150, 24))
 	platform(Vector2(855, 470), Vector2(100, 20), true)
 	# Optional rooftop line: readable jumps, a reward, and a return to the main route.
 	platform(Vector2(650,340),Vector2(110,20))
-	platform(Vector2(850,315),Vector2(140,20))
-	platform(Vector2(1080,350),Vector2(180,20))
+	platform(Vector2(850,315),Vector2(90,20))
+	platform(Vector2(1080,350),Vector2(110,20))
 	platform(Vector2(1290,370),Vector2(100,20))
 	player = Player.new()
 	player.z_index = 1
@@ -35,9 +35,9 @@ func _ready() -> void:
 	add_child(player)
 	var camera := Camera2D.new()
 	camera.position = Vector2(180, -80)
-	camera.zoom = Vector2(1.12,1.12)
+	camera.zoom = Vector2(1.0,1.0)
 	camera.limit_left = 0
-	camera.limit_right = 7660
+	camera.limit_right = 8860
 	camera.limit_top = 0
 	camera.limit_bottom = 720
 	player.add_child(camera)
@@ -158,8 +158,11 @@ func bind_keys(action: String, keys: Array) -> void:
 		event.physical_keycode = key
 		InputMap.action_add_event(action, event)
 
-func platform(center: Vector2, size: Vector2, moving := false) -> void:
+func platform(center: Vector2, size: Vector2, moving := false, pace := 1.2, travel := 90.0) -> void:
 	var body: PhysicsBody2D = MovingPlatform.new() if moving else StaticBody2D.new()
+	if moving:
+		body.pace = pace
+		body.travel = travel
 	body.position = center
 	var collision := CollisionShape2D.new()
 	var shape := RectangleShape2D.new()

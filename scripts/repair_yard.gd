@@ -149,7 +149,7 @@ func interact() -> void:
 		hint = "Bridge moving. Wait until it reaches the marked stop."
 
 func _physics_process(delta: float) -> void:
-	if not entered and player.position.x > 1780 and player.is_on_floor():
+	if not entered and player.position.x > 1780 and player.position.x < 2220 and player.is_on_floor():
 		entered = true
 		player.set_checkpoint(Vector2(1800, 490))
 		hint = "Repair checkpoint active. J breaks the marked crate."

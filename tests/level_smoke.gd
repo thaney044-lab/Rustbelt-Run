@@ -72,7 +72,7 @@ func run() -> void:
 	check(not paused and lab.player.controls_enabled,"Escape resumes movement")
 	lab.combat.enemies[-1].defeat()
 	await place(Vector2(5420,490))
-	await place(Vector2(7500,450))
+	await place(Vector2(8700,450))
 	await frames(20)
 	check(lab.director.complete and lab.director.overlay.visible and not lab.player.controls_enabled,"workshop landing opens results and stops player input")
 	await key(KEY_R)

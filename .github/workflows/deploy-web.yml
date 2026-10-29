@@ -60,6 +60,7 @@ jobs:
           godot --headless --path . --script tests/gameplay_smoke.gd
           godot --headless --path . --script tests/foundry_smoke.gd
           godot --headless --path . --script tests/level_smoke.gd
+          godot --headless --path . --script tests/transfer_smoke.gd
       - name: Export browser game
         run: bash tools/build_web.sh
       - uses: actions/upload-pages-artifact@v3

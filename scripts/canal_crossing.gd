@@ -17,7 +17,7 @@ func _ready() -> void:
 	add_child(water)
 	lab.platform(Vector2(4400,560),Vector2(200,80))
 	lab.platform(Vector2(4520,470),Vector2(80,20))
-	lab.platform(Vector2(4700,470),Vector2(120,20),true)
+	lab.platform(Vector2(4700,470),Vector2(100,20),true,1.45)
 	lab.platform(Vector2(5100,560),Vector2(460,80))
 	lab.platform(Vector2(5150,455),Vector2(110,20))
 	lab.label_at("FLOODED SERVICE CANAL",Vector2(4310,310))
