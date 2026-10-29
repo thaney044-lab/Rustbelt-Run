@@ -27,6 +27,13 @@ func _draw() -> void:
 		for col in 5:
 			for row in 3:
 				draw_rect(Rect2(x+12+col*28, 445-h+row*30, 12, 19), Color("a8b49a") if (col+row+i)%4==0 else Color("47635f"))
+	# Pipework, roof vents and softened chimney plumes provide industrial depth.
+	for i in range(-1,12):
+		var x := i*270.0-scroll*.35
+		draw_polyline(PackedVector2Array([Vector2(x,560),Vector2(x,355),Vector2(x+65,355),Vector2(x+65,390)]),Color("4c6962"),9,true)
+		draw_line(Vector2(x-2,560),Vector2(x-2,360),Color("8da18b",0.5),2)
+		for j in 5:
+			draw_circle(Vector2(x+100+j*10,180-j*15),12+j*3,Color("d2d5b8",0.06))
 	# Mid-distance railway viaduct and rusty gantries.
 	var rail_y := 420.0
 	draw_line(Vector2(0,rail_y),Vector2(1200,rail_y),Color("445d59"),8)

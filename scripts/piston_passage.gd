@@ -61,7 +61,7 @@ func _physics_process(delta: float) -> void:
 	if player.position.x > 3990 and player.is_on_floor():
 		finished = true
 	if finished:
-		lab.status.text = "FIRST SHIFT  /  DEPOT RESTORED!\n" + ("Rare machine part recovered." if secret_found else "A rare part is hidden in the maintenance loft.") + "  R: replay passage."
+		lab.status.text = "DEPOT RESTORED  /  CONTINUE RIGHT TO THE SERVICE CANAL\n" + ("Rare machine part recovered." if secret_found else "A rare part is hidden in the maintenance loft.") + "  R: replay passage."
 	elif collected_flash > 0:
 		lab.status.text = "SECRET FOUND  /  RARE MACHINE PART\nStored for this play session. Continue through the piston passage."
 	else:

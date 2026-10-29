@@ -24,8 +24,9 @@ func _ready() -> void:
 	add_child(player)
 	var camera := Camera2D.new()
 	camera.position = Vector2(180, -80)
+	camera.zoom = Vector2(1.12,1.12)
 	camera.limit_left = 0
-	camera.limit_right = 4320
+	camera.limit_right = 5480
 	camera.limit_top = 0
 	camera.limit_bottom = 720
 	player.add_child(camera)
@@ -45,6 +46,15 @@ func _ready() -> void:
 	backing.set_corner_radius_all(3)
 	status.add_theme_stylebox_override("normal", backing)
 	hud.add_child(status)
+	var fullscreen := Button.new()
+	fullscreen.text = "FULLSCREEN"
+	fullscreen.position = Vector2(1000,22)
+	fullscreen.add_theme_font_size_override("font_size",14)
+	fullscreen.pressed.connect(func():
+		var full := DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED if full else DisplayServer.WINDOW_MODE_FULLSCREEN)
+	)
+	hud.add_child(fullscreen)
 	status.text = "RUSTBELT RUN   /   OVERGROWN RAIL DEPOT\nA/D or arrows: run    Space: jump    R: retry  |  Reach the workshop flag."
 	label_at("SHORT / FULL JUMPS", Vector2(140, 310))
 	label_at("MOVING PLATFORM", Vector2(670, 335))
@@ -57,6 +67,9 @@ func _ready() -> void:
 	var passage := preload("res://scripts/piston_passage.gd").new()
 	passage.lab = self
 	add_child(passage)
+	var canal := preload("res://scripts/canal_crossing.gd").new()
+	canal.lab = self
+	add_child(canal)
 	var scenery_layer := CanvasLayer.new()
 	scenery_layer.layer = -10
 	var scenery := preload("res://scripts/depot_scenery.gd").new()

@@ -69,3 +69,5 @@ Artwork notes and provenance: [assets/art/README.md](assets/art/README.md).
 Continue right after lowering the crane. A checkpoint before the piston passage restores you to safety and restarts its timing after a hit. Amber lights with an exclamation mark warn before descent. Wait for a head to retract, then cross beneath it. The maintenance loft above the checkpoint contains an optional machine part, retained across retries during the current play session (not saved after a page reload). Reach the freight car and PATCH to finish this prototype stage; R replays the passage. The train is a stationary finish illustration, not the planned moving-train sequence.
 
 Additional validation: `godot --headless --path . --script tests/passage_smoke.gd`.
+
+The route now continues beyond the freight yard into a flooded service canal with a checkpoint, moving maintenance lift and foundry gate. Use the FULLSCREEN button for a larger browser view. The camera is 12% closer; movement and collision dimensions are unchanged. Additional test: `godot --headless --path . --script tests/canal_smoke.gd`.

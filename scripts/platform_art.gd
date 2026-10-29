@@ -21,6 +21,16 @@ func _draw() -> void:
 		draw_rect(Rect2(-size.x/2-3, r.position.y, size.x+6, 7), Color("e6c77c"))
 		return
 	draw_style_box(box(base_color, Color("1d3035"), 3), r)
+	# Recessed metal panels, small scratches and rust stains add material depth.
+	for band in range(1, int(size.y), 4):
+		var shade := 0.04 + float(band)/maxf(size.y,1.0)*0.08
+		draw_rect(Rect2(r.position+Vector2(3,band),Vector2(size.x-6,3)),Color(0.06,0.12,0.13,shade))
+	for i in range(int(size.x/19)):
+		var x := r.position.x+7+i*19
+		var y := r.position.y+9+fposmod(i*17.0,maxf(4,size.y-16))
+		draw_line(Vector2(x,y),Vector2(minf(x+8,r.end.x-3),y+2),Color("b6ad85",0.16),1)
+		if i%3 == 0:
+			draw_circle(Vector2(x,y),2.5,Color("a16d45",0.25))
 	draw_rect(Rect2(r.position + Vector2(0, 8), Vector2(size.x, 5)), Color("283d40"))
 	if size.y > 30:
 		for x in range(int(r.position.x + 10), int(r.end.x-26), 40):
