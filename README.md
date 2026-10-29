@@ -12,7 +12,7 @@ The movement lab uses temporary geometric art and includes acceleration, variabl
 - Jump: Space or controller A; release early for a short hop.
 - Retry: R. Reach the flag to set the checkpoint.
 
-Wrench mechanics, crane puzzle, enemies, final art/audio, menus, remapping, persistence, and Windows exports are planned, not implemented. Controller bindings exist but have not been tested with physical hardware. Movement feel still needs a human playtest.
+The next section is a repair yard: J swings the wrench, K throws it toward a highlighted switch, E carries/inserts the battery or uses the crane control, and T resets the puzzle at its checkpoint. Controller bindings: X swing, B throw, Y use, Back reset. Lower the crane bridge and cross to the exit. Falls restore the whole puzzle to a recoverable state. Enemies, final art/audio, menus, remapping, persistence, and Windows exports are planned, not implemented. Controller bindings exist but have not been tested with physical hardware. Movement feel still needs a human playtest.
 
 See [the implementation plan](docs/IMPLEMENTATION_PLAN.md) for milestones and acceptance criteria based on the supplied v0.1 outline. Godot is the initial default; the outline did not specify an engine.
 
@@ -21,6 +21,7 @@ See [the implementation plan](docs/IMPLEMENTATION_PLAN.md) for milestones and ac
 ```sh
 godot --headless --path . --quit-after 120
 godot --headless --path . --script tests/movement_smoke.gd
+godot --headless --path . --script tests/repair_smoke.gd
 ```
 
 The smoke test exercises real physics: landing, different jump heights, checkpoint activation, fall recovery, and moving-platform carrying. It exits nonzero on failure.

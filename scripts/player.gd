@@ -1,5 +1,8 @@
 extends CharacterBody2D
 
+signal respawned
+var facing := 1.0
+
 const SPEED := 290.0
 const ACCELERATION := 1900.0
 const GRAVITY := 1450.0
@@ -31,6 +34,8 @@ func _physics_process(delta: float) -> void:
 	if not controls_enabled:
 		return
 	var axis := Input.get_axis("move_left", "move_right")
+	if absf(axis) > 0.1:
+		facing = signf(axis)
 	velocity.x = move_toward(velocity.x, axis * SPEED, ACCELERATION * delta)
 	coyote = COYOTE_TIME if is_on_floor() else maxf(0.0, coyote - delta)
 	jump_buffer = BUFFER_TIME if Input.is_action_just_pressed("jump") else maxf(0.0, jump_buffer - delta)
@@ -51,3 +56,4 @@ func respawn() -> void:
 	coyote = 0.0
 	jump_buffer = 0.0
 	reset_physics_interpolation()
+	respawned.emit()

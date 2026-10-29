@@ -25,7 +25,7 @@ func _ready() -> void:
 	var camera := Camera2D.new()
 	camera.position = Vector2(180, -80)
 	camera.limit_left = 0
-	camera.limit_right = 1950
+	camera.limit_right = 3000
 	camera.limit_top = 0
 	camera.limit_bottom = 720
 	player.add_child(camera)
@@ -40,7 +40,10 @@ func _ready() -> void:
 	label_at("MOVING PLATFORM", Vector2(670, 335))
 	label_at("CHECKPOINT", Vector2(980, 470))
 	label_at("LOW CEILING", Vector2(1340, 290))
-	label_at("END OF MOVEMENT LAB", Vector2(1640, 410))
+	label_at("REPAIR YARD ->", Vector2(1640, 410))
+	var yard := preload("res://scripts/repair_yard.gd").new()
+	yard.lab = self
+	add_child(yard)
 	queue_redraw()
 
 func configure_input() -> void:
@@ -48,6 +51,10 @@ func configure_input() -> void:
 	bind_keys("move_right", [KEY_D, KEY_RIGHT])
 	bind_keys("jump", [KEY_SPACE])
 	bind_keys("restart", [KEY_R])
+	bind_keys("interact", [KEY_E])
+	bind_keys("swing", [KEY_J])
+	bind_keys("throw_wrench", [KEY_K])
+	bind_keys("reset_puzzle", [KEY_T])
 	var axis_left := InputEventJoypadMotion.new()
 	axis_left.axis = JOY_AXIS_LEFT_X
 	axis_left.axis_value = -1.0
@@ -56,7 +63,7 @@ func configure_input() -> void:
 	axis_right.axis = JOY_AXIS_LEFT_X
 	axis_right.axis_value = 1.0
 	InputMap.action_add_event("move_right", axis_right)
-	for pair in [["jump", JOY_BUTTON_A], ["move_left", JOY_BUTTON_DPAD_LEFT], ["move_right", JOY_BUTTON_DPAD_RIGHT]]:
+	for pair in [["interact", JOY_BUTTON_Y], ["swing", JOY_BUTTON_X], ["throw_wrench", JOY_BUTTON_B], ["reset_puzzle", JOY_BUTTON_BACK], ["jump", JOY_BUTTON_A], ["move_left", JOY_BUTTON_DPAD_LEFT], ["move_right", JOY_BUTTON_DPAD_RIGHT]]:
 		var event := InputEventJoypadButton.new()
 		event.button_index = pair[1]
 		InputMap.action_add_event(pair[0], event)
@@ -98,11 +105,9 @@ func _physics_process(_delta: float) -> void:
 		checkpoint_reached = true
 		player.spawn_point = Vector2(1020, 490)
 		status.text += "\nCheckpoint active — falls and R return here."
-	if player.position.x > 1700 and player.is_on_floor():
-		status.text = "Movement lab complete. R: return to checkpoint.\nNext milestone: wrench, battery, socket and crane."
 
 func _draw() -> void:
-	for x in range(50, 1950, 160):
+	for x in range(50, 3000, 160):
 		draw_rect(Rect2(x, 160, 55, 360), Color("172d30"))
 	draw_line(Vector2(1000, 520), Vector2(1000, 465), Color("e6c86a"), 4)
 	draw_colored_polygon(PackedVector2Array([Vector2(1000, 465), Vector2(1030, 475), Vector2(1000, 485)]), Color("e6c86a"))

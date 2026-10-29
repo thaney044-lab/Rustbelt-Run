@@ -49,7 +49,9 @@ jobs:
           PY
           echo "$RUNNER_TEMP/godot-bin" >> "$GITHUB_PATH"
       - name: Validate physics
-        run: godot --headless --path . --script tests/movement_smoke.gd
+        run: |
+          godot --headless --path . --script tests/movement_smoke.gd
+          godot --headless --path . --script tests/repair_smoke.gd
       - name: Export browser game
         run: bash tools/build_web.sh
       - uses: actions/upload-pages-artifact@v3
