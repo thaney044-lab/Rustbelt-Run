@@ -1,10 +1,24 @@
 # Rustbelt Run
 
-A 2D puzzle platformer following a fox mechanic through an overgrown industrial valley. Repair machinery, discover secrets, and chase a runaway robot.
+A three-level 2D puzzle platformer following a fox mechanic through an overgrown industrial valley. Repair machinery, discover secrets, and chase a runaway robot.
+
+## The valley campaign
+
+The game now opens on a keyboard/controller-accessible level selector. All three levels are available immediately; completing one offers the next route. Pause any level to return to the selector.
+
+| Level | Length | Goal and route |
+| --- | ---: | --- |
+| First Shift | 13,060 units | The original repair yard, canal, foundry and freight journey. |
+| Mosswater Relay | 6,100 units | Restore three pumps to power ferries and a vertical lift, cross water jets, and open the harbour gate. |
+| Emberline Summit | 7,100 units | Restore two breakers, climb increasingly high furnace catwalks, time the presses, and light the summit beacon. |
+
+The two new levels have independent layouts, four safe checkpoint banks each, 35/40 scrap pickups and three/four patrols respectively. Power remains restored after retries. Leaving or restarting a level starts a fresh run; completion records save the best time and largest scrap haul per level locally on the device. The save is `user://campaign.cfg` (browser storage for the Web build).
+
+Campaign navigation, each new jump connection, powered machinery, vertical carrying, relay range, closed/open exit gates, hazard timing, retry state, results screens and save reloads are covered by `tests/campaign_smoke.gd`. Jump geometry is tested with moving decks at their center positions; machinery motion and carrying are checked separately. Physical controller hardware still needs validation.
 
 ## Current prototype
 
-Godot **4.6.3**, GDScript, Compatibility renderer. Open `project.godot` and press **F6** on `scenes/movement_lab.tscn`, or press **F5** to run the project. From a terminal in this directory: `godot --path .`.
+Godot **4.6.3**, GDScript, Compatibility renderer. Open `project.godot` and press **F6** on `scenes/movement_lab.tscn`, or press **F5** to open the campaign selector. From a terminal in this directory: `godot --path .`.
 
 First Shift connects seven areas: Cinder Yard, the repair works, piston hall, flooded viaduct, the foundry, freight aqueduct and the last mile. Painted stone viaducts, iron catwalks, cables, lanterns and ferns tie the playable route into the industrial valley. The fox has acceleration, variable jump height, coyote time, jump buffering, a follow camera and checkpoint recovery. The main route combines patrol combat, a crane repair puzzle, timed pistons, canal crossings and a powered hoist.
 
@@ -15,7 +29,7 @@ First Shift connects seven areas: Cinder Yard, the repair works, piston hall, fl
 - Optional rooftop routes hold two rare parts; a third is in the maintenance loft. Parts and scrap survive checkpoint retries during this page session. The rooftop parts also restore health.
 - Reach PATCH's lit workshop for the results screen: time, scrap, rare parts and retries. Enter/the button starts a fresh run; R returns to the final checkpoint for more exploration.
 
-In the repair yard, J swings the wrench, K throws it toward a highlighted switch, E carries/inserts the battery or uses the crane control, and T resets the puzzle at its checkpoint. Controller bindings: X swing, B throw, Y use, Back reset. Lower the crane bridge and cross to the exit. Falls restore the whole puzzle to a recoverable state. Patrol bots, three health points, brief damage protection and optional scrap trails are implemented. Production audio, a title screen, remapping, persistent saves and Windows exports remain planned. Controller bindings exist but have not been tested with physical hardware. The owner has playtested and approved the movement; new art and level additions still benefit from further playtesting.
+In the repair yard, J swings the wrench, K throws it toward a highlighted switch, E carries/inserts the battery or uses the crane control, and T resets the puzzle at its checkpoint. Controller bindings: X swing, B throw, Y use, Back reset. Lower the crane bridge and cross to the exit. Falls restore the whole puzzle to a recoverable state. Patrol bots, three health points, brief damage protection and optional scrap trails are implemented. Production audio, remapping, persistent checkpoint saves and Windows exports remain planned. Controller bindings exist but have not been tested with physical hardware. The owner has playtested and approved the movement; new art and level additions still benefit from further playtesting.
 
 See [the implementation plan](docs/IMPLEMENTATION_PLAN.md) for milestones and acceptance criteria based on the supplied v0.1 outline. Godot is the initial default; the outline did not specify an engine.
 
@@ -57,6 +71,7 @@ godot --headless --path . --script tests/gameplay_smoke.gd
 godot --headless --path . --script tests/foundry_smoke.gd
 godot --headless --path . --script tests/level_smoke.gd
 godot --headless --path . --script tests/freight_smoke.gd
+godot --headless --path . --script tests/campaign_smoke.gd
 ```
 
 The smoke test exercises real physics: landing, different jump heights, checkpoint activation, fall recovery, and moving-platform carrying. It exits nonzero on failure.
@@ -84,7 +99,7 @@ python -m http.server 8060 --directory builds/web
 
 Serve over HTTP for local testing or HTTPS for public hosting; opening `index.html` directly from disk does not work. Upload every file in `builds/web` together to a static host (or upload the ZIP as an HTML game on itch.io). This single-threaded build does not require COOP/COEP headers. Use a desktop browser with WebGL 2 and WebAssembly. Mobile touch controls are not implemented.
 
-The browser prototype is live at https://thaney044-lab.github.io/Rustbelt-Run/. It is not yet the complete campaign.
+The browser prototype is live at https://thaney044-lab.github.io/Rustbelt-Run/. It includes the three-level valley campaign.
 
 ## Publish a browser link with GitHub Pages
 

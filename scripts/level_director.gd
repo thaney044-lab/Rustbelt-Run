@@ -1,5 +1,6 @@
 extends Node2D
 ## Session presentation and optional discoveries; puzzle/checkpoint ownership stays local.
+var mission_id := 0
 var lab: Node2D
 var foundry: Node2D
 var passage: Node2D
@@ -49,7 +50,7 @@ func _ready() -> void:
 	overlay.visible = false
 	canvas.add_child(overlay)
 	var eyebrow := make_label(Vector2(0,143),14,Color("b9a875"))
-	eyebrow.text = "R U S T B E L T   R U N     /     F I R S T   S H I F T"
+	eyebrow.text = "R U S T B E L T   R U N     /     " + Campaign.TITLES[mission_id].to_upper()
 	eyebrow.size.x = 1152
 	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	overlay.add_child(eyebrow)
@@ -64,7 +65,7 @@ func _ready() -> void:
 	overlay.add_child(details)
 	primary = make_button(Vector2(401,403),Vector2(350,44))
 	primary.pressed.connect(func():
-		if complete: replay()
+		if complete: advance()
 		else: toggle_pause()
 	)
 	overlay.add_child(primary)
@@ -74,10 +75,16 @@ func _ready() -> void:
 		else: replay()
 	)
 	overlay.add_child(secondary)
+	var levels := make_button(Vector2(401,515),Vector2(350,36))
+	levels.text = "LEVEL SELECT"
+	levels.pressed.connect(Campaign.menu)
+	overlay.add_child(levels)
 	primary.focus_neighbor_bottom = primary.get_path_to(secondary)
-	primary.focus_neighbor_top = primary.get_path_to(secondary)
-	secondary.focus_neighbor_bottom = secondary.get_path_to(primary)
+	primary.focus_neighbor_top = primary.get_path_to(levels)
+	secondary.focus_neighbor_bottom = secondary.get_path_to(levels)
 	secondary.focus_neighbor_top = secondary.get_path_to(primary)
+	levels.focus_neighbor_top = levels.get_path_to(secondary)
+	levels.focus_neighbor_bottom = levels.get_path_to(primary)
 
 func make_label(at: Vector2, font_size: int, color: Color) -> Label:
 	var label := Label.new()
@@ -126,6 +133,10 @@ func on_retry() -> void:
 	secondary.release_focus()
 	overlay.hide()
 
+func advance() -> void:
+	if mission_id < 2: Campaign.play(mission_id+1)
+	else: Campaign.menu()
+
 func replay() -> void:
 	get_tree().paused = false
 	get_tree().call_deferred("reload_current_scene")
@@ -140,7 +151,7 @@ func toggle_pause() -> void:
 		heading.text = "Take a breather."
 		details.text = "A/D or arrows  ·  Run      Space  ·  Jump\nJ  ·  Swing      K  ·  Throw      E  ·  Use\nR  ·  Return to checkpoint      T  ·  Reset repair puzzle\nController: A jump · X swing · B throw · Y use · Start pause"
 		primary.text = "RESUME  /  ESC"
-		secondary.text = "RESTART FIRST SHIFT"
+		secondary.text = "RESTART " + Campaign.TITLES[mission_id].to_upper()
 		primary.grab_focus()
 	else:
 		primary.release_focus()
@@ -152,7 +163,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		toggle_pause()
 		get_viewport().set_input_as_handled()
 	elif complete and event is InputEventKey and event.pressed and event.physical_keycode == KEY_ENTER:
-		replay()
+		advance()
 		get_viewport().set_input_as_handled()
 
 func cache_count() -> int:
@@ -165,11 +176,12 @@ func finish() -> void:
 	heading.text = "The workshop lights are on."
 	var parts := cache_count()+int(passage.secret_found)
 	details.text = "FIRST SHIFT COMPLETE\n%02d:%02d    ·    %d scrap recovered    ·    %d/3 rare parts\n%d checkpoint retries    ·    Explore the rooftops to find every part." % [int(elapsed)/60,int(elapsed)%60,lab.combat.scrap_count,parts,retries]
-	primary.text = "PLAY AGAIN  /  ENTER"
+	primary.text = "NEXT LEVEL / MOSSWATER RELAY"
 	secondary.text = "EXPLORE FROM CHECKPOINT  /  R"
 	overlay.show()
 	primary.grab_focus()
 	toast.hide()
+	if get_tree().current_scene == lab: Campaign.record_completion(0,elapsed,lab.combat.scrap_count)
 
 func _process(delta: float) -> void:
 	if paused: return

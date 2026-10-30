@@ -1,5 +1,6 @@
 extends Node2D
 
+var authored_layout := true
 var lab: Node2D
 var yard: Node2D
 var enemies: Array[Node2D] = []
@@ -20,12 +21,13 @@ var enemy_art: Texture2D = preload("res://assets/art/painted/patrol_bot.png")
 var enemy_region := Rect2(162,203,1087,795)
 
 func _ready() -> void:
-	for spec in [[355.0,330.0,450.0],[2690.0,2620.0,2740.0],[5030.0,4970.0,5090.0],[7040.0,6900.0,7180.0]]:
-		spawn_patrol(Vector2(spec[0],499), spec[1], spec[2])
-	for point in [Vector2(140,480),Vector2(250,415),Vector2(440,335),Vector2(525,415),Vector2(575,415),Vector2(660,485),Vector2(770,475),Vector2(855,430),Vector2(960,480),Vector2(1100,395),Vector2(1290,485),Vector2(1450,400),Vector2(1650,485),Vector2(1770,485),Vector2(1990,485),Vector2(2110,450),Vector2(2375,470),Vector2(2580,485),Vector2(2810,435),Vector2(3000,485),Vector2(3290,485),Vector2(3530,485),Vector2(3780,485),Vector2(3970,400),Vector2(4410,485),Vector2(4520,430),Vector2(4700,430),Vector2(4950,485),Vector2(5150,415),Vector2(5500,480),Vector2(5660,450),Vector2(5850,400),Vector2(6140,340),Vector2(6340,410),Vector2(6600,430),Vector2(6940,480),Vector2(7190,460),Vector2(7360,415),Vector2(7490,440),Vector2(7700,410),Vector2(7890,480),Vector2(8000,480),Vector2(8160,440),Vector2(8400,400),Vector2(8560,440)]:
-		scrap_positions.append(point)
-		collected.append(false)
-	lab.label_at("PATROL  /  J swing · K throw · jump to stomp",Vector2(240,570))
+	if authored_layout:
+		for spec in [[355.0,330.0,450.0],[2690.0,2620.0,2740.0],[5030.0,4970.0,5090.0],[7040.0,6900.0,7180.0]]:
+			spawn_patrol(Vector2(spec[0],499), spec[1], spec[2])
+		for point in [Vector2(140,480),Vector2(250,415),Vector2(440,335),Vector2(525,415),Vector2(575,415),Vector2(660,485),Vector2(770,475),Vector2(855,430),Vector2(960,480),Vector2(1100,395),Vector2(1290,485),Vector2(1450,400),Vector2(1650,485),Vector2(1770,485),Vector2(1990,485),Vector2(2110,450),Vector2(2375,470),Vector2(2580,485),Vector2(2810,435),Vector2(3000,485),Vector2(3290,485),Vector2(3530,485),Vector2(3780,485),Vector2(3970,400),Vector2(4410,485),Vector2(4520,430),Vector2(4700,430),Vector2(4950,485),Vector2(5150,415),Vector2(5500,480),Vector2(5660,450),Vector2(5850,400),Vector2(6140,340),Vector2(6340,410),Vector2(6600,430),Vector2(6940,480),Vector2(7190,460),Vector2(7360,415),Vector2(7490,440),Vector2(7700,410),Vector2(7890,480),Vector2(8000,480),Vector2(8160,440),Vector2(8400,400),Vector2(8560,440)]:
+			scrap_positions.append(point)
+			collected.append(false)
+		lab.label_at("PATROL  /  J swing · K throw · jump to stomp",Vector2(240,570))
 	lab.player.respawned.connect(reset_enemies)
 
 func spawn_patrol(at: Vector2, left: float, right: float) -> void:
@@ -53,7 +55,7 @@ func reset_enemies() -> void:
 	notice_time = 0
 
 func swing() -> void:
-	if flight_active or yard.wrench_out or attack_cooldown > 0:
+	if flight_active or (is_instance_valid(yard) and yard.wrench_out) or attack_cooldown > 0:
 		return
 	attack_cooldown = 0.25
 	for enemy in enemies:
@@ -73,10 +75,10 @@ func nearest_target() -> Node2D:
 	return result
 
 func begin_throw() -> bool:
-	if flight_active or yard.wrench_out:
+	if flight_active or (is_instance_valid(yard) and yard.wrench_out):
 		return false
 	var target := nearest_target()
-	if not target and yard.entered:
+	if not target and is_instance_valid(yard) and yard.entered:
 		return false # The existing puzzle wrench handles switches and crane machinery.
 	flight_active = true
 	returning = false

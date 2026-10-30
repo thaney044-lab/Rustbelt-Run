@@ -3,8 +3,11 @@ config_version=5
 [application]
 config/name="Rustbelt Run"
 config/icon="res://assets/art/panda_icon.svg"
-run/main_scene="res://scenes/movement_lab.tscn"
+run/main_scene="res://scenes/campaign_menu.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
+
+[autoload]
+Campaign="*res://scripts/campaign.gd"
 
 [display]
 window/size/viewport_width=1152
