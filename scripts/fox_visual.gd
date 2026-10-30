@@ -11,12 +11,21 @@ var player: CharacterBody2D
 var frame := 0
 var time := 0.0
 var action_time := 0.0
+var landing_time := 0.0
+var landing_strength := 0.0
 
 func _ready() -> void:
 	player = get_parent()
+	player.landed.connect(on_landed)
+	player.respawned.connect(func(): landing_time = 0.0)
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 
+func on_landed(impact_speed: float) -> void:
+	landing_strength = clampf((impact_speed - 120) / 600, 0, 1) * 0.10
+	landing_time = 0.18
+
 func _process(delta: float) -> void:
+	landing_time = maxf(0, landing_time - delta)
 	time += delta
 	modulate.a = 0.65+sin(time*14)*0.20 if player.invulnerability > 0 else 1.0
 	action_time = maxf(0.0,action_time-delta)
@@ -36,9 +45,10 @@ func _draw() -> void:
 	if not player:
 		return
 	var bob := sin(time*2.6)*0.6 if frame == 0 else 0.0
-	draw_set_transform(Vector2(0,bob),0,Vector2(player.facing,1))
+	var squash := sin(landing_time / 0.18 * PI) * landing_strength
+	draw_set_transform(Vector2(0,20 + bob),0,Vector2(player.facing * (1 + squash),1 - squash))
 	var source: Rect2 = REGIONS[frame]
 	var cell_origin := Vector2((frame%4)*384,(frame/4 as int)*512)
-	var destination := Rect2((source.position-cell_origin-Vector2(ANCHOR_X,BOOT_Y[frame]))*SCALE+Vector2(0,20),source.size*SCALE)
+	var destination := Rect2((source.position-cell_origin-Vector2(ANCHOR_X,BOOT_Y[frame]))*SCALE,source.size*SCALE)
 	draw_texture_rect_region(SHEET,destination,source)
 	draw_set_transform(Vector2.ZERO)

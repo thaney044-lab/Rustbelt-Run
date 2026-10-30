@@ -35,11 +35,13 @@ func jump_to(target_x: float) -> void:
 
 func key(code: Key) -> void:
 	var event := InputEventKey.new()
+	event.keycode = code
 	event.physical_keycode = code
 	event.pressed = true
 	Input.parse_input_event(event)
 	await process_frame
 	event = InputEventKey.new()
+	event.keycode = code
 	event.physical_keycode = code
 	Input.parse_input_event(event)
 	await process_frame
@@ -48,6 +50,19 @@ func run() -> void:
 	lab = load("res://scenes/movement_lab.tscn").instantiate()
 	root.add_child(lab)
 	await frames(10)
+	var yard = lab.combat.yard
+	check(lab.director.objective_text(2000).contains("crate"), "repair objective starts with clearing the crate")
+	yard.crate_broken = true
+	check(lab.director.objective_text(2000).contains("switch"), "repair objective advances to the gate switch")
+	yard.gate_open = true
+	yard.carrying = true
+	check(lab.director.objective_text(2000).contains("Insert"), "carried battery produces the socket objective")
+	yard.powered = true
+	check(lab.director.objective_text(2000).contains("control"), "powered crane produces the bridge objective")
+	yard.crate_broken = false
+	yard.gate_open = false
+	yard.carrying = false
+	yard.powered = false
 	await place(Vector2(480,340))
 	await jump_to(650)
 	check(lab.player.is_on_floor() and lab.player.position.y < 315 and lab.player.position.x > 595,"first rooftop jump is reachable using normal movement")
@@ -73,9 +88,26 @@ func run() -> void:
 	await key(KEY_ESCAPE)
 	var before: float = lab.director.elapsed
 	await frames(10)
+	check(lab.director.primary.has_focus(), "pause focuses the resume button for keyboard navigation")
+	await key(KEY_DOWN)
+	check(lab.director.secondary.has_focus(), "Down selects the restart button")
+	await key(KEY_UP)
+	check(lab.director.primary.has_focus(), "Up returns to resume")
 	check(paused and lab.director.overlay.visible and lab.director.elapsed == before,"pause freezes simulation and run timer")
+	await key(KEY_ENTER)
+	check(not paused and lab.player.controls_enabled, "Enter activates focused resume button")
+	var start := InputEventJoypadButton.new()
+	start.button_index = JOY_BUTTON_START
+	start.pressed = true
+	Input.parse_input_event(start)
+	await process_frame
+	await process_frame
+	check(paused and lab.director.primary.has_focus(), "controller Start opens pause with focused resume")
+	start = InputEventJoypadButton.new()
+	start.button_index = JOY_BUTTON_START
+	Input.parse_input_event(start)
 	await key(KEY_ESCAPE)
-	check(not paused and lab.player.controls_enabled,"Escape resumes movement")
+	check(not paused and lab.player.controls_enabled, "Escape resumes after controller pause")
 	lab.combat.enemies[-1].defeat()
 	await place(Vector2(5420,490))
 	await place(Vector2(8700,450))

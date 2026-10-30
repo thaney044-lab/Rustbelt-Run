@@ -10,7 +10,10 @@ func run() -> void:
 	check(lab.player.is_on_floor() and lab.player.position.x > 622,"widened entrance gap is reachable with a held jump")
 	await place(Vector2(750,500))
 	await jump_to(1030)
-	check(lab.player.is_on_floor() and lab.player.position.x > 907,"second wide gap reaches the checkpoint bank")
+	# The moving shuttle can catch the first jump before the checkpoint bank.
+	if lab.player.is_on_floor() and lab.player.position.x < 990:
+		await jump_to(1030)
+	check(lab.player.is_on_floor() and lab.player.position.x > 990,"second wide gap reaches the checkpoint bank")
 	await place(Vector2(1130,500))
 	await jump_to(1410)
 	check(lab.player.is_on_floor() and lab.player.position.x > 1287,"third wide gap reaches the narrower bank")

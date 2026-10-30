@@ -21,6 +21,12 @@ See [the implementation plan](docs/IMPLEMENTATION_PLAN.md) for milestones and ac
 
 The repeating foreground flywheels have been removed so bottom-of-screen machinery no longer appears to follow the player.
 
+## Objectives and menu navigation
+
+The HUD now shows the current district and next objective, including each step of the repair puzzle and foundry route. Intro controls disappear after eight seconds; the pause menu holds the full control reference. Use Up/Down and Enter, or controller D-pad and A, to select pause/results buttons. Start or Esc pauses the game. Focus is visible and released when play resumes. Controller pause is covered by simulated input; physical hardware still needs validation.
+
+The fox briefly compresses on landing in proportion to impact speed, with its boots anchored to the same contact point. This animation leaves collision and jump tuning unchanged.
+
 ## Combat and collection feedback
 
 Wrench swings leave a brief amber arc, and thrown wrenches have a short fading trail. Scrap pickups display a floating recovery caption and ring; checkpoints use a green pulse and rare parts use a gold celebration. Three health segments beneath the HUD briefly highlight lost health when damage occurs. Effects expire automatically and pause with gameplay.

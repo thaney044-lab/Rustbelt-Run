@@ -1,6 +1,7 @@
 extends CharacterBody2D
 
 signal respawned
+signal landed(impact_speed: float)
 var facing := 1.0
 
 const SPEED := 290.0
@@ -61,8 +62,10 @@ func _physics_process(delta: float) -> void:
 		velocity.y = -180.0
 	velocity.y += GRAVITY * delta
 	var was_grounded := is_on_floor()
+	var impact_speed := velocity.y
 	move_and_slide()
 	if is_on_floor() and not was_grounded:
+		landed.emit(impact_speed)
 		get_parent().effects.burst(position+Vector2(0,20),Color("c7bb93",0.6),5)
 	if position.y > 850.0:
 		respawn()

@@ -74,6 +74,10 @@ func _ready() -> void:
 		else: replay()
 	)
 	overlay.add_child(secondary)
+	primary.focus_neighbor_bottom = primary.get_path_to(secondary)
+	primary.focus_neighbor_top = primary.get_path_to(secondary)
+	secondary.focus_neighbor_bottom = secondary.get_path_to(primary)
+	secondary.focus_neighbor_top = secondary.get_path_to(primary)
 
 func make_label(at: Vector2, font_size: int, color: Color) -> Label:
 	var label := Label.new()
@@ -89,7 +93,7 @@ func make_button(at: Vector2, dimensions: Vector2) -> Button:
 	var button := Button.new()
 	button.position = at
 	button.size = dimensions
-	button.focus_mode = Control.FOCUS_NONE
+	button.focus_mode = Control.FOCUS_ALL
 	button.add_theme_font_size_override("font_size",16)
 	var style := StyleBoxFlat.new()
 	style.bg_color = Color("30483a")
@@ -100,6 +104,11 @@ func make_button(at: Vector2, dimensions: Vector2) -> Button:
 	var hover := style.duplicate()
 	hover.bg_color = Color("51624a")
 	button.add_theme_stylebox_override("hover",hover)
+	var focus := style.duplicate()
+	focus.bg_color = Color("48664f")
+	focus.border_color = Color("ffe2a1")
+	focus.set_border_width_all(2)
+	button.add_theme_stylebox_override("focus", focus)
 	button.add_theme_color_override("font_color",Color("f0dfb9"))
 	return button
 
@@ -113,6 +122,8 @@ func on_retry() -> void:
 	paused = false
 	get_tree().paused = false
 	lab.player.controls_enabled = true
+	primary.release_focus()
+	secondary.release_focus()
 	overlay.hide()
 
 func replay() -> void:
@@ -127,13 +138,17 @@ func toggle_pause() -> void:
 	overlay.visible = paused
 	if paused:
 		heading.text = "Take a breather."
-		details.text = "A/D or arrows  ·  Run      Space  ·  Jump\nJ  ·  Swing      K  ·  Throw      E  ·  Use\nR  ·  Return to checkpoint      T  ·  Reset repair puzzle"
+		details.text = "A/D or arrows  ·  Run      Space  ·  Jump\nJ  ·  Swing      K  ·  Throw      E  ·  Use\nR  ·  Return to checkpoint      T  ·  Reset repair puzzle\nController: A jump · X swing · B throw · Y use · Start pause"
 		primary.text = "RESUME  /  ESC"
 		secondary.text = "RESTART FIRST SHIFT"
+		primary.grab_focus()
+	else:
+		primary.release_focus()
+		secondary.release_focus()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_echo(): return
-	if event is InputEventKey and event.pressed and event.physical_keycode == KEY_ESCAPE:
+	if (event is InputEventKey and event.pressed and event.physical_keycode == KEY_ESCAPE) or (event is InputEventJoypadButton and event.pressed and event.button_index == JOY_BUTTON_START):
 		toggle_pause()
 		get_viewport().set_input_as_handled()
 	elif complete and event is InputEventKey and event.pressed and event.physical_keycode == KEY_ENTER:
@@ -153,6 +168,7 @@ func finish() -> void:
 	primary.text = "PLAY AGAIN  /  ENTER"
 	secondary.text = "EXPLORE FROM CHECKPOINT  /  R"
 	overlay.show()
+	primary.grab_focus()
 	toast.hide()
 
 func _process(delta: float) -> void:
@@ -183,7 +199,36 @@ func _process(delta: float) -> void:
 	route.text = "%s     /     PARTS %d/3     /     %02d:%02d" % [CHAPTERS[chapter],cache_count()+int(passage.secret_found),int(elapsed)/60,int(elapsed)%60]
 	progress.points = PackedVector2Array([Vector2(28,623),Vector2(28+clampf(x/8700,0,1)*1096,623)])
 	if foundry.finished: finish()
+	update_status()
 	queue_redraw()
+
+func objective_text(x: float) -> String:
+	if x < 1850:
+		return "Head right to the repair works · rooftops hide rare salvage."
+	if x < 2780:
+		var yard = lab.combat.yard
+		if not yard.crate_broken: return "J · Break the wooden crate to reach the battery."
+		if not yard.gate_open: return "K · Throw the wrench toward the elevated switch."
+		if not yard.powered:
+			return "E · Insert the battery in the socket." if yard.carrying else "E · Pick up the battery beside the broken crate."
+		if not yard.lowered: return "E · Use the crane control to lower the bridge."
+		return "Cross the lowered bridge to the maintenance loft."
+	if x < 4280: return "Watch the amber warning · cross when the pistons rise."
+	if x < 5350: return "Ride the maintenance platform across the flooded canal."
+	if not foundry.powered: return "E · Power the hoist at the nearby amber control."
+	if foundry.stage < 2: return "Ride the hoist up, then cross the upper catwalks."
+	if foundry.stage < 3: return "Wait for steam to clear, then cross to the service island."
+	return "Follow the last platforms right to PATCH's lit workshop."
+
+func update_status() -> void:
+	var text: String = CHAPTERS[maxi(chapter, 0)] + "\n" + objective_text(lab.player.position.x)
+	if lab.combat.notice_time > 0:
+		text = lab.combat.notice
+	elif elapsed < 8:
+		text += "\nA/D move · Space jump · J/K wrench · Esc pause & controls"
+	if lab.status.text != text:
+		lab.status.text = text
+		lab.status.reset_size()
 
 func _draw() -> void:
 	for i in CACHE_POSITIONS.size():
