@@ -12,7 +12,7 @@ var toast_time := 0.0
 var last_checkpoint := Vector2(100,490)
 var caches := [false,false]
 const CACHE_POSITIONS := [Vector2(850,270),Vector2(6290,220)]
-const CHAPTERS := ["01  /  CINDER YARD","02  /  THE REPAIR WORKS","03  /  PISTON HALL","04  /  FLOODED VIADUCT","05  /  THE FOUNDRY"]
+const CHAPTERS := ["01  /  CINDER YARD","02  /  THE REPAIR WORKS","03  /  PISTON HALL","04  /  FLOODED VIADUCT","05  /  THE FOUNDRY","06  /  FREIGHT AQUEDUCT","07  /  THE LAST MILE"]
 var toast: Label
 var route: Label
 var progress: Line2D
@@ -179,7 +179,7 @@ func _process(delta: float) -> void:
 		return
 	elapsed += delta
 	var x: float = lab.player.position.x
-	var next_chapter := 0 if x < 1850 else (1 if x < 2980 else (2 if x < 4280 else (3 if x < 5350 else 4)))
+	var next_chapter := 0 if x < 1850 else (1 if x < 2980 else (2 if x < 4280 else (3 if x < 5350 else (4 if x < 8600 else (5 if x < 11100 else 6)))))
 	if next_chapter != chapter:
 		chapter = next_chapter
 		message(CHAPTERS[chapter])
@@ -197,7 +197,7 @@ func _process(delta: float) -> void:
 	toast.visible = toast_time > 0
 	toast.modulate.a = minf(1,toast_time)
 	route.text = "%s     /     PARTS %d/3     /     %02d:%02d" % [CHAPTERS[chapter],cache_count()+int(passage.secret_found),int(elapsed)/60,int(elapsed)%60]
-	progress.points = PackedVector2Array([Vector2(28,623),Vector2(28+clampf(x/8700,0,1)*1096,623)])
+	progress.points = PackedVector2Array([Vector2(28,623),Vector2(28+clampf(x/preload("res://scripts/freight_run.gd").END_X,0,1)*1096,623)])
 	if foundry.finished: finish()
 	update_status()
 	queue_redraw()
@@ -215,10 +215,14 @@ func objective_text(x: float) -> String:
 		return "Cross the lowered bridge to the maintenance loft."
 	if x < 4280: return "Watch the amber warning · cross when the pistons rise."
 	if x < 5350: return "Ride the maintenance platform across the flooded canal."
+	if x >= 12000: return "Time the final steam vent, then follow the workshop lights."
+	if x >= 11100: return "Cross the steam platforms to the last safe bank."
+	if x >= 10000: return "Climb the freight catwalks and clear the patrol bank."
+	if x >= 8600: return "Cross the aqueduct and ride the freight shuttle to safety."
 	if not foundry.powered: return "E · Power the hoist at the nearby amber control."
 	if foundry.stage < 2: return "Ride the hoist up, then cross the upper catwalks."
 	if foundry.stage < 3: return "Wait for steam to clear, then cross to the service island."
-	return "Follow the last platforms right to PATCH's lit workshop."
+	return "Reach the freight aqueduct beyond the foundry."
 
 func update_status() -> void:
 	var text: String = CHAPTERS[maxi(chapter, 0)] + "\n" + objective_text(lab.player.position.x)

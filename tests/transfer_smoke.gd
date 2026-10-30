@@ -49,10 +49,10 @@ func run() -> void:
 	check(lab.player.is_on_floor() and lab.player.position.x > 8372 and lab.player.position.y < 425,"precision jump reaches the final upper landing")
 	await place(Vector2(8460,420))
 	await jump_to(8650)
-	check(lab.player.is_on_floor() and lab.player.position.x > 8510,"last jump reaches the relocated workshop bank")
+	check(lab.player.is_on_floor() and lab.player.position.x > 8510,"last foundry jump reaches the aqueduct entrance")
 	lab.player.respawn()
 	await frames(3)
-	check(lab.player.position.x == 7940 and not area.finished,"late retry preserves the new midpoint checkpoint")
+	check(lab.player.position.x == 8680 and not area.finished,"late retry preserves the aqueduct entrance checkpoint")
 	area.time = 1.45
 	lab.player.position = Vector2(7460,455)
 	lab.player.velocity = Vector2.ZERO
@@ -60,5 +60,5 @@ func run() -> void:
 	check(not area.vent_live(0) and lab.player.position.x == 7460,"amber warning is harmless before steam starts")
 	area.time = 2.25
 	await frames(2)
-	check(lab.player.position.x == 7940 and area.time < 0.1,"live steam returns to checkpoint and resets its cycle")
+	check(lab.player.position.x == 8680 and area.time < 0.1,"live steam returns to checkpoint and resets its cycle")
 	quit(1 if failures else 0)

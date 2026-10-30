@@ -37,7 +37,7 @@ func _ready() -> void:
 	camera.position = Vector2(180, -80)
 	camera.zoom = Vector2(1.0,1.0)
 	camera.limit_left = 0
-	camera.limit_right = 8860
+	camera.limit_right = preload("res://scripts/freight_run.gd").WORLD_END
 	camera.limit_top = 0
 	camera.limit_bottom = 720
 	player.add_child(camera)
@@ -99,6 +99,9 @@ func _ready() -> void:
 	var foundry := preload("res://scripts/foundry_run.gd").new()
 	foundry.lab = self
 	add_child(foundry)
+	var freight := preload("res://scripts/freight_run.gd").new()
+	freight.lab = self
+	add_child(freight)
 	var dressing := preload("res://scripts/level_dressing.gd").new()
 	add_child(dressing)
 	director = preload("res://scripts/level_director.gd").new()

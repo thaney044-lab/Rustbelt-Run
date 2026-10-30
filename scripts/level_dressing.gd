@@ -16,16 +16,16 @@ func _ready() -> void:
 		create_glow()
 	if section < 0:
 		# Retained draw commands are split into independently culled world sections.
-		for i in 9:
+		for i in 14:
 			var chunk: Node2D = get_script().new()
 			chunk.section = i
 			chunk.glow = glow
 			add_child(chunk)
 		return
-	if section != 8: return
+	if section != 12: return
 	var sign := Label.new()
 	sign.text = "PATCH'S WORKSHOP"
-	sign.position = Vector2(8648,372)
+	sign.position = Vector2(12848,372)
 	sign.add_theme_font_size_override("font_size",8)
 	sign.add_theme_color_override("font_color",Color("d5bb7a"))
 	add_child(sign)
@@ -50,7 +50,7 @@ func _draw() -> void:
 	if section < 0: return
 	foliage = DrawBatch.new()
 	# Sagging power cables tie individual jumps to a continuous railway district.
-	for spec in [[30,520],[970,1260],[1660,2060],[2580,2990],[4290,4900],[6820,7240],[7870,8010]]:
+	for spec in [[30,520],[970,1260],[1660,2060],[2580,2990],[4290,4900],[6820,7240],[7870,8010],[8870,9340],[9650,10180],[11480,12150]]:
 		if not owns((spec[0]+spec[1])*0.5): continue
 		var left: float = spec[0]
 		var right: float = spec[1]
@@ -68,7 +68,7 @@ func _draw() -> void:
 			foliage.line(at,at+Vector2(0,10),Color("3c4b3b"),1,true)
 			foliage.circle(at+Vector2(0,11),2,Color("ebc578"))
 	# Hanging catwalks use braces and chain eyes, not unexplained floating blocks.
-	for spec in [[205,315,180,440],[385,495,140,360],[595,705,150,330],[805,895,130,305],[1025,1135,170,340],[1240,1340,210,360],[1380,1550,180,350],[2800,2900,180,446],[6030,6250,110,380],[6060,6160,110,295],[6245,6335,90,255],[6400,6500,110,305]]:
+	for spec in [[205,315,180,440],[385,495,140,360],[595,705,150,330],[805,895,130,305],[1025,1135,170,340],[1240,1340,210,360],[1380,1550,180,350],[2800,2900,180,446],[6030,6250,110,380],[6060,6160,110,295],[6245,6335,90,255],[6400,6500,110,305],[8940,9060,240,450],[9130,9270,220,390],[10270,10410,200,390],[10490,10630,170,340],[11000,11140,250,440],[11520,11640,240,460],[12210,12350,220,410],[12440,12580,190,370]]:
 		if not owns((spec[0]+spec[1])*0.5): continue
 		var left: float = spec[0]
 		var right: float = spec[1]
@@ -80,9 +80,9 @@ func _draw() -> void:
 			for y in range(int(top),int(bottom),18):
 				foliage.circle(Vector2(x,y),2.5,Color("6e765b"))
 	# Railway railing has thin, subdued uprights behind the playable silhouette.
-	for spec in [[35,470,520],[945,1120,520],[1640,1800,520],[4310,4460,520],[6860,7220,520],[8570,8790,490]]:
+	for spec in [[35,470,520],[945,1120,520],[1640,1800,520],[4310,4460,520],[6860,7220,520],[8570,8790,490],[9320,9560,460],[9980,10180,460],[10700,10900,390],[11170,11420,520],[11940,12140,460],[12660,12980,490]]:
 		if owns((spec[0]+spec[1])*0.5): railing(spec[0],spec[1],spec[2])
-	for x in [140,1090,1760,2660,4160,5060,6970,8730]:
+	for x in [140,1090,1760,2660,4160,5060,6970,8730,9430,10080,10800,11300,12040,12880]:
 		if owns(x): lamp(Vector2(x,330))
 	# District landmarks, placed outside the collision path.
 	if owns(90): station_clock(Vector2(90,235))
@@ -112,9 +112,9 @@ func _draw() -> void:
 		for y in [280,630]:
 			foliage.line(Vector2(x-18,y),Vector2(x+18,y),Color("566c50"),3,true)
 	# An illuminated workshop provides a real destination beyond the final jump.
-	if owns(8510): workshop(Vector2(8510,279))
+	if owns(12710): workshop(Vector2(12710,279))
 	# Ferns live at edges; their roots never change the actual collision rim.
-	for spec in [[20,520],[470,520],[940,520],[1510,520],[1845,520],[2980,520],[4240,520],[5310,520],[6810,520],[7240,520],[8780,490]]:
+	for spec in [[20,520],[470,520],[940,520],[1510,520],[1845,520],[2980,520],[4240,520],[5310,520],[6810,520],[7240,520],[8780,490],[9540,460],[10170,460],[10890,390],[11430,520],[12140,460],[12990,490]]:
 		if owns(spec[0]): fern(Vector2(spec[0],spec[1]),float(spec[0])*0.01)
 	if not foliage.vertices.is_empty():
 		foliage_mesh = foliage.build()

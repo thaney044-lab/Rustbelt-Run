@@ -8,7 +8,7 @@ var time := 0.0
 var lift: AnimatableBody2D
 const CONTROL := Vector2(5490,490)
 const METAL = preload("res://assets/art/painted/weathered_steel.png")
-const VENTS := [Vector2(7460,475),Vector2(8230,490)]
+const VENTS := [Vector2(7460,475),Vector2(8230,490),Vector2(11580,460),Vector2(12280,410)]
 
 func _ready() -> void:
 	lab.platform(Vector2(5420,560),Vector2(260,80))
@@ -94,7 +94,7 @@ func _physics_process(delta: float) -> void:
 		if vent_live(i) and vent_rect(i).intersects(player_rect):
 			p.respawn()
 			break
-	if p.position.x > 8670 and p.is_on_floor():
+	if p.position.x > preload("res://scripts/freight_run.gd").END_X and p.is_on_floor():
 		finished = true
 	if finished:
 		lab.status.text = "FOUNDRY SERVICE RUN COMPLETE!\nR: retry from the final checkpoint."
