@@ -15,6 +15,7 @@ var notice := ""
 var notice_time := 0.0
 var time := 0.0
 var attack_cooldown := 0.0
+var wrench_trail: Array[Vector2] = []
 var enemy_art: Texture2D = preload("res://assets/art/painted/patrol_bot.png")
 var enemy_region := Rect2(162,203,1087,795)
 
@@ -43,6 +44,7 @@ func reset_enemies() -> void:
 	for enemy in enemies:
 		enemy.reset()
 	flight_active = false
+	wrench_trail.clear()
 	attack_cooldown = 0
 	wrench_target = null
 	notice_time = 0
@@ -89,7 +91,7 @@ func collect_scrap() -> void:
 		if not collected[i] and lab.player.position.distance_to(scrap_positions[i]) < 24:
 			collected[i] = true
 			scrap_count += 1
-			lab.effects.burst(scrap_positions[i],Color("efd081"),5)
+			lab.effects.celebrate(scrap_positions[i], Color("efd081"), "+1 SCRAP")
 
 func _physics_process(delta: float) -> void:
 	time += delta
@@ -98,7 +100,12 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("swing"):
 		swing()
 	collect_scrap()
+	if not flight_active:
+		wrench_trail.clear()
 	if flight_active:
+		wrench_trail.append(wrench_position)
+		if wrench_trail.size() > 7:
+			wrench_trail.pop_front()
 		var destination: Vector2 = lab.player.position if returning else (wrench_target.position if is_instance_valid(wrench_target) and wrench_target.alive else wrench_destination)
 		wrench_position = wrench_position.move_toward(destination,680*delta)
 		if wrench_position.distance_to(destination) < 12:
@@ -114,6 +121,15 @@ func _physics_process(delta: float) -> void:
 	queue_redraw()
 
 func _draw() -> void:
+	if attack_cooldown > 0:
+		var progress := 1.0 - attack_cooldown / 0.25
+		var center: Vector2 = lab.player.position + Vector2(0, -4)
+		var start := -1.2 + progress * 1.5
+		if lab.player.facing < 0:
+			start = PI - start - 0.65
+		draw_arc(center, 46, start, start + 0.65, 16, Color(1.0, 0.87, 0.57, (1.0 - progress) * 0.8), 3, true)
+	for i in range(1, wrench_trail.size()):
+		draw_line(wrench_trail[i - 1], wrench_trail[i], Color(0.85, 0.92, 0.79, float(i) / wrench_trail.size() * 0.45), 2, true)
 	for i in scrap_positions.size():
 		if collected[i]:
 			continue

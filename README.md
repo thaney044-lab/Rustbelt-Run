@@ -21,6 +21,10 @@ See [the implementation plan](docs/IMPLEMENTATION_PLAN.md) for milestones and ac
 
 The repeating foreground flywheels have been removed so bottom-of-screen machinery no longer appears to follow the player.
 
+## Combat and collection feedback
+
+Wrench swings leave a brief amber arc, and thrown wrenches have a short fading trail. Scrap pickups display a floating recovery caption and ring; checkpoints use a green pulse and rare parts use a gold celebration. Three health segments beneath the HUD briefly highlight lost health when damage occurs. Effects expire automatically and pause with gameplay.
+
 ## Item graphics polish
 
 Catwalks have cross-braced metal webs, brass rivets, timber treads and bounded under-brackets. Moving decks use amber hazard stripes and paired lamps; stone decks have segmented coping aligned to their collision top. Wooden crates have grain, diagonal braces and metal straps, while gates have inset hazard panels and reinforced rails.

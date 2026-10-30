@@ -169,12 +169,13 @@ func _process(delta: float) -> void:
 		message(CHAPTERS[chapter])
 	if lab.player.spawn_point != last_checkpoint:
 		last_checkpoint = lab.player.spawn_point
+		lab.effects.celebrate(lab.player.position, Color("9cdbb1"), "CHECKPOINT")
 		message("CHECKPOINT LIT  /  progress secured · health restored")
 	for i in CACHE_POSITIONS.size():
 		if not caches[i] and lab.player.position.distance_to(CACHE_POSITIONS[i]) < 32:
 			caches[i] = true
 			lab.player.health = 3
-			lab.effects.burst(CACHE_POSITIONS[i],Color("f1ce77"),18)
+			lab.effects.celebrate(CACHE_POSITIONS[i], Color("f1ce77"), "RARE PART")
 			message("RARE PART RECOVERED  /  rooftop salvage · health restored")
 	toast_time = maxf(0,toast_time-delta)
 	toast.visible = toast_time > 0
