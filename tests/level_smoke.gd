@@ -50,6 +50,11 @@ func run() -> void:
 	lab = load("res://scenes/movement_lab.tscn").instantiate()
 	root.add_child(lab)
 	await frames(10)
+	await place(Vector2(1060,398))
+	check(not lab.checkpoint_reached, "upper salvage ledge does not activate the checkpoint below")
+	await place(Vector2(1020,500))
+	check(lab.checkpoint_reached, "checkpoint activates on its actual landing bank")
+	check(lab.combat.enemies[0].patrol_speed < lab.combat.enemies[-1].patrol_speed, "First Shift patrol pressure builds toward the finale")
 	var yard = lab.combat.yard
 	check(lab.director.objective_text(2000).contains("crate"), "repair objective starts with clearing the crate")
 	yard.crate_broken = true

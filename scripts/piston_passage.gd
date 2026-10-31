@@ -15,8 +15,6 @@ func _ready() -> void:
 	lab.platform(Vector2(2850,455),Vector2(100,18))
 	lab.platform(Vector2(4190,560),Vector2(180,80))
 	lab.label_at("MAINTENANCE LOFT",Vector2(2760,350))
-	lab.label_at("PISTON PASSAGE  /  Watch the amber warning",Vector2(3010,270))
-	lab.label_at("DEPOT EXIT",Vector2(3940,340))
 	lab.player.respawned.connect(on_retry)
 
 func on_retry() -> void:
@@ -75,13 +73,30 @@ func _draw() -> void:
 	# Industrial overhead frame; warm lamps communicate the cycle without color alone.
 	draw_line(Vector2(3060,215),Vector2(3750,215),Color("243d41"),24)
 	draw_line(Vector2(3060,205),Vector2(3750,205),Color("bc8d56"),5)
+	# Riveted frame and individual hydraulic housings give the machinery depth.
+	draw_texture_rect_region(METAL,Rect2(3060,207,690,17),Rect2(60,170,1380,34),Color(0.55,0.65,0.57))
+	for bolt_x in range(3070,3750,35):
+		draw_circle(Vector2(bolt_x,211),2,Color("b6ad81"))
+		draw_circle(Vector2(bolt_x,220),1.5,Color("708175"))
 	for i in 3:
 		var x: float = PISTONS[i]
 		var bottom := piston_bottom(i)
 		var p := phase(i)
 		var warning := p > 1.3 and p < 2.35
-		draw_rect(Rect2(x-9,225,18,bottom-250),Color("92aaa1"))
-		draw_line(Vector2(x-5,225),Vector2(x-5,bottom-25),Color("dae0c3"),3)
+		# Floor markings show the crush lane even with the head raised.
+		for dx in range(-28,28,9):
+			draw_line(Vector2(x+dx,521),Vector2(x+dx+5,527),Color("bd985c"),3,true)
+		if warning:
+			draw_rect(Rect2(x-28,350,56,168),Color("efb55b",0.06))
+			for side in [-28,28]:
+				draw_line(Vector2(x+side,350),Vector2(x+side,518),Color("efb55b",0.4),1,true)
+		draw_rect(Rect2(x-18,221,36,60),Color("1d3434"))
+		draw_texture_rect_region(METAL,Rect2(x-16,224,32,54),Rect2(90,130,96,162),Color(0.55,0.65,0.58))
+		for collar_y in [228,268]:
+			draw_line(Vector2(x-20,collar_y),Vector2(x+20,collar_y),Color("a69a72"),4,true)
+		draw_rect(Rect2(x-9,275,18,maxf(1,bottom-300)),Color("92aaa1"))
+		draw_line(Vector2(x+7,276),Vector2(x+7,bottom-25),Color("43605a"),3,true)
+		draw_line(Vector2(x-5,276),Vector2(x-5,bottom-25),Color("dae0c3"),3)
 		draw_rect(Rect2(x-29,bottom-28,58,28),Color("263c3f"))
 		draw_texture_rect_region(METAL,Rect2(x-29,bottom-28,58,28),Rect2(120,150,174,84),Color(0.6,0.72,0.68))
 		draw_rect(Rect2(x-27,bottom-25,54,19),Color("c9934d"))

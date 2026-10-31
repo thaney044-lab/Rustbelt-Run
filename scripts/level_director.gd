@@ -16,6 +16,7 @@ const CACHE_POSITIONS := [Vector2(850,270),Vector2(6290,220)]
 const CHAPTERS := ["01  /  CINDER YARD","02  /  THE REPAIR WORKS","03  /  PISTON HALL","04  /  FLOODED VIADUCT","05  /  THE FOUNDRY","06  /  FREIGHT AQUEDUCT","07  /  THE LAST MILE"]
 var toast: Label
 var route: Label
+var route_markers: Array[Label] = []
 var progress: Line2D
 var overlay: ColorRect
 var heading: Label
@@ -44,6 +45,14 @@ func _ready() -> void:
 	progress.width = 3
 	progress.default_color = Color("c2ac6f")
 	canvas.add_child(progress)
+	if mission_id == 0:
+		# The long first route reads as seven short, visible milestones.
+		var boundaries := [0.0,1850.0,2980.0,4280.0,5350.0,8600.0,11100.0]
+		for i in boundaries.size():
+			var marker := make_label(Vector2(24+boundaries[i]/12870.0*1096,630),9,Color("8b9c88"))
+			marker.text = "%02d" % [i+1]
+			canvas.add_child(marker)
+			route_markers.append(marker)
 	overlay = ColorRect.new()
 	overlay.color = Color("0b211e",0.90)
 	overlay.size = Vector2(1152,648)
@@ -194,7 +203,9 @@ func _process(delta: float) -> void:
 	var next_chapter := 0 if x < 1850 else (1 if x < 2980 else (2 if x < 4280 else (3 if x < 5350 else (4 if x < 8600 else (5 if x < 11100 else 6)))))
 	if next_chapter != chapter:
 		chapter = next_chapter
-		message(CHAPTERS[chapter])
+		if chapter > 0: message(CHAPTERS[chapter])
+		for i in route_markers.size():
+			route_markers[i].modulate = Color("ffe0a0") if i <= chapter else Color("72877c")
 	if lab.player.spawn_point != last_checkpoint:
 		last_checkpoint = lab.player.spawn_point
 		lab.effects.celebrate(lab.player.position, Color("9cdbb1"), "CHECKPOINT")
@@ -215,8 +226,14 @@ func _process(delta: float) -> void:
 	queue_redraw()
 
 func objective_text(x: float) -> String:
+	if x < 220:
+		return "Bring the workshop back online · A/D move, Space jump."
+	if x < 480 and lab.combat.enemies[0].alive:
+		return "Patrol ahead · J swings the wrench. Jump onto its flat top."
+	if x < 980:
+		return "Ride the shuttle right · the upper route hides a rare part."
 	if x < 1850:
-		return "Head right to the repair works · rooftops hide rare salvage."
+		return "Reach the repair works · E operates machinery."
 	if x < 2780:
 		var yard = lab.combat.yard
 		if not yard.crate_broken: return "J · Break the wooden crate to reach the battery."
@@ -240,8 +257,7 @@ func update_status() -> void:
 	var text: String = CHAPTERS[maxi(chapter, 0)] + "\n" + objective_text(lab.player.position.x)
 	if lab.combat.notice_time > 0:
 		text = lab.combat.notice
-	elif elapsed < 8:
-		text += "\nA/D move · Space jump · J/K wrench · Esc pause & controls"
+
 	if lab.status.text != text:
 		lab.status.text = text
 		lab.status.reset_size()

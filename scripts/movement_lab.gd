@@ -77,9 +77,6 @@ func _ready() -> void:
 	)
 	hud.add_child(fullscreen)
 	status.text = "FIRST SHIFT   /   CINDER YARD\nA/D: run   Space: jump   J/K: wrench   E: use   R: retry   Esc: pause"
-	label_at("ROOFTOPS  /  RARE SALVAGE", Vector2(510, 225))
-	label_at("WORKSHOP CHECKPOINT", Vector2(980, 570))
-	label_at("REPAIR YARD  ->", Vector2(1640, 360))
 	var yard := preload("res://scripts/repair_yard.gd").new()
 	yard.lab = self
 	add_child(yard)
@@ -102,6 +99,12 @@ func _ready() -> void:
 	var freight := preload("res://scripts/freight_run.gd").new()
 	freight.lab = self
 	add_child(freight)
+	# Encounters build from a single readable introduction to faster late patrols.
+	for enemy in combat.enemies:
+		enemy.patrol_speed = 72.0 if enemy.home.x < 1850 else (88.0 if enemy.home.x < 8600 else 104.0)
+	var detailing := preload("res://scripts/first_shift_details.gd").new()
+	detailing.lab = self
+	add_child(detailing)
 	var dressing := preload("res://scripts/level_dressing.gd").new()
 	add_child(dressing)
 	director = preload("res://scripts/level_director.gd").new()
@@ -194,16 +197,17 @@ func label_at(text: String, at: Vector2) -> void:
 	add_child(label)
 
 func _physics_process(_delta: float) -> void:
-	if player.position.x > 980 and player.position.x < 1130 and player.is_on_floor() and not checkpoint_reached:
+	if player.position.x > 980 and player.position.x < 1130 and player.is_on_floor() and absf(player.position.y-500) < 5 and not checkpoint_reached:
 		checkpoint_reached = true
 		player.set_checkpoint(Vector2(1020, 490))
+		queue_redraw()
 		status.text = "RUSTBELT RUN   /   CHECKPOINT REACHED\nContinue right to the repair yard.  R returns here."
 
 func _draw() -> void:
 	# Workshop flag, rails and riveted support below the checkpoint.
 	draw_line(Vector2(1000,520),Vector2(1000,455),Color("283d3f"),6)
 	draw_line(Vector2(999,520),Vector2(999,455),Color("d4bc88"),2)
-	draw_colored_polygon(PackedVector2Array([Vector2(1002,456),Vector2(1036,462),Vector2(1028,483),Vector2(1002,478)]),Color("d7a451"))
+	draw_colored_polygon(PackedVector2Array([Vector2(1002,456),Vector2(1036,462),Vector2(1028,483),Vector2(1002,478)]),Color("a9dcaf") if checkpoint_reached else Color("d7a451"))
 	draw_circle(Vector2(1015,468),5,Color("314d4b"))
 	# Ground decoration never crosses the solid platform's upper edge.
 	for x in [60, 1200, 1600, 2800]:

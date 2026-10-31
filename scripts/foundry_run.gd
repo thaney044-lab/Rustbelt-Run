@@ -39,12 +39,6 @@ func _ready() -> void:
 	lab.platform(Vector2(8230,500),Vector2(90,20))
 	lab.platform(Vector2(8430,450),Vector2(90,20))
 	lab.platform(Vector2(8680,530),Vector2(330,80))
-	lab.label_at("FOUNDRY SERVICE RUN",Vector2(5350,290))
-	lab.label_at("E  /  POWER THE HOIST",Vector2(5410,400))
-	lab.label_at("RIDE UP, THEN JUMP RIGHT",Vector2(5780,280))
-	lab.label_at("CROSS THE STEAM CHANNEL",Vector2(6400,315))
-	lab.label_at("TRANSFER SPAN  /  WAIT FOR STEAM TO CLEAR",Vector2(7070,280))
-	lab.label_at("SAFE SERVICE ISLAND",Vector2(7850,360))
 	lab.player.respawned.connect(reset)
 
 func reset() -> void:
@@ -144,6 +138,13 @@ func _draw() -> void:
 			draw_line(at+Vector2(dx,4),at+Vector2(dx,12),Color("bfa16a"),2,true)
 		var lamp := at+Vector2(-32,-18)
 		draw_circle(lamp,8,Color("d77c53") if vent_live(i) else (Color("efbf62") if warning else Color("86b99a")))
+		if warning or vent_live(i):
+			var danger := vent_rect(i)
+			var tint := Color("eec778") if warning else Color("efbfa1")
+			draw_rect(danger,Color(tint,0.045 if warning else 0.09))
+			for side in [danger.position.x,danger.end.x]:
+				for y in range(int(danger.position.y),int(danger.end.y),14):
+					draw_line(Vector2(side,y),Vector2(side,y+6),Color(tint,0.45),1,true)
 		if warning:
 			draw_line(lamp+Vector2(0,-5),lamp+Vector2(0,1),Color("263d32"),2,true)
 			draw_circle(lamp+Vector2(0,4),1.2,Color("263d32"))
