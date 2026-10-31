@@ -4,6 +4,7 @@ var lab: Node2D
 var patrol_left := 330.0
 var patrol_right := 485.0
 var direction := 1.0
+var patrol_speed := 72.0
 var alive := true
 var age := 0.0
 var home := Vector2.ZERO
@@ -45,8 +46,8 @@ func contact_player(player: CharacterBody2D) -> void:
 func _physics_process(delta: float) -> void:
 	age += delta
 	if alive:
-		wheel_rotation += direction * 48 * delta / 5.0
-		position.x = clampf(position.x+direction*48*delta,patrol_left,patrol_right)
+		wheel_rotation += direction * patrol_speed * delta / 5.0
+		position.x = clampf(position.x+direction*patrol_speed*delta,patrol_left,patrol_right)
 		if position.x >= patrol_right:
 			direction = -1
 		elif position.x <= patrol_left:

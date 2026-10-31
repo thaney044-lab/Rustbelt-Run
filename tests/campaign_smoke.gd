@@ -9,6 +9,10 @@ func run() -> void:
 		check(lab.combat.scrap_positions.size() > 30,"new mission has its own scrap route")
 		check(lab.combat.enemies.size() == (3 if id in [1,3] else 4),"new mission has authored patrols")
 		check(not lab.interact_relay() and lab.relay_count() == 0,"distant controls cannot be activated from spawn")
+		check(lab.combat.enemies[0].patrol_speed >= 88, "campaign patrols apply increased pressure")
+		lab.time = 3.8
+		check(lab.hazard_live(0), "hazards remain dangerous through the longer active window")
+		lab.time = 0.0
 		var enemy = lab.combat.enemies[0]
 		lab.player.position = enemy.position-Vector2(50,0)
 		lab.player.facing = 1

@@ -79,6 +79,7 @@ func _ready() -> void:
 	for index in data.bots:
 		var spec: Array = data.platforms[index]
 		combat.spawn_patrol(Vector2(spec[0],spec[1]-spec[3]/2.0-21),spec[0]-spec[2]/2.0+40,spec[0]+spec[2]/2.0-40)
+		combat.enemies[-1].patrol_speed = data.patrol_speed
 	for index in range(1,data.platforms.size()):
 		var spec: Array = data.platforms[index]
 		for offset in ([-45,0,45] if spec[3] > 30 else [0]):
@@ -126,7 +127,7 @@ func hazard_phase(index: int) -> float:
 
 func hazard_live(index: int) -> bool:
 	var phase := hazard_phase(index)
-	return phase >= 2.3 and phase < 3.4
+	return phase >= 2.3 and phase < 2.3 + float(data.active_duration)
 
 func hazard_rect(index: int) -> Rect2:
 	var spec: Array = data.platforms[data.hazards[index]]
