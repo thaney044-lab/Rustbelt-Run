@@ -28,19 +28,19 @@ func objective_text(_x: float) -> String:
 	for i in lab.relay_on.size():
 		if not lab.relay_on[i]:
 			var distance: int = int(lab.data.relays[i].x-lab.player.position.x)
-			if lab.player.position.distance_to(lab.data.relays[i]) < 65: return "E · Restore this " + ("pump." if mission_id == 1 else "breaker.")
+			if lab.player.position.distance_to(lab.data.relays[i]) < 65: return "E · Restore this " + (lab.control_name()+".")
 			if abs(distance) < 65: return "Land beside the control · E restores power."
-			return "Restore %s %d/%d · %s %d m" % ["pump" if mission_id == 1 else "breaker",i+1,lab.relay_on.size(),"right" if distance > 0 else "left",int(abs(distance)/20)]
-	return "All power restored · head right to the " + ("harbour gate." if mission_id == 1 else "summit beacon.")
+			return "Restore %s %d/%d · %s %d m" % [lab.control_name(),i+1,lab.relay_on.size(),"right" if distance > 0 else "left",int(abs(distance)/20)]
+	return "All power restored · head right to the " + str(lab.data.get("exit_name","harbour gate" if mission_id == 1 else "summit beacon"))+"."
 
 func finish() -> void:
 	if complete: return
 	complete = true
 	lab.player.controls_enabled = false
 	lab.player.velocity = Vector2.ZERO
-	heading.text = "The water is moving again." if mission_id == 1 else "The valley has a signal."
-	details.text = "%s COMPLETE\n%02d:%02d · %d/%d scrap · %d retries\n%s" % [lab.data.title.to_upper(),int(elapsed)/60,int(elapsed)%60,lab.combat.scrap_count,lab.combat.scrap_positions.size(),retries,"The summit line is ready for you." if mission_id == 1 else "All three routes are ready to revisit from the level selector."]
-	primary.text = "NEXT LEVEL / EMBERLINE SUMMIT" if mission_id == 1 else "RETURN TO LEVEL SELECT"
+	heading.text = lab.data.get("ending","The water is moving again." if mission_id == 1 else "The valley has a signal.")
+	details.text = "%s COMPLETE\n%02d:%02d · %d/%d scrap · %d retries\n%s" % [lab.data.title.to_upper(),int(elapsed)/60,int(elapsed)%60,lab.combat.scrap_count,lab.combat.scrap_positions.size(),retries,"The next route is ready for you." if mission_id < Campaign.PATHS.size()-1 else "All five routes are ready to revisit from the level selector."]
+	primary.text = "NEXT / " + Campaign.TITLES[mission_id+1].to_upper() if mission_id < Campaign.PATHS.size()-1 else "RETURN TO LEVEL SELECT"
 	secondary.text = "EXPLORE FROM CHECKPOINT / R"
 	overlay.show()
 	primary.grab_focus()

@@ -1,20 +1,22 @@
 # Rustbelt Run
 
-A three-level 2D puzzle platformer following a fox mechanic through an overgrown industrial valley. Repair machinery, discover secrets, and chase a runaway robot.
+A five-level 2D puzzle platformer following a fox mechanic through an overgrown industrial valley. Repair machinery, discover secrets, and chase a runaway robot.
 
 ## The valley campaign
 
-The game now opens on a keyboard/controller-accessible level selector. All three levels are available immediately; completing one offers the next route. Pause any level to return to the selector.
+The game opens on a keyboard/controller-accessible level selector with five routes. All five levels are available immediately; completing one offers the next route. Pause any level to return to the selector.
 
 | Level | Length | Goal and route |
 | --- | ---: | --- |
 | First Shift | 13,060 units | The original repair yard, canal, foundry and freight journey. |
 | Mosswater Relay | 6,100 units | Restore three pumps to power ferries and a vertical lift, cross water jets, and open the harbour gate. |
 | Emberline Summit | 7,100 units | Restore two breakers, climb increasingly high furnace catwalks, time the presses, and light the summit beacon. |
+| Stormglass Viaduct | 6,800 units | Ground three ridge relays, ride diagonal trolleys, and cross alternating electrical arcs in the rain. |
+| Nightfall Dispatch | 8,000 units | Restore three night signals, time scanning beam zones, and reopen the dispatch station. |
 
-The two new levels have independent layouts, four safe checkpoint banks each, 35/40 scrap pickups and three/four patrols respectively. Power remains restored after retries. Leaving or restarting a level starts a fresh run; completion records save the best time and largest scrap haul per level locally on the device. The save is `user://campaign.cfg` (browser storage for the Web build).
+The four mission levels have independent layouts, multiple safe checkpoint banks, their own scrap routes, and three or four patrols each. Power remains restored after retries. Leaving or restarting a level starts a fresh run; completion records save the best time and largest scrap haul per level locally on the device. The save is `user://campaign.cfg` (browser storage for the Web build).
 
-Campaign navigation, each new jump connection, powered machinery, vertical carrying, relay range, closed/open exit gates, hazard timing, retry state, results screens and save reloads are covered by `tests/campaign_smoke.gd`. Jump geometry is tested with moving decks at their center positions; machinery motion and carrying are checked separately. Physical controller hardware still needs validation.
+Campaign navigation, each mission jump connection, powered machinery, vertical and diagonal carrying, relay range, closed/open exit gates, hazard timing, retry state, results screens and save reloads are covered by `tests/campaign_smoke.gd`. Jump geometry is tested with moving decks at their center positions; machinery motion and carrying are checked separately. Physical controller hardware still needs validation.
 
 ## Current prototype
 
@@ -99,7 +101,7 @@ python -m http.server 8060 --directory builds/web
 
 Serve over HTTP for local testing or HTTPS for public hosting; opening `index.html` directly from disk does not work. Upload every file in `builds/web` together to a static host (or upload the ZIP as an HTML game on itch.io). This single-threaded build does not require COOP/COEP headers. Use a desktop browser with WebGL 2 and WebAssembly. Mobile touch controls are not implemented.
 
-The browser prototype is live at https://thaney044-lab.github.io/Rustbelt-Run/. It includes the three-level valley campaign.
+The browser prototype is live at https://thaney044-lab.github.io/Rustbelt-Run/. It includes the five-level valley campaign.
 
 ## Publish a browser link with GitHub Pages
 

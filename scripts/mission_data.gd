@@ -1,6 +1,24 @@
 extends RefCounted
 ## Authored landing geometry. Motion is applied around each listed center.
 static func get_level(id: int) -> Dictionary:
+	if id == 3:
+		return {
+			"title": "Stormglass Viaduct", "subtitle": "Ground the storm. Reopen the ridge crossing.",
+			"control": "grounding relay", "online": "RIDGE GROUNDED", "exit_name": "ridge shelter", "ending": "The ridge is grounded.",
+			"period": 4.8, "phase_offset": 2.4,
+			"end": 6800, "goal": 6660, "relays": [Vector2(380,490),Vector2(3310,450),Vector2(5720,450)],
+			"checks": [3,8,13,18], "bots": [5,10,16], "hazards": [6,14,19],
+			"platforms": [[240,560,480,80],[610,500,140,20,"xy",45,0.9],[850,440,150,20],[1120,520,320,80],[1470,470,160,20,"xy",55,1.1],[1790,540,320,80],[2140,480,160,20],[2380,420,160,20],[2660,500,320,80],[3000,450,160,20,"x",60,1.1],[3310,520,320,80],[3650,460,160,20],[3900,400,160,20,"y",30,1.0],[4190,500,320,80],[4530,440,160,20],[4780,380,160,20],[5070,480,320,80],[5410,420,160,20,"xy",50,1.0],[5720,520,320,80],[6050,460,160,20],[6290,400,160,20],[6610,500,380,80]]
+		}
+	if id == 4:
+		return {
+			"title": "Nightfall Dispatch", "subtitle": "Restore the signals. Bring the night line home.",
+			"control": "signal", "online": "SIGNAL ONLINE", "exit_name": "dispatch station", "ending": "The night line is open.",
+			"period": 5.8, "phase_offset": 1.9,
+			"end": 8000, "goal": 7870, "relays": [Vector2(1090,430),Vector2(3240,440),Vector2(5650,400)],
+			"checks": [3,8,13,18,20], "bots": [5,10,15,23], "hazards": [6,12,21],
+			"platforms": [[240,560,480,80],[620,550,160,20],[850,510,160,20],[1090,500,320,80],[1430,450,160,20,"x",60,1.1],[1740,530,320,80],[2080,470,160,20],[2320,410,160,20],[2600,490,320,80],[2940,430,160,20,"y",30,1.0],[3240,510,320,80],[3590,450,160,20],[3830,390,160,20],[4110,470,320,80],[4460,410,160,20,"xy",55,1.0],[4770,490,320,80],[5120,430,160,20],[5360,370,160,20],[5650,470,320,80],[6000,410,160,20,"x",65,1.2],[6300,490,320,80],[6640,430,160,20],[6880,370,160,20],[7170,470,320,80],[7500,420,160,20,"y",25,1.0],[7830,520,340,80]]
+		}
 	if id == 1:
 		return {
 			"title": "Mosswater Relay", "subtitle": "Wake the pumps beneath the flooded viaduct.",

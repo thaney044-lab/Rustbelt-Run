@@ -1,5 +1,5 @@
 extends "res://scripts/movement_lab.gd"
-@export_enum("Mosswater Relay:1", "Emberline Summit:2") var mission_id := 1
+@export_enum("Mosswater Relay:1", "Emberline Summit:2", "Stormglass Viaduct:3", "Nightfall Dispatch:4") var mission_id := 1
 var data: Dictionary
 var relay_on: Array[bool] = []
 var checkpoint_index := -1
@@ -89,9 +89,9 @@ func _ready() -> void:
 	hud.add_child(vitals)
 	for at in data.relays:
 		relay_on.append(false)
-		label_at("E / " + ("RESTART PUMP" if mission_id == 1 else "RESTORE BREAKER"),at+Vector2(-65,-105))
-	label_at("RESTORE POWER TO RUN THE FERRIES" if mission_id == 1 else "RESTORE BREAKERS TO RUN THE LIFTS",Vector2(1180,280))
-	label_at("AMBER WARNS / CROSS WHEN CLEAR",Vector2(1870 if mission_id == 1 else 2760,260))
+		label_at("E / " + ("RESTORE " + control_name().to_upper()),at+Vector2(-65,-105))
+	label_at("RESTORE POWER TO RUN THE MACHINERY",Vector2(1180,280))
+	label_at("AMBER WARNS / CROSS WHEN CLEAR",Vector2(data.platforms[data.hazards[0]][0]-180,260))
 	var background := CanvasLayer.new()
 	background.layer = -10
 	var scenery := preload("res://scripts/mission_scenery.gd").new()
@@ -110,16 +110,19 @@ func interact_relay() -> bool:
 		if not relay_on[index] and player.position.distance_to(data.relays[index]) < 65:
 			relay_on[index] = true
 			if relay_count() == relay_on.size(): exit_shape.set_deferred("disabled",true)
-			effects.celebrate(data.relays[index],Color("a9e1b3"),"PUMP ONLINE" if mission_id == 1 else "BREAKER ONLINE")
+			effects.celebrate(data.relays[index],Color("a9e1b3"),data.get("online","PUMP ONLINE" if mission_id == 1 else "BREAKER ONLINE"))
 			director.message("Power restored · %d/%d online" % [relay_count(),relay_on.size()])
 			return true
 	return false
+
+func control_name() -> String:
+	return data.get("control","pump" if mission_id == 1 else "breaker")
 
 func relay_count() -> int:
 	return relay_on.count(true)
 
 func hazard_phase(index: int) -> float:
-	return fposmod(time+index*1.7,5.2)
+	return fposmod(time+index*float(data.get("phase_offset",1.7)),float(data.get("period",5.2)))
 
 func hazard_live(index: int) -> bool:
 	var phase := hazard_phase(index)
@@ -135,11 +138,13 @@ func _physics_process(delta: float) -> void:
 	time += delta
 	for index in movers.size():
 		var spec: Array = moving_specs[index]
-		var needed := 1 if spec[0] < 3000 else 2
-		if relay_count() >= needed:
+		var needed := 1
+		for relay in data.relays.size():
+			if spec[0] > data.relays[relay].x: needed = relay+1
+		if relay_on[needed-1]:
 			moving_elapsed[index] += delta
 		var offset := sin(moving_elapsed[index]*spec[6])*float(spec[5])
-		movers[index].position = Vector2(spec[0],spec[1])+ (Vector2(offset,0) if spec[4] == "x" else Vector2(0,offset))
+		movers[index].position = Vector2(spec[0],spec[1])+ (Vector2(offset,0) if spec[4] == "x" else (Vector2(offset,offset*0.65) if spec[4] == "xy" else Vector2(0,offset)))
 	if Input.is_action_just_pressed("interact"): interact_relay()
 	if player.is_on_floor():
 		for i in data.checks.size():
@@ -157,6 +162,7 @@ func _physics_process(delta: float) -> void:
 func _draw() -> void:
 	if data.is_empty(): return
 	var metal := Color("38534a") if mission_id == 1 else Color("514638")
+	if mission_id >= 3: metal = Color("39465b")
 	for index in data.platforms.size():
 		var spec: Array = data.platforms[index]
 		var top: float = spec[1]-spec[3]/2.0
@@ -194,6 +200,20 @@ func _draw() -> void:
 				for j in 8:
 					var rise := fposmod(time*120+j*14,110)
 					draw_circle(Vector2(r.get_center().x+sin(time*7+j)*7,r.end.y-rise),7+rise*0.05,Color(0.56,0.82,0.85,(1-rise/130)*0.55))
+		elif mission_id >= 3:
+			draw_rect(Rect2(r.position.x-6,r.end.y-2,60,8),metal)
+			if hazard_live(index):
+				var energy := Color("a2dfed") if mission_id == 3 else Color("efa8b0")
+				if mission_id == 3:
+					var bolt := PackedVector2Array()
+					for j in 10:
+						bolt.append(Vector2(r.get_center().x+sin(time*45+j*3.1)*12,r.end.y-j*12))
+					draw_polyline(bolt,Color(energy,0.2),9,true)
+					draw_polyline(bolt,energy,2,true)
+				else:
+					draw_rect(r,Color(energy,0.12))
+					var scan_x := r.get_center().x + sin(time*5)*16
+					draw_line(Vector2(scan_x,r.position.y),Vector2(scan_x,r.end.y),energy,3,true)
 		else:
 			var press := 1.0 if hazard_live(index) else smoothstep(2.1,2.3,phase) if warning else 0.0
 			var head_y := lerpf(r.position.y-20,r.end.y-10,press)
@@ -215,6 +235,15 @@ func _draw() -> void:
 	if mission_id == 2:
 		draw_line(goal+Vector2(80,30),goal+Vector2(80,-255),metal,10,true)
 		draw_circle(goal+Vector2(80,-255),16,Color("f8d388") if ready else metal)
+
+	if mission_id == 3:
+		draw_line(goal+Vector2(76,25),goal+Vector2(76,-170),metal,8,true)
+		draw_arc(goal+Vector2(76,-170),14,0,TAU,24,Color("9fd7e9") if ready else Color("a29676"),3,true)
+	if mission_id == 4:
+		draw_line(goal+Vector2(78,30),goal+Vector2(78,-155),metal,8,true)
+		draw_rect(Rect2(goal+Vector2(64,-158),Vector2(28,80)),Color("14232f"))
+		for i in 3:
+			draw_circle(goal+Vector2(78,-145+i*24),7,Color("a1d5b3") if i < relay_count() else Color("c18a70"))
 
 func panel(color: Color) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()

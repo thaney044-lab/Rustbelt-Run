@@ -134,7 +134,7 @@ func on_retry() -> void:
 	overlay.hide()
 
 func advance() -> void:
-	if mission_id < 2: Campaign.play(mission_id+1)
+	if mission_id < Campaign.PATHS.size()-1: Campaign.play(mission_id+1)
 	else: Campaign.menu()
 
 func replay() -> void:

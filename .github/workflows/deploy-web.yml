@@ -62,7 +62,7 @@ jobs:
           godot --headless --path . --script tests/level_smoke.gd
           godot --headless --path . --script tests/transfer_smoke.gd
           godot --headless --path . --script tests/freight_smoke.gd
-          timeout 180 godot --headless --path . --script tests/campaign_smoke.gd
+          timeout 300 godot --headless --path . --script tests/campaign_smoke.gd
       - name: Export browser game
         run: bash tools/build_web.sh
       - uses: actions/upload-pages-artifact@v3

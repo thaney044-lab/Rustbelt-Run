@@ -1,7 +1,7 @@
 extends Node
 ## Small local save; levels remain available for direct play.
-const PATHS := ["res://scenes/movement_lab.tscn", "res://scenes/mosswater.tscn", "res://scenes/emberline.tscn"]
-const TITLES := ["First Shift", "Mosswater Relay", "Emberline Summit"]
+const PATHS := ["res://scenes/movement_lab.tscn", "res://scenes/mosswater.tscn", "res://scenes/emberline.tscn", "res://scenes/stormglass.tscn", "res://scenes/nightfall.tscn"]
+const TITLES := ["First Shift", "Mosswater Relay", "Emberline Summit", "Stormglass Viaduct", "Nightfall Dispatch"]
 const SAVE_PATH := "user://campaign.cfg"
 var records: Dictionary = {}
 
@@ -9,7 +9,7 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	var config := ConfigFile.new()
 	if config.load(SAVE_PATH) == OK:
-		for id in 3:
+		for id in PATHS.size():
 			var record = config.get_value("levels",str(id),{})
 			if record is Dictionary and typeof(record.get("time")) in [TYPE_INT,TYPE_FLOAT] and typeof(record.get("scrap")) == TYPE_INT:
 				records[id] = record

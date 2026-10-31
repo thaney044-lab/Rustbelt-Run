@@ -14,10 +14,21 @@ func _draw() -> void:
 	var camera := get_viewport().get_camera_2d()
 	if not camera: return
 	var scroll := camera.get_screen_center_position().x
-	var cool := mission_id == 1
-	draw_texture_rect(DEPOT if cool else PAINTING,Rect2(-clampf(scroll*0.04,0,350),-20,1600,710),false,Color(0.63,0.83,0.83) if cool else Color(0.95,0.72,0.57))
+	var cool := mission_id in [1,3]
+	var tint := Color(0.63,0.83,0.83) if cool else Color(0.95,0.72,0.57)
+	if mission_id == 3: tint = Color(0.48,0.62,0.79)
+	if mission_id == 4: tint = Color(0.42,0.46,0.66)
+	draw_texture_rect(DEPOT if cool else PAINTING,Rect2(-clampf(scroll*0.04,0,350),-20,1600,710),false,tint)
 	for i in 12:
 		draw_rect(Rect2(0,350+i*27,1152,27),Color(0.04,0.14,0.17,i*0.012) if cool else Color(0.19,0.07,0.04,i*0.014))
+	if mission_id == 3:
+		for i in 32:
+			var rain := Vector2(fposmod(i*91.0-scroll*0.15-time*75,1250)-40,fposmod(i*53.0+time*260,740)-40)
+			draw_line(rain,rain+Vector2(-4,16),Color(0.67,0.8,0.91,0.19),1,true)
+	if mission_id == 4:
+		for i in 36:
+			var star := Vector2(fposmod(i*137.0-scroll*0.015,1152),20+fposmod(i*59.0,185))
+			draw_circle(star,0.8,Color(0.9,0.91,0.8,0.25+sin(time+i)*0.12))
 	if cool:
 		draw_rect(Rect2(0,590,1152,150),Color("284b55",0.75))
 		for row in 8:

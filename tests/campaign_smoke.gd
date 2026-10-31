@@ -2,12 +2,12 @@ extends "res://tests/level_smoke.gd"
 
 func run() -> void:
 	var campaign = root.get_node("Campaign")
-	for id in [1,2]:
-		lab = load("res://scenes/mosswater.tscn" if id == 1 else "res://scenes/emberline.tscn").instantiate()
+	for id in [1,2,3,4]:
+		lab = load(campaign.PATHS[id]).instantiate()
 		root.add_child(lab)
 		await frames(6)
 		check(lab.combat.scrap_positions.size() > 30,"new mission has its own scrap route")
-		check(lab.combat.enemies.size() == (3 if id == 1 else 4),"new mission has authored patrols")
+		check(lab.combat.enemies.size() == (3 if id in [1,3] else 4),"new mission has authored patrols")
 		check(not lab.interact_relay() and lab.relay_count() == 0,"distant controls cannot be activated from spawn")
 		var enemy = lab.combat.enemies[0]
 		lab.player.position = enemy.position-Vector2(50,0)
@@ -29,6 +29,17 @@ func run() -> void:
 		lab.player.velocity = Vector2.ZERO
 		await frames(30)
 		check(lift.position.distance_to(lift_before) > 2 and lab.player.is_on_floor() and absf(lab.player.position.y-lift.position.y+30) < 4,"vertical lift carries the player")
+		for i in lab.moving_specs.size():
+			if lab.moving_specs[i][4] == "xy":
+				# Begin away from the sine-wave turnaround to measure clear motion.
+				lab.moving_elapsed[i] = 0.0
+				await frames(2)
+				var trolley: AnimatableBody2D = lab.movers[i]
+				var trolley_before := trolley.position
+				lab.player.position = trolley.position-Vector2(0,30)
+				lab.player.velocity = Vector2.ZERO
+				await frames(25)
+				check(trolley.position.distance_to(trolley_before) > 2 and lab.player.is_on_floor() and absf(lab.player.position.x-trolley.position.x) < 5 and absf(lab.player.position.y-trolley.position.y+30) < 4,"diagonal trolley carries the player in both axes")
 		lab.relay_on.fill(false)
 		# Freeze machinery while verifying each authored jump connection in real physics.
 		lab.set_physics_process(false)
@@ -58,17 +69,18 @@ func run() -> void:
 		check(lab.relay_count() == count and lab.player.health == 3,"relay power survives checkpoint recovery")
 		for index in lab.data.hazards.size():
 			var r: Rect2 = lab.hazard_rect(index)
-			lab.time = 1.6-index*1.7
+			lab.time = 1.6-index*float(lab.data.get("phase_offset",1.7))
 			lab.player.position = Vector2(r.get_center().x,r.end.y-22)
 			lab.player.velocity = Vector2.ZERO
 			await frames(2)
 			check(not lab.hazard_live(index) and absf(lab.player.position.x-r.get_center().x) < 1,"hazard warning leaves time to react")
-			lab.time = 2.4-index*1.7
+			lab.time = 2.4-index*float(lab.data.get("phase_offset",1.7))
 			await frames(2)
 			check(lab.player.position.x == lab.player.spawn_point.x,"active hazard restores the safe checkpoint")
 		var last: Array = lab.data.platforms[-1]
 		await place(Vector2(lab.data.goal+20,last[1]-last[3]/2.0-30))
 		check(lab.director.complete and lab.director.overlay.visible,"powered exit completes the mission")
+		check(lab.director.primary.text.contains("NEXT") if id < campaign.PATHS.size()-1 else lab.director.primary.text.contains("SELECT"),"results lead to the next available route")
 		check(lab.director.primary.has_focus(),"results screen offers a focused campaign action")
 		lab.player.respawn()
 		await frames(3)
@@ -85,9 +97,12 @@ func run() -> void:
 	campaign.record_completion(1,120.0,5)
 	campaign.record_completion(1,80.0,8)
 	check(campaign.records[1].time == 80.0 and campaign.records[1].scrap == 10, "campaign preserves the fastest time and largest scrap haul")
+	campaign.records.erase(4)
+	campaign.record_completion(4,95.0,20)
 	var restored = load("res://scripts/campaign.gd").new()
 	root.add_child(restored)
 	check(restored.records[1].time == 80.0 and restored.records[1].scrap == 10, "completion records survive a fresh campaign load")
+	check(restored.records[4].time == 95.0 and restored.records[4].scrap == 20,"new level records reload alongside existing campaign records")
 	restored.queue_free()
 	campaign.records = old_records
 	if existed:
@@ -105,6 +120,14 @@ func run() -> void:
 	await process_frame
 	await process_frame
 	check(current_scene != null and current_scene.mission_id == 2,"next-level action opens Emberline Summit")
+	current_scene.director.advance()
+	await process_frame
+	await process_frame
+	check(current_scene.mission_id == 3,"Emberline now leads to Stormglass")
+	current_scene.director.advance()
+	await process_frame
+	await process_frame
+	check(current_scene.mission_id == 4,"Stormglass leads to Nightfall")
 	campaign.menu()
 	await process_frame
 	await process_frame
