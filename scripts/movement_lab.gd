@@ -8,8 +8,10 @@ var checkpoint_reached := false
 var effects: Node2D
 var combat: Node2D
 var director: Node2D
+var enhanced_visuals := false
 
 func _ready() -> void:
+	enhanced_visuals = true
 	effects = preload("res://scripts/visual_effects.gd").new()
 	add_child(effects)
 	configure_input()
@@ -178,6 +180,7 @@ func platform(center: Vector2, size: Vector2, moving := false, pace := 1.2, trav
 	var visual := preload("res://scripts/platform_art.gd").new()
 	visual.size = size
 	visual.moving = moving
+	visual.enhanced = enhanced_visuals
 	body.add_child(visual)
 	add_child(body)
 

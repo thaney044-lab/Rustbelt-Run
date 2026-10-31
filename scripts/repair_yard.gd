@@ -1,6 +1,7 @@
 extends Node2D
 
 # Constrained puzzle state: all objects reset together on checkpoint retry.
+const Art = preload("res://scripts/rendered_art.gd")
 const METAL = preload("res://assets/art/painted/weathered_steel.png")
 const BATTERY_HOME := Vector2(2000, 497)
 const SOCKET := Vector2(2155, 493)
@@ -40,22 +41,6 @@ func _ready() -> void:
 	bridge.position = Vector2(2375, 375)
 	add_shape(bridge, Vector2(310, 20), Color("dfb85d"))
 	add_child(bridge)
-	marker = Label.new()
-	marker.position = Vector2(1760, 305)
-	marker.add_theme_font_size_override("font_size", 14)
-	marker.add_theme_color_override("font_color", Color("f5dbab"))
-	var plaque := StyleBoxFlat.new()
-	plaque.bg_color = Color("294446",0.92)
-	plaque.content_margin_left = 10
-	plaque.content_margin_right = 10
-	plaque.content_margin_top = 6
-	plaque.content_margin_bottom = 6
-	marker.add_theme_stylebox_override("normal",plaque)
-	marker.text = "WORKSHOP  /  02\nJ swing   K throw   E use   T reset"
-	add_child(marker)
-	lab.label_at("THROW -> SWITCH", Vector2(1990, 310))
-	lab.label_at("BATTERY -> SOCKET -> CRANE", Vector2(2050, 580))
-	lab.label_at("EXIT ->", Vector2(2720, 455))
 	player.respawned.connect(on_respawn)
 
 func add_shape(node: PhysicsBody2D, size: Vector2, color: Color) -> void:
@@ -66,6 +51,7 @@ func add_shape(node: PhysicsBody2D, size: Vector2, color: Color) -> void:
 	node.add_child(collision)
 	var visual := preload("res://scripts/platform_art.gd").new()
 	visual.size = size
+	visual.enhanced = true
 	visual.base_color = color
 	visual.moving = size.x > 250
 	visual.surface_kind = "crate" if size == Vector2(42,46) else ("gate" if size == Vector2(20,110) else "steel")
@@ -189,37 +175,29 @@ func _physics_process(delta: float) -> void:
 func _draw() -> void:
 	# Fixed crane tower and top beam frame the actual moving bridge.
 	for x in [2250,2500]:
-		draw_line(Vector2(x,590),Vector2(x,225),Color("394e4d"),18)
-		draw_texture_rect_region(METAL,Rect2(x-9,225,18,365),Rect2(190,160,54,1095),Color(0.7,0.75,0.65))
-		draw_line(Vector2(x-3,580),Vector2(x-3,225),Color("b47d4b"),7)
-		for y in range(250,560,60):
-			draw_line(Vector2(x-9,y),Vector2(x+9,y+40),Color("c19662"),3)
-	draw_line(Vector2(2230,225),Vector2(2520,225),Color("273c40"),26)
-	draw_line(Vector2(2230,219),Vector2(2520,219),Color("d4a759"),7)
-	for x in range(2240,2520,30):
-		draw_line(Vector2(x,215),Vector2(x+14,235),Color("8d7048"),5)
-	draw_line(SOCKET,Vector2(2195,525),Color("273b3c"),9)
-	draw_line(Vector2(2195,525),Vector2(2375,525),Color("273b3c"),9)
-	draw_line(SOCKET, Vector2(2375,330), Color("e6c86a") if powered else Color("657673"), 3)
-	draw_line(Vector2(2375, 330), bridge.position, Color("e6c86a"), 4)
-	draw_rect(Rect2(SOCKET - Vector2(18, 20), Vector2(36, 40)), Color("d0c4a0"), false, 3)
-	draw_circle(SWITCH, 17, Color("6ebe99") if gate_open else Color("d79156"))
-	draw_line(SWITCH - Vector2(8, 0), SWITCH + Vector2(8, 0), Color.WHITE, 3)
-	if not gate_open and target_in_front(SWITCH, 260):
-		draw_arc(SWITCH, 25, 0, TAU, 24, Color.WHITE, 3)
-	draw_style_box(tool_box(Color("2b4146")),Rect2(battery-Vector2(13,18),Vector2(26,36)))
-	draw_rect(Rect2(battery-Vector2(8,12),Vector2(16,24)),Color("385e51"))
-	for j in 3:
-		draw_rect(Rect2(battery+Vector2(-6,-10+j*8),Vector2(12,5)),Color("a1d9a9"))
-	for dx in [-10,10]:
-		draw_circle(battery+Vector2(dx,-14),1.2,Color("d1c28d"))
-		draw_circle(battery+Vector2(dx,14),1.2,Color("d1c28d"))
-	draw_rect(Rect2(battery+Vector2(-5,-22),Vector2(10,5)),Color("e2bc72"))
-	draw_line(battery+Vector2(0,-7),battery+Vector2(0,7),Color("294849"),3)
-	draw_line(battery + Vector2(-6, 0), battery + Vector2(6, 0), Color("203a30"), 3)
-	draw_style_box(tool_box(Color("49635d")),Rect2(CONTROL-Vector2(17,16),Vector2(34,37)))
-	draw_circle(CONTROL, 12, Color("e6c86a") if powered else Color("657673"))
-	draw_line(CONTROL, CONTROL + Vector2(0, -20), Color.WHITE, 3)
+		Art.column(self,Vector2(x,225),365,20)
+	Art.strip(self,"gantry",2230,211,290)
+	var conduit := PackedVector2Array([SOCKET,Vector2(2195,525),Vector2(2248,525),Vector2(2248,242),Vector2(2375,242)])
+	draw_polyline(conduit,Color("19312e"),6,true)
+	draw_polyline(conduit,Color("cfb36b") if powered else Color("637668"),2,true)
+	Art.sprite(self,"wheel",Vector2(2375,242),0.8)
+	draw_line(Vector2(2375,242),bridge.position-Vector2(0,10),Color("263d35"),5,true)
+	draw_line(Vector2(2374,242),bridge.position-Vector2(1,10),Color("bca66a"),2,true)
+	Art.column(self,SWITCH+Vector2(0,20),110,6)
+	Art.sprite(self,"console",SWITCH+Vector2(0,20),0.85)
+	Art.glow(self,SWITCH,Vector2(42,42),Color("a3e8b7",0.15) if gate_open else Color("efbd67",0.13))
+	if not gate_open and target_in_front(SWITCH,260):
+		for i in 4:
+			var angle := PI/4+i*PI/2
+			draw_arc(SWITCH,24,angle-0.24,angle+0.24,8,Color("ffe1a0"),2,true)
+	draw_style_box(tool_box(Color("3d5045")),Rect2(SOCKET-Vector2(18,20),Vector2(36,42)))
+	for dx in [-14,14]:
+		for dy in [-16,16]:
+			draw_circle(SOCKET+Vector2(dx,dy),1.5,Color("bca36e"))
+	Art.sprite(self,"battery",battery+Vector2(0,18),0.85)
+	Art.sprite(self,"console",CONTROL+Vector2(0,28),0.76)
+	if powered:
+		Art.glow(self,CONTROL+Vector2(7,-10),Vector2(38,38),Color("a8ecc0",0.19))
 	if wrench_out:
 		draw_circle(wrench_position, 7, Color("e2e4d5"))
 		draw_line(wrench_position, wrench_position + Vector2(15, -9), Color("e2e4d5"), 5)

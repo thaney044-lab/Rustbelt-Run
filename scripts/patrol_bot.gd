@@ -1,4 +1,5 @@
 extends Node2D
+const Art = preload("res://scripts/rendered_art.gd")
 
 var lab: Node2D
 var patrol_left := 330.0
@@ -60,6 +61,9 @@ func is_targeted() -> bool:
 	return alive and lab.combat.nearest_target() == self
 
 func _draw() -> void:
+	if lab.enhanced_visuals:
+		draw_rendered_bot()
+		return
 	if not alive and age >= 1.0:
 		return
 	var alpha := 1.0 if alive else 1.0 - smoothstep(0.55, 1.0, age)
@@ -109,3 +113,31 @@ func _draw() -> void:
 			var angle := PI / 4 + quadrant * PI / 2
 			draw_arc(Vector2.ZERO, radius, angle - 0.18, angle + 0.18, 8, Color("ffe0a0", 0.9), 1.5, true)
 		draw_colored_polygon(PackedVector2Array([Vector2(-3, -43), Vector2(3, -43), Vector2(0, -39)]), Color("ffe0a0"))
+
+func draw_rendered_bot() -> void:
+	if not alive and age >= 1.0: return
+	var alpha := 1.0 if alive else 1.0-smoothstep(0.55,1.0,age)
+	var collapse := 0.0 if alive else smoothstep(0.08,0.38,age)
+	draw_set_transform(Vector2(0,20),0,Vector2(1,0.18))
+	for i in range(4,0,-1):
+		draw_circle(Vector2.ZERO,20+i*3,Color(0.015,0.035,0.035,0.055*alpha))
+	draw_set_transform(Vector2(0,18),collapse*0.24*direction,Vector2(direction*0.88,0.88*(1.0-collapse*0.55)))
+	var bob := sin(age*9)*0.45 if alive else 0.0
+	Art.sprite(self,"patrol",Vector2(0,-4+bob),1.0,Color(1,1,1,alpha))
+	for wheel_x in [-25.6,25.6]:
+		draw_set_transform(Vector2(0,18)+Vector2(wheel_x*direction*0.88,-10),wheel_rotation,Vector2(0.88,0.88))
+		draw_texture_rect(Art.DATA.wheel[0],Rect2(-14,-16,28,32),false,Color(1,1,1,alpha))
+	draw_set_transform(Vector2.ZERO)
+	if alive:
+		Art.glow(self,Vector2(21.5*direction,-17),Vector2(25,25),Color(1.0,0.66,0.24,0.11+sin(age*4)*0.025))
+		for i in 3:
+			var phase := fposmod(age*0.8+i/3.0,1.0)
+			draw_circle(Vector2(-24*direction-phase*12*direction,-47-phase*24),1.5+phase*4,Color(0.74,0.84,0.8,(1.0-phase)*0.16))
+	if not alive and age < 0.16:
+		var flash := 1.0-age/0.16
+		draw_circle(Vector2(0,-8),12+age*85,Color(1,0.86,0.52,flash*0.7))
+		draw_arc(Vector2(0,-8),14+age*150,0,TAU,32,Color(1,0.94,0.72,flash),2,true)
+	if is_targeted():
+		for quadrant in 4:
+			var angle := PI/4+quadrant*PI/2
+			draw_arc(Vector2(0,-10),43,angle-0.18,angle+0.18,8,Color("ffe0a0",0.9),1.5,true)

@@ -1,4 +1,5 @@
 extends Node2D
+const Art = preload("res://scripts/rendered_art.gd")
 var lab: Node2D
 var active := false
 var time := 0.0
@@ -20,9 +21,6 @@ func _ready() -> void:
 	lab.platform(Vector2(4700,470),Vector2(100,20),true,1.45)
 	lab.platform(Vector2(5100,560),Vector2(460,80))
 	lab.platform(Vector2(5150,455),Vector2(110,20))
-	lab.label_at("FLOODED SERVICE CANAL",Vector2(4310,310))
-	lab.label_at("RIDE THE MAINTENANCE LIFT",Vector2(4540,350))
-	lab.label_at("NEXT DISTRICT  /  FOUNDRY",Vector2(5080,340))
 	lab.player.respawned.connect(func(): finished = false)
 
 func _physics_process(delta: float) -> void:
@@ -48,15 +46,10 @@ func _draw() -> void:
 		var y := 600+fposmod(i*19.0,100)
 		draw_line(Vector2(x,y),Vector2(x+18+sin(time+i)*7,y),Color("7caaa0",0.35),2)
 	for x in [4320,4900,5260]:
-		draw_line(Vector2(x,590),Vector2(x,260),Color("324c4c"),12)
-		draw_line(Vector2(x,260),Vector2(x+60,260),Color("324c4c"),8)
-		draw_circle(Vector2(x+60,275),14,Color("1c3338"))
-		draw_circle(Vector2(x+60,275),10,Color("bc914f"))
-		draw_circle(Vector2(x+60,275),7,Color("e8c884"))
-		draw_circle(Vector2(x+58,273),3,Color("fff0be"))
-		draw_line(Vector2(x+47,260),Vector2(x+73,260),Color("36473e"),5)
-		for r in [20,32,44]:
-			draw_circle(Vector2(x+60,275),r,Color(0.95,0.8,0.47,0.025))
+		Art.column(self,Vector2(x,260),330,13)
+		draw_line(Vector2(x,260),Vector2(x+60,260),Color("324c4c"),8,true)
+		Art.sprite(self,"lantern",Vector2(x+60,296),0.9)
+		Art.glow(self,Vector2(x+60,279),Vector2(150,150),Color("f5c988",0.16))
 	draw_line(Vector2(4340,520),Vector2(4340,455),Color("d4bc88"),4)
 	draw_colored_polygon(PackedVector2Array([Vector2(4342,456),Vector2(4375,465),Vector2(4342,478)]),Color("88bd9b"))
 	# Riveted foundry arch and warm furnace light beyond the exit.

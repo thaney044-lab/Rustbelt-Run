@@ -1,0 +1,427 @@
+{
+  "workflow": "Original procedural geometry, local Blender Cycles; no image generation or external providers",
+  "source": "tools/art/render_first_shift.py",
+  "renderer": "Blender 4.3.2 / Cycles CPU / 48 samples / AgX",
+  "pixels_per_world_unit": 3,
+  "scope": "First Shift only",
+  "sprites": {
+    "catwalk": {
+      "file": "catwalk.png",
+      "world_size": [
+        160,
+        64
+      ],
+      "anchor": [
+        80.0,
+        28.6809
+      ],
+      "pixels_per_unit": 3,
+      "render_seconds": 5.2
+    },
+    "shuttle": {
+      "file": "shuttle.png",
+      "world_size": [
+        160,
+        64
+      ],
+      "anchor": [
+        80.0,
+        28.6809
+      ],
+      "pixels_per_unit": 3,
+      "render_seconds": 5.77
+    },
+    "support": {
+      "file": "support.png",
+      "world_size": [
+        28,
+        180
+      ],
+      "anchor": [
+        14.0,
+        16.2414
+      ],
+      "pixels_per_unit": 3,
+      "render_seconds": 2.56
+    },
+    "gantry": {
+      "file": "gantry.png",
+      "world_size": [
+        240,
+        48
+      ],
+      "anchor": [
+        120.0,
+        16.8085
+      ],
+      "pixels_per_unit": 3,
+      "render_seconds": 7.28
+    },
+    "piston_head": {
+      "file": "piston_head.png",
+      "world_size": [
+        80,
+        52
+      ],
+      "anchor": [
+        40.0,
+        44.4839
+      ],
+      "pixels_per_unit": 3,
+      "render_seconds": 2.0
+    },
+    "hydraulic": {
+      "file": "hydraulic.png",
+      "world_size": [
+        52,
+        76
+      ],
+      "anchor": [
+        26.0,
+        22.9827
+      ],
+      "pixels_per_unit": 3,
+      "render_seconds": 1.46
+    },
+    "crate": {
+      "file": "crate.png",
+      "world_size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24.0,
+        57.1
+      ],
+      "pixels_per_unit": 3,
+      "render_seconds": 2.09
+    },
+    "console": {
+      "file": "console.png",
+      "world_size": [
+        48,
+        80
+      ],
+      "anchor": [
+        24.0,
+        70.4623
+      ],
+      "pixels_per_unit": 3,
+      "render_seconds": 1.45
+    },
+    "battery": {
+      "file": "battery.png",
+      "world_size": [
+        36,
+        52
+      ],
+      "anchor": [
+        18.0,
+        48.312
+      ],
+      "pixels_per_unit": 3,
+      "render_seconds": 1.07
+    },
+    "lantern": {
+      "file": "lantern.png",
+      "world_size": [
+        40,
+        52
+      ],
+      "anchor": [
+        20.0,
+        45.2067
+      ],
+      "pixels_per_unit": 3,
+      "render_seconds": 0.86
+    },
+    "checkpoint": {
+      "file": "checkpoint.png",
+      "world_size": [
+        42,
+        88
+      ],
+      "anchor": [
+        21.0,
+        76.6013
+      ],
+      "pixels_per_unit": 3,
+      "render_seconds": 1.24
+    },
+    "patrol": {
+      "file": "patrol.png",
+      "world_size": [
+        104,
+        104
+      ],
+      "anchor": [
+        52.0,
+        89.5431
+      ],
+      "pixels_per_unit": 3,
+      "render_seconds": 3.92
+    },
+    "wheel": {
+      "file": "wheel.png",
+      "world_size": [
+        28,
+        32
+      ],
+      "anchor": [
+        14.0,
+        19.0978
+      ],
+      "pixels_per_unit": 3,
+      "render_seconds": 0.6
+    },
+    "pump": {
+      "file": "pump.png",
+      "world_size": [
+        120,
+        96
+      ],
+      "anchor": [
+        60.0,
+        81.5601
+      ],
+      "pixels_per_unit": 3,
+      "render_seconds": 5.72
+    },
+    "stone_arch": {
+      "file": "stone_arch.png",
+      "world_size": [
+        240,
+        340
+      ],
+      "anchor": [
+        120.0,
+        46.5281
+      ],
+      "pixels_per_unit": 3,
+      "render_seconds": 39.65
+    },
+    "salvage": {
+      "file": "salvage.png",
+      "world_size": [
+        28,
+        28
+      ],
+      "anchor": [
+        14.0,
+        14.0
+      ],
+      "pixels_per_unit": 3,
+      "render_seconds": 2.44
+    }
+  },
+  "validation": {
+    "catwalk": {
+      "sha256": "8e82309dd9359f8430b8641c802d48f1780e9f3f24519908bcd68998735cc420",
+      "dimensions": [
+        480,
+        192
+      ],
+      "alpha_bounds": [
+        0,
+        36,
+        480,
+        153
+      ]
+    },
+    "shuttle": {
+      "sha256": "3c449ac2f530ee220bec39e66f490c04d780baa55f38d6c58e83b0cef3a825d7",
+      "dimensions": [
+        480,
+        192
+      ],
+      "alpha_bounds": [
+        0,
+        36,
+        480,
+        155
+      ]
+    },
+    "support": {
+      "sha256": "4eda4ed07c64b4e5bfc1588f1748b0776bd09d78d7cdaab7abc50ef26b6a20a5",
+      "dimensions": [
+        84,
+        540
+      ],
+      "alpha_bounds": [
+        11,
+        38,
+        73,
+        507
+      ]
+    },
+    "gantry": {
+      "sha256": "358edbd79e5214fd138728985e369beaf25928d7e5f8a8a2133530676b6e6c09",
+      "dimensions": [
+        720,
+        144
+      ],
+      "alpha_bounds": [
+        0,
+        29,
+        720,
+        121
+      ]
+    },
+    "piston_head": {
+      "sha256": "c294c4c2b6b7372ac7ccbf9b6fe3321535a5357fe416864c1a5693eb11cf427b",
+      "dimensions": [
+        240,
+        156
+      ],
+      "alpha_bounds": [
+        14,
+        24,
+        226,
+        137
+      ]
+    },
+    "hydraulic": {
+      "sha256": "b38690fbc645ada79d57207e77f5777820a51f2353a952e050ab05bca5f54f13",
+      "dimensions": [
+        156,
+        228
+      ],
+      "alpha_bounds": [
+        30,
+        32,
+        156,
+        196
+      ]
+    },
+    "crate": {
+      "sha256": "b537f782509822e03120086347876bc138957edfcb22dabd58662fe19d7ad5ce",
+      "dimensions": [
+        144,
+        192
+      ],
+      "alpha_bounds": [
+        7,
+        19,
+        137,
+        175
+      ]
+    },
+    "console": {
+      "sha256": "5ce50c067aa458c509a894b68db25cbdf881029243f8ce52d4a61b2c5949bce4",
+      "dimensions": [
+        144,
+        240
+      ],
+      "alpha_bounds": [
+        26,
+        45,
+        118,
+        212
+      ]
+    },
+    "battery": {
+      "sha256": "b2c5020f7237e6765518c6ed92d6090702f0cc66a4d8009267829b3318289251",
+      "dimensions": [
+        108,
+        156
+      ],
+      "alpha_bounds": [
+        13,
+        17,
+        95,
+        146
+      ]
+    },
+    "lantern": {
+      "sha256": "4e60ea7ea41da4bd4dbc9e97b55062fa8243e95b7ac479e4d66753c8b3f92fff",
+      "dimensions": [
+        120,
+        156
+      ],
+      "alpha_bounds": [
+        20,
+        17,
+        101,
+        144
+      ]
+    },
+    "checkpoint": {
+      "sha256": "e85c6ae6e8f863e0a1e32364bf734d0bf3b7a16274e00f66cf2d4468ea817a89",
+      "dimensions": [
+        126,
+        264
+      ],
+      "alpha_bounds": [
+        20,
+        16,
+        106,
+        233
+      ]
+    },
+    "patrol": {
+      "sha256": "e7b3d98167aed2c8eb7f23b9cd3eae80312c85da4f6c7c32880df5a98ec402f3",
+      "dimensions": [
+        312,
+        312
+      ],
+      "alpha_bounds": [
+        41,
+        48,
+        280,
+        249
+      ]
+    },
+    "wheel": {
+      "sha256": "8af457a5b4257d4e5192be67e907a664779c0c748600da663f306e0a5fb6ec63",
+      "dimensions": [
+        84,
+        96
+      ],
+      "alpha_bounds": [
+        1,
+        6,
+        83,
+        91
+      ]
+    },
+    "pump": {
+      "sha256": "7db422120adabff2198452dbb98b5324728dc3becc500eee6fff170b1c613dd6",
+      "dimensions": [
+        360,
+        288
+      ],
+      "alpha_bounds": [
+        17,
+        47,
+        330,
+        250
+      ]
+    },
+    "stone_arch": {
+      "sha256": "63209998689c50b1f565d5494586f3fdd6cbb31b9752df779c1db0ba558afdd8",
+      "dimensions": [
+        720,
+        1020
+      ],
+      "alpha_bounds": [
+        0,
+        84,
+        720,
+        882
+      ]
+    },
+    "salvage": {
+      "sha256": "1f1d69209d9b95c93625c76bb2ed1ca647d022a7ad6a622e1dff7f1be4e09b81",
+      "dimensions": [
+        84,
+        84
+      ],
+      "alpha_bounds": [
+        6,
+        6,
+        78,
+        78
+      ]
+    }
+  }
+}

@@ -3,9 +3,11 @@ extends Node2D
 const METAL = preload("res://assets/art/painted/weathered_steel.png")
 const STONE = preload("res://assets/art/painted/viaduct_stone.png")
 const DrawBatch = preload("res://scripts/draw_batch.gd")
+const Art = preload("res://scripts/rendered_art.gd")
 
 var size := Vector2(100, 20)
 var moving := false
+var enhanced := false
 var surface_kind := "steel"
 var base_color := Color("3b5152")
 var foliage: RefCounted
@@ -18,6 +20,9 @@ func _ready() -> void:
 	texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
 
 func _draw() -> void:
+	if enhanced and surface_kind != "gate":
+		draw_rendered_platform()
+		return
 	foliage = DrawBatch.new()
 	stonework = DrawBatch.new()
 	var r := Rect2(-size / 2, size)
@@ -35,6 +40,20 @@ func _draw() -> void:
 		return
 	draw_catwalk(r)
 	draw_foliage()
+
+func draw_rendered_platform() -> void:
+	if surface_kind == "crate":
+		Art.sprite(self,"crate",Vector2(0,size.y/2.0),1.0)
+		return
+	if not moving and size.y > 35 and size.x > 100:
+		var bays := maxi(1,int(round(size.x/240.0)))
+		var span := size.x / bays
+		var entry: Array = Art.DATA.stone_arch
+		for i in bays:
+			var at := Vector2(-size.x/2.0+i*span,-size.y/2.0)
+			draw_texture_rect(entry[0],Rect2(at-Vector2(0,entry[2].y),Vector2(span,entry[1].y)),false)
+		return
+	Art.strip(self,"shuttle" if moving else "catwalk",-size.x/2.0,-size.y/2.0,size.x)
 
 func draw_catwalk(r: Rect2) -> void:
 	# All load-bearing detail stays below the exact collision top.

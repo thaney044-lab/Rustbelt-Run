@@ -1,4 +1,5 @@
 extends Node2D
+const Art = preload("res://scripts/rendered_art.gd")
 var lab: Node2D
 var active := false
 var powered := false
@@ -22,6 +23,7 @@ func _ready() -> void:
 	lift.add_child(shape)
 	var visual := preload("res://scripts/platform_art.gd").new()
 	visual.size = Vector2(150,20)
+	visual.enhanced = true
 	visual.moving = true
 	lift.add_child(visual)
 	add_child(lift)
@@ -102,21 +104,13 @@ func _physics_process(delta: float) -> void:
 
 func _draw() -> void:
 	for x in [5780,5920]:
-		draw_rect(Rect2(x-8,245,16,365),Color("273d32"))
-		draw_texture_rect_region(METAL,Rect2(x-7,245,14,365),Rect2(180,100,42,1095),Color(0.62,0.68,0.50))
-		draw_line(Vector2(x-5,600),Vector2(x-5,245),Color("a69965"),2,true)
-		for y in range(260,595,28):
-			draw_circle(Vector2(x+3,y),1.5,Color("c8af76"))
-			draw_line(Vector2(x-6,y),Vector2(x+6,y+20),Color("626d48"),2,true)
-	draw_rect(Rect2(5760,238,180,16),Color("314633"))
-	draw_texture_rect_region(METAL,Rect2(5760,238,180,16),Rect2(100,180,540,48),Color(0.81,0.75,0.48))
-	draw_line(Vector2(5760,238),Vector2(5940,238),Color("c5ad72"),2,true)
-	draw_circle(Vector2(5850,245),12,Color("283e30"))
-	draw_arc(Vector2(5850,245),9,0,TAU,24,Color("ab9a63"),2,true)
-	draw_line(Vector2(5850,245),Vector2(5850,lift.position.y),Color("c9b887"),3)
-	draw_rect(Rect2(CONTROL-Vector2(16,18),Vector2(32,45)),Color("354b42"))
-	draw_circle(CONTROL,9,Color("a5dbad") if powered else Color("e3b65c"))
-	draw_line(CONTROL,CONTROL+Vector2(0,-18),Color("e2d7ae"),3)
+		Art.column(self,Vector2(x,245),365,18)
+	Art.strip(self,"gantry",5760,237,180)
+	Art.sprite(self,"wheel",Vector2(5850,249),0.8)
+	draw_line(Vector2(5850,245),Vector2(5850,lift.position.y),Color("233c38"),5,true)
+	draw_line(Vector2(5849,245),Vector2(5849,lift.position.y),Color("bfa66b"),2,true)
+	Art.sprite(self,"console",CONTROL+Vector2(0,30),0.86)
+	if powered: Art.glow(self,CONTROL+Vector2(8,-10),Vector2(40,40),Color("a6e4b4",0.22))
 	# Heat is below the catwalk; all actual landing rims remain unobstructed.
 	for i in 12:
 		var x := 5570+i*105.0
@@ -152,7 +146,7 @@ func _draw() -> void:
 			for j in 11:
 				var rise := fposmod(time*100+j*11,110)
 				var center := at+Vector2(sin(time*5+j)*5,-rise)
-				draw_circle(center,10+rise*0.10,Color(0.83,0.91,0.84,(1-rise/130)*0.35))
+				Art.glow(self,center,Vector2(26+rise*0.3,30+rise*0.3),Color(0.75,0.88,0.83,(1-rise/130)*0.3))
 			for j in 5:
 				var base := at+Vector2(-12+j*6,0)
 				draw_line(base,base+Vector2(sin(time*9+j)*4,-85-j*4),Color("d6e7d8",0.25),3,true)

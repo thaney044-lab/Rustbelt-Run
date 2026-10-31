@@ -1,5 +1,6 @@
 extends Node2D
 
+const Art = preload("res://scripts/rendered_art.gd")
 var lab: Node2D
 var time := 0.0
 var checkpoint_active := false
@@ -71,13 +72,7 @@ func _draw() -> void:
 	draw_line(Vector2(2750,520),Vector2(2750,465),Color("d4bc88"),4)
 	draw_colored_polygon(PackedVector2Array([Vector2(2752,466),Vector2(2785,472),Vector2(2752,485)]),Color("88bd9b"))
 	# Industrial overhead frame; warm lamps communicate the cycle without color alone.
-	draw_line(Vector2(3060,215),Vector2(3750,215),Color("243d41"),24)
-	draw_line(Vector2(3060,205),Vector2(3750,205),Color("bc8d56"),5)
-	# Riveted frame and individual hydraulic housings give the machinery depth.
-	draw_texture_rect_region(METAL,Rect2(3060,207,690,17),Rect2(60,170,1380,34),Color(0.55,0.65,0.57))
-	for bolt_x in range(3070,3750,35):
-		draw_circle(Vector2(bolt_x,211),2,Color("b6ad81"))
-		draw_circle(Vector2(bolt_x,220),1.5,Color("708175"))
+	Art.strip(self,"gantry",3060,205,690)
 	for i in 3:
 		var x: float = PISTONS[i]
 		var bottom := piston_bottom(i)
@@ -90,19 +85,11 @@ func _draw() -> void:
 			draw_rect(Rect2(x-28,350,56,168),Color("efb55b",0.06))
 			for side in [-28,28]:
 				draw_line(Vector2(x+side,350),Vector2(x+side,518),Color("efb55b",0.4),1,true)
-		draw_rect(Rect2(x-18,221,36,60),Color("1d3434"))
-		draw_texture_rect_region(METAL,Rect2(x-16,224,32,54),Rect2(90,130,96,162),Color(0.55,0.65,0.58))
-		for collar_y in [228,268]:
-			draw_line(Vector2(x-20,collar_y),Vector2(x+20,collar_y),Color("a69a72"),4,true)
-		draw_rect(Rect2(x-9,275,18,maxf(1,bottom-300)),Color("92aaa1"))
-		draw_line(Vector2(x+7,276),Vector2(x+7,bottom-25),Color("43605a"),3,true)
-		draw_line(Vector2(x-5,276),Vector2(x-5,bottom-25),Color("dae0c3"),3)
-		draw_rect(Rect2(x-29,bottom-28,58,28),Color("263c3f"))
-		draw_texture_rect_region(METAL,Rect2(x-29,bottom-28,58,28),Rect2(120,150,174,84),Color(0.6,0.72,0.68))
-		draw_rect(Rect2(x-27,bottom-25,54,19),Color("c9934d"))
-		for offset in [-20,-5,10]:
-			draw_line(Vector2(x+offset,bottom-23),Vector2(x+offset+12,bottom-9),Color("4f4b37"),5)
-		draw_line(Vector2(x-30,bottom),Vector2(x+30,bottom),Color("f0d18d"),3)
+		Art.sprite(self,"hydraulic",Vector2(x,228),0.94)
+		draw_rect(Rect2(x-7,270,14,maxf(1,bottom-295)),Color("728f87"))
+		draw_line(Vector2(x-4,270),Vector2(x-4,bottom-25),Color("d3ddc8"),3,true)
+		draw_line(Vector2(x+5,270),Vector2(x+5,bottom-25),Color("33534c"),2,true)
+		Art.sprite(self,"piston_head",Vector2(x,bottom),0.9)
 		draw_circle(Vector2(x,190),9,Color("dc8869") if bottom > 450 else (Color("efb55b") if warning else Color("78a993")))
 		if bottom > 450:
 			draw_line(Vector2(x-4,190),Vector2(x+4,190),Color("263e40"),3)

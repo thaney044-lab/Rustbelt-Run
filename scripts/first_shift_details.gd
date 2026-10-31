@@ -1,5 +1,6 @@
 extends Node2D
 ## First Shift's signage and machinery live in world space, below the actors.
+const Art = preload("res://scripts/rendered_art.gd")
 var lab: Node2D
 var shuttles: Array[AnimatableBody2D] = []
 const STEEL := Color("28413e")
@@ -56,29 +57,19 @@ func _draw() -> void:
 			draw_circle(at+corner,1.5,BRASS)
 	for shuttle in shuttles:
 		if not near(shuttle.origin): continue
-		# A fixed track and moving carriage explain the deck's actual travel envelope.
-		var track: Vector2 = shuttle.origin+Vector2(0,35)
+		var track: Vector2 = shuttle.origin+Vector2(0,36)
 		var span: float = shuttle.travel+16
-		for dy in [0,7]:
-			draw_line(track+Vector2(-span,dy),track+Vector2(span,dy),STEEL,5,true)
-			draw_line(track+Vector2(-span,dy-2),track+Vector2(span,dy-2),Color("83937c"),1,true)
-		for side in [-1,1]:
-			var end := track+Vector2(side*span,0)
-			draw_rect(Rect2(end-Vector2(4,7),Vector2(8,22)),BRASS)
-		var carriage := shuttle.position+Vector2(0,37)
+		Art.strip(self,"gantry",track.x-span,track.y,span*2,Color(0.68,0.77,0.74))
+		var carriage := shuttle.position+Vector2(0,32)
 		draw_line(carriage,shuttle.position+Vector2(0,10),STEEL,8,true)
 		for dx in [-9,9]:
-			draw_circle(carriage+Vector2(dx,0),6,STEEL)
-			draw_circle(carriage+Vector2(dx,0),3,BRASS)
+			Art.sprite(self,"wheel",carriage+Vector2(dx,0),0.45)
 	for at in REST_STOPS:
 		if not near(at): continue
 		var secured: bool = lab.player.spawn_point.x >= at.x-30
-		var lamp: Vector2 = at+Vector2(72,-40)
-		var tint := Color("a9deb4") if secured else Color("c2aa75")
-		draw_line(lamp+Vector2(0,5),lamp+Vector2(0,40),STEEL,5,true)
-		draw_rect(Rect2(lamp-Vector2(11,14),Vector2(22,26)),STEEL)
-		draw_rect(Rect2(lamp-Vector2(8,11),Vector2(16,20)),tint)
-		# A cross makes the health-restoration station legible without color alone.
-		draw_line(lamp-Vector2(5,1),lamp+Vector2(5,-1),STEEL,3,true)
-		draw_line(lamp-Vector2(0,6),lamp+Vector2(0,4),STEEL,3,true)
-		if secured: draw_circle(lamp,19,Color(tint,0.09))
+		Art.sprite(self,"checkpoint",at+Vector2(72,0),0.65,Color.WHITE if secured else Color(0.69,0.77,0.70))
+		if secured:
+			draw_circle(at+Vector2(72,-40),13,Color("c5e6ae",0.07))
+	# Mechanical silhouettes and material detail belong to real maintenance banks.
+	for at in [Vector2(60,520),Vector2(1755,520),Vector2(2720,520),Vector2(5075,520),Vector2(7040,520),Vector2(10080,460),Vector2(12800,490)]:
+		if near(at): Art.sprite(self,"pump",at,0.67,Color(0.85,0.94,0.89))

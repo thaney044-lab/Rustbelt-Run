@@ -19,6 +19,10 @@ func _ready() -> void:
 	player.landed.connect(on_landed)
 	player.respawned.connect(func(): landing_time = 0.0)
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	if player.get_parent().enhanced_visuals:
+		var finish := ShaderMaterial.new()
+		finish.shader = preload("res://shaders/actor_finish.gdshader")
+		material = finish
 
 func on_landed(impact_speed: float) -> void:
 	landing_strength = clampf((impact_speed - 120) / 600, 0, 1) * 0.10

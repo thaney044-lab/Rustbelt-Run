@@ -2,6 +2,7 @@ extends Node2D
 ## World-space architecture: deliberately behind the fox and all landing rims.
 const METAL = preload("res://assets/art/painted/weathered_steel.png")
 const WORKSHOP = preload("res://assets/art/painted/workshop.png")
+const Art = preload("res://scripts/rendered_art.gd")
 const DrawBatch = preload("res://scripts/draw_batch.gd")
 var time := 0.0
 var section := -1
@@ -76,9 +77,9 @@ func _draw() -> void:
 		var bottom: float = spec[3]
 		for x in [left+8,right-8]:
 			foliage.line(Vector2(x,top),Vector2(x,bottom),Color("223b37"),3,true)
-			foliage.line(Vector2(x-1,top),Vector2(x-1,bottom),Color("9d936d",0.5),1,true)
+			foliage.line(Vector2(x-1,top),Vector2(x-1,bottom),Color("8c9986",0.3),1,true)
 			for y in range(int(top),int(bottom),18):
-				foliage.circle(Vector2(x,y),2.5,Color("6e765b"))
+				foliage.circle(Vector2(x,y),1.4,Color("627367",0.65))
 	# Railway railing has thin, subdued uprights behind the playable silhouette.
 	for spec in [[35,470,520],[945,1120,520],[1640,1800,520],[4310,4460,520],[6860,7220,520],[8570,8790,490],[9320,9560,460],[9980,10180,460],[10700,10900,390],[11170,11420,520],[11940,12140,460],[12660,12980,490]]:
 		if owns((spec[0]+spec[1])*0.5): railing(spec[0],spec[1],spec[2])
@@ -121,10 +122,9 @@ func _draw() -> void:
 		draw_mesh(foliage_mesh,null)
 
 func girder(at: Vector2, height: float, width: float) -> void:
-	foliage.rect(Rect2(at-Vector2(width/2,0),Vector2(width,height)),Color("263d37"))
-	foliage.line(at-Vector2(width/2-1,0),at+Vector2(-width/2+1,height),Color("909277"),2,true)
-	for y in range(8,int(height),35):
-		foliage.circle(at+Vector2(0,y),1.5,Color("b5a778"))
+	var entry: Array = Art.DATA.support
+	var stretch := Vector2(width/20.0,height/147.5)
+	draw_texture_rect(entry[0],Rect2(at-entry[2]*stretch,entry[1]*stretch),false,Color(0.76,0.86,0.79))
 
 func railing(left: float, right: float, floor_y: float) -> void:
 	for y in [floor_y-36,floor_y-14]:
@@ -136,11 +136,8 @@ func railing(left: float, right: float, floor_y: float) -> void:
 func lamp(at: Vector2) -> void:
 	girder(at+Vector2(-20,-10),200,5)
 	foliage.polyline(PackedVector2Array([at+Vector2(-20,0),at+Vector2(-20,-15),at+Vector2(0,-15),at]),Color("a39b73"),3,true)
-	if glow: draw_texture_rect(glow,Rect2(at-Vector2(58,48),Vector2(116,116)),false)
-	foliage.rect(Rect2(at-Vector2(8,0),Vector2(16,22)),Color("273d33"))
-	foliage.rect(Rect2(at-Vector2(5,-3),Vector2(10,15)),Color("e7c27e"))
-	foliage.line(at+Vector2(0,3),at+Vector2(0,18),Color("645e3d"),1,true)
-	foliage.line(at-Vector2(12,0),at+Vector2(12,0),Color("647357"),4,true)
+	if glow: draw_texture_rect(glow,Rect2(at-Vector2(75,60),Vector2(150,150)),false,Color(1,0.87,0.64,0.8))
+	Art.sprite(self,"lantern",at+Vector2(0,22),0.66)
 
 func station_clock(at: Vector2) -> void:
 	foliage.line(at+Vector2(-55,0),at+Vector2(0,0),Color("243d35"),8,true)

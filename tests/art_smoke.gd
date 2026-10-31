@@ -13,6 +13,14 @@ func check(ok: bool, description: String) -> void:
 		failures += 1
 
 func run() -> void:
+	var library = load("res://scripts/rendered_art.gd")
+	var aligned: bool = library.DATA.size() == 16
+	for entry in library.DATA.values():
+		var source_image: Image = entry[0].get_image()
+		aligned = aligned and source_image.get_size() == Vector2i(entry[1]*3)
+		aligned = aligned and source_image.get_format() == Image.FORMAT_RGBA8 and source_image.get_pixel(0,0).a == 0
+		aligned = aligned and Rect2(Vector2.ZERO,entry[1]).has_point(entry[2])
+	check(aligned,"all sixteen rendered sprites have transparent margins and valid world anchors")
 	var art = load("res://scripts/fox_visual.gd")
 	var image: Image = art.SHEET.get_image()
 	check(image.get_size() == Vector2i(1536,1024),"fox atlas matches declared layout")
@@ -23,6 +31,7 @@ func run() -> void:
 	check(valid and art.REGIONS.size() == 8,"all eight pose regions fit the atlas")
 	var scene = load("res://scenes/movement_lab.tscn").instantiate()
 	root.add_child(scene)
+	check(scene.enhanced_visuals,"First Shift enables the new rendered art profile")
 	var fox = scene.player.get_child(1)
 	scene.player.controls_enabled = false
 	scene.player.velocity.y = -300

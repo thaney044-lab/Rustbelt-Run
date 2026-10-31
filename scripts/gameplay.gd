@@ -1,4 +1,5 @@
 extends Node2D
+const Art = preload("res://scripts/rendered_art.gd")
 
 var authored_layout := true
 var lab: Node2D
@@ -138,6 +139,10 @@ func _draw() -> void:
 		if collected[i]:
 			continue
 		var at := scrap_positions[i]+Vector2(0,sin(time*2+i)*2)
+		if lab.enhanced_visuals:
+			draw_circle(at,12,Color("e9c77c",0.06))
+			Art.sprite(self,"salvage",at,0.72)
+			continue
 		draw_circle(at,8,Color("dbb45e",0.10))
 		var points := PackedVector2Array()
 		for j in 6:
